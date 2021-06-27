@@ -14,8 +14,5 @@ class TestFaceData(unittest.TestCase):
         data = faceDataStruture.UserData("name","unknown","\null\image.jpg","example.com","5555555")
         self.assertEqual(data, faceDataStruture.UserData("name","unknown","\null\image.jpg","example.com","5555555"))
         
-        
-    def test_data_structure_in_a_array(self):
-        pass
-
+    
 
