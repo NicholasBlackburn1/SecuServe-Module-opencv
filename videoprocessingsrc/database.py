@@ -1,98 +1,49 @@
 
-import logging
-import pathlib
-from tokenize import Double
-from requests import Session
-import sqlalchemy as db
-import sqlalchemy.dialects.sqlite
-from configparser import ConfigParser
-from sqlalchemy.orm import sessionmaker
+import __init__
 
 # Gets the Face Data from the Face data
-PATH = str(pathlib.Path().absolute())+"/data/"+"Config.ini"
 
 #TODO: NEED TO ONLY USE LIFE TIME DATABASE FOR FACES 
 
 def getFaces():
     # Read config.ini file
-    config_object = ConfigParser()
-    config_object.read(PATH)
+    config_object = __init__.ConfigParser.ConfigParser()
+    config_object.read(__init__.DATABASE_PATH)
 
     # Get the password
     database = config_object["DATABASE"]
 
-    engine = db.create_engine('postgresql://'+ str(database['user'])+":"+str(database['pass'])+"@"+str(database['ip'])+":"+str(database['port'])+"/"+str(database['databasename']))
+    engine = __init__.db.create_engine('postgresql://'+ str(database['user'])+":"+str(database['pass'])+"@"+str(database['ip'])+":"+str(database['port'])+"/"+str(database['databasename']))
     connection = engine.connect()
-    metadata = db.MetaData()
-    faces = db.Table(database['table'], metadata,
+    metadata = __init__.db.MetaData()
+    faces = __init__.db.Table(database['table'], metadata,
                      autoload=True, autoload_with=engine)
-    query = db.select([faces])
+    query = __init__.db.select([faces])
     result_proxy = connection.execute(query)
     result_set = result_proxy.fetchall()
     return(result_set)
 
-# Returns the LifeTime Table result set
-def getLifetime():
-  
-    # Read config.ini file
-    config_object = ConfigParser()
-    config_object.read(PATH)
-
-    # Get the password
-    database = config_object["DATABASE"]
-
-    engine = db.create_engine('postgresql://'+ str(database['useSame nicky wicky my cute foxy boir'])+":"+str(database['pass'])+"@"+str(database['ip'])+":"+str(database['port'])+"/"+str(database['databasename']))
-    connection = engine.connect()
-    metadata = db.MetaData()
-    faces = db.Table(database['Lifetable'], metadata,
-                     autoload=True, autoload_with=engine)
-    
-    query = db.select([faces])
-  
-    result_proxy = connection.execute(query)
-    result_set = result_proxy.fetchall()
-    return(result_set)
 
 '''
 Return the amout of Entrys in the  dataBase 
 '''
 def getAmountOfEntrys():
     # Read config.ini file
-    config_object = ConfigParser()
-    config_object.read(PATH)
+    config_object = __init__.ConfigParser.ConfigParser()
+    config_object.read(__init__.DATABASE_PATH)
 
     # Get the password
     database = config_object["DATABASE"]
 
-    engine = db.create_engine('postgresql://'+ str(database['user'])+":"+str(database['pass'])+"@"+str(database['ip'])+":"+str(database['port'])+"/"+str(database['databasename']))
-    Session = sessionmaker(bind=engine)
+    engine = __init__.db.create_engine('postgresql://'+ str(database['user'])+":"+str(database['pass'])+"@"+str(database['ip'])+":"+str(database['port'])+"/"+str(database['databasename']))
+    Session = __init__.sessionmaker(bind=engine)
     session = Session()
 
-    metadata = db.MetaData()
-    faces = db.Table(database['table'], metadata,
+    metadata = __init__.db.MetaData()
+    faces = __init__.db.Table(database['table'], metadata,
                      autoload=True, autoload_with=engine)
     databasecount = int(float(session.query(faces).count()))
     return databasecount
-
-# this is the seen Amout life time database
-def getAmountOfLifeEntrys():
-    # Read config.ini file
-    config_object = ConfigParser()
-    config_object.read(PATH)
-
-    # Get the password
-    database = config_object["DATABASE"]
-
-    engine = db.create_engine('postgresql://'+ str(database['user'])+":"+str(database['pass'])+"@"+str(database['ip'])+":"+str(database['port'])+"/"+str(database['databasename']))
-    Session = sessionmaker(bind=engine)
-    session = Session()
-
-    metadata = db.MetaData()
-    faces = db.Table(database['lifetable'], metadata,
-                     autoload=True, autoload_with=engine)
-    print("The Amount of Entrys that are in the Table are" + str(session.query(faces).count()))
-    return session
-
 
 
 def getKey(result_set, i):
