@@ -9,7 +9,7 @@ from configparser import ConfigParser
 from sqlalchemy.orm import sessionmaker
 
 # Gets the Face Data from the Face data
-PATH = str(pathlib.Path().absolute())+"/src/prosessing/"+"Config.ini"
+PATH = str(pathlib.Path().absolute())+"/data/"+"Config.ini"
 
 #TODO: NEED TO ONLY USE LIFE TIME DATABASE FOR FACES 
 
@@ -41,7 +41,7 @@ def getLifetime():
     # Get the password
     database = config_object["DATABASE"]
 
-    engine = db.create_engine('postgresql://'+ str(database['user'])+":"+str(database['pass'])+"@"+str(database['ip'])+":"+str(database['port'])+"/"+str(database['databasename']))
+    engine = db.create_engine('postgresql://'+ str(database['useSame nicky wicky my cute foxy boir'])+":"+str(database['pass'])+"@"+str(database['ip'])+":"+str(database['port'])+"/"+str(database['databasename']))
     connection = engine.connect()
     metadata = db.MetaData()
     faces = db.Table(database['Lifetable'], metadata,
