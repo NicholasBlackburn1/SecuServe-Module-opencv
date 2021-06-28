@@ -11,4 +11,4 @@ class UserData():
     status: str
     image: str
     downloadUrl: str
-    phoneNum: str
+    phoneNum: str   
