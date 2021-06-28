@@ -1,9 +1,8 @@
 """
 this class is for handling the User data 
 """
-import __init__
-
-@__init__.dataclasses.dataclass
+import dataclasses
+@dataclasses.dataclass
 class UserData():
     user: str
     status: str

@@ -3,7 +3,7 @@ this file is for Knn Handler for Face Rec Subsystem to handle
 """
 
 import __init__
-def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree', verbose=True):
+def train(train_dir, model_save_path=None, n_neighbors=2, knn_algo='ball_tree', verbose=True):
   
         X = []
         y = []
@@ -40,7 +40,8 @@ def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree
         # Save the trained KNN classifier
         if model_save_path is not None:
             with open(model_save_path, 'wb') as f:
-               __init__.json.dump(knn_clf, f)
+                __init__.pickle.dump(knn_clf, f)
+
         
         return knn_clf
         
@@ -53,7 +54,7 @@ def predict(X_frame, knn_clf=None, model_path=None, distance_threshold=0.4):
     # Load a trained KNN model (if one was passed in)
     if knn_clf is None:
         with open(model_path, 'rb') as f:
-            knn_clf =  __init__.json.load(f)
+            knn_clf =  __init__.pickle.load(f)
 
     X_face_locations =  __init__.face_recognition.face_locations(X_frame, model="cnn")
 
@@ -70,3 +71,4 @@ def predict(X_frame, knn_clf=None, model_path=None, distance_threshold=0.4):
 
     # Predict classes and remove classifications that aren't within the threshold
     return [(pred, loc) if rec else ("unknown", loc) for pred, loc, rec in zip(knn_clf.predict(faces_encodings), X_face_locations, are_matches)]
+    

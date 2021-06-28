@@ -1,6 +1,10 @@
 """
 This is were u config the the start up of the app
 """
+import dataclasses
+
+import pickle
+import os
 import wget
 import pathlib
 import cv2
@@ -13,7 +17,7 @@ import sqlalchemy.dialects.sqlite
 from configparser import ConfigParser
 from sqlalchemy.orm import sessionmaker
 import zmq
-import os
+
 import threading
 import queue
 import math
@@ -23,8 +27,10 @@ from sklearn import neighbors
 import logging
 import json
 
-
-
+# this is all the global paths needed throuht the program
 DATABASE_PATH = str(pathlib.Path().absolute())+"/data/"+"Config.ini"
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+
+
 
