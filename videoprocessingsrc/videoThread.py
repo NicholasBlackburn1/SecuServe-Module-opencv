@@ -6,7 +6,7 @@ import __init__
 class ThreadingClass:
   # initiate threading class
   def __init__(self, name):
-    self.cap = __init__.cv2.VideoCapture(name)
+    self.cap = __init__.cv2.VideoCapture(name, __init__.cv2.CAP_GSTREAMER)
 	# define an empty queue and thread
     self.q = __init__.queue.Queue()
     t = __init__.threading.Thread(target=self._reader)

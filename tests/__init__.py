@@ -24,7 +24,7 @@ from sklearn import neighbors
 import logging
 import json
 import pickle
-
+import unittest
 
 TEST_TRAIN_DIR = str(pathlib.Path().absolute())+"/data/testTraining/"
 TEST_FACE_IMAGE = str(pathlib.Path().absolute())+"/data/images/me.jpg"
