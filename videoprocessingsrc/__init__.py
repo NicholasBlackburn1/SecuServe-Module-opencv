@@ -26,14 +26,16 @@ from face_recognition.face_recognition_cli import image_files_in_folder
 from sklearn import neighbors
 import logging
 import json
-import faceDataStruture as UserData
 import requests
 import logging
 from colorama import init, Fore, Back, Style
 import consoleLog
+import faceDataStruture
+import knnClasifiyer
+from datetime import datetime
 
 # this is all the global paths needed throuht the program
-DATABASE_PATH = str(pathlib.Path().absolute())+"/data/"+"Config.ini"
+PATH = str(pathlib.Path().absolute())+"/data/"+"Config.ini"
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 watchdog = 0
@@ -45,8 +47,7 @@ print("Example Config"+str(pathlib.Path().absolute()) +
         "/src/prosessing/"+"Config.ini")
 # Read config.ini file
 config_object = ConfigParser()
-config_object.read(str(pathlib.Path().absolute()) +
-                    "/src/prosessing/"+"Config.ini")
+config_object.read(PATH)
 
 logconfig = config_object['LOGGING']
 zmqconfig = config_object['ZMQ']
