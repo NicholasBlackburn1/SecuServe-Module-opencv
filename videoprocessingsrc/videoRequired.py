@@ -34,6 +34,7 @@ class RequiredCode(object):
         self.downloadUserFaces(__init__.imagePathusers)
 
         __init__.console_log.PipeLine_Ok("PipeLine Setup End time"+str( __init__.datetime.now() -  __init__.pipeline_start_setup))
+        return True
             
     # This trains the face model for the  pipeline
     def trainPipeLine(self):

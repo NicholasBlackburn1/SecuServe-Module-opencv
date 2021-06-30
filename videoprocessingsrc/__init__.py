@@ -33,6 +33,9 @@ import consoleLog
 import faceDataStruture
 import knnClasifiyer
 from datetime import datetime
+import database
+import videoRequired
+
 
 # this is all the global paths needed throuht the program
 PATH = str(pathlib.Path().absolute())+"/data/"+"Config.ini"
@@ -65,8 +68,19 @@ Modelpath = str(imagePathusers+'Face.Model')
 
 userList = []
 
+
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 logger = logging.getLogger()
 logger.addHandler(logging.FileHandler(str(loggingPath)+"Cv_PipeLine"+str(current_time)+".uwu", 'a'))
 
 default_endpoint = 'https://textbelt.com/text'
+
+context = zmq.Context()
+socketrecv = context.socket(zmq.SUB)
+socketsend = context.socket(zmq.SUB)
+
+socketrecv.connect("tcp://"+zmqconfig['ip']+":"+zmqconfig['port'])
+socketsend.bind("tcp://"+zmqconfig['ip']+":"+zmqconfig['port-send'])
+
+recv_command = socketrecv.recv_json()
+send_data = socketsend.send_json()
