@@ -41,10 +41,6 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 watchdog = 0
 imagename = datetime.now().strftime("%Y_%m_%d-%I_%M_%S")
 os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
-
-# gets Config file
-print("Example Config"+str(pathlib.Path().absolute()) +
-        "/src/prosessing/"+"Config.ini")
 # Read config.ini file
 config_object = ConfigParser()
 config_object.read(PATH)
