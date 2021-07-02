@@ -44,11 +44,5 @@ logger.addHandler(__init__.logging.FileHandler(str(loggingPath)+"Cv_PipeLine"+st
 default_endpoint = 'https://textbelt.com/text'
 
 
-context = __init__.zmq.Context()
-socketrecv = context.socket(__init__.zmq.SUB)
-socketsend = context.socket(__init__.zmq.PUB)
 
-socketrecv.connect("tcp://"+zmqconfig['ip']+":"+zmqconfig['port'])
-socketsend.bind("tcp://"+zmqconfig['ip']+":"+zmqconfig['port-send'])
-
-recv_data = socketrecv.recv_json()
+print("in const")

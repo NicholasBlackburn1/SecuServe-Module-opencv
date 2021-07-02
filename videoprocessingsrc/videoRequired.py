@@ -1,7 +1,9 @@
 """
 This class is for the required opencv
 parts 
+TODO: Setup pipeline send mesg basted on what part of pipe line its in
 """
+
 
 import __init__
 
@@ -9,52 +11,55 @@ class RequiredCode(object):
     
     # this allows me to set up pipe line easyerly  but for the cv module
     def setupPipeline(self):
+        pipeline_start_setup = __init__.datetime.now()
         __init__.gc.enable()
-        __init__.sys.stdout.write = __init__.logger.info
+        __init__.sys.stdout.write = __init__.const.logger.info
         
-        if(not __init__.os.path.exists(self.rootDirPath)):
-            __init__.console_log.Warning("creating Dirs")
+        if(not __init__.os.path.exists(__init__.const.rootDirPath)):
+            __init__.console_Log.Warning("creating Dirs")
             self.makefiledirs()
             
-        __init__.console_log.Debug("Example Config"+str(__init__.PATH))
-        __init__.console_log.PipeLine_init(__init__.cv2.getBuildInformation())
-        __init__.console_log.Warning("is opencv opdemised"+str(__init__.cv2.useOptimized()))
+        __init__.console_Log.Debug("Example Config"+str(__init__.const.PATH))
+        __init__.console_Log.PipeLine_init(__init__.cv2.getBuildInformation())
+        __init__.console_Log.Warning("is opencv opdemised"+str(__init__.cv2.useOptimized()))
         
          # Database connection handing
-        __init__.console_log.Warning("Connecting to the Database Faces")
-        __init__.console_log.PipeLine_Data( __init__.db.getFaces())
-        __init__.console_log.Warning("connected to database Faces")
+        __init__.console_Log.Warning("Connecting to the Database Faces")
+        __init__.console_Log.PipeLine_Data( __init__.mydb.getFaces())
+        __init__.console_Log.Warning("connected to database Faces")
 
         # Updates Data in the Usable data list uwu
         self.UserDataList()
 
-        __init__.console_log.Warning("Setting up cv")
+        __init__.console_Log.Warning("Setting up cv")
 
         # Downlaods all the Faces
-        self.downloadUserFaces(__init__.imagePathusers)
+        self.downloadUserFaces(__init__.const.imagePathusers)
 
-        __init__.console_log.PipeLine_Ok("PipeLine Setup End time"+str( __init__.datetime.now() -  __init__.pipeline_start_setup))
+        __init__.console_Log.PipeLine_Ok("PipeLine Setup End time"+str( __init__.datetime.now() -  pipeline_start_setup))
         self.trainPipeLine()
             
     # This trains the face model for the  pipeline
     def trainPipeLine(self):
-        __init__.console_log.Warning("Training Model Going to take a while UwU..... ")
-        __init__.knnClasifiyer.train(train_dir=__init__.imagePathusers,
-                  model_save_path=__init__.Modelpath, n_neighbors=2)
+        pipeline_train_knn = __init__.datetime.now()
+        __init__.console_Log.Warning("Training Model Going to take a while UwU..... ")
+        __init__.knnClasifiyer.train(train_dir=__init__.const.imagePathusers,
+                  model_save_path=__init__.const.Modelpath, n_neighbors=2)
         
-        __init__.console_log.PipeLine_Ok("Done Train Knn pipeline timer" + str(__init__.datetime.now() - __init__.pipeline_train_knn))
-        __init__.console_log.Warning("Done Training Model.....")
+        __init__.console_Log.PipeLine_Ok("Done Train Knn pipeline timer" + str(__init__.datetime.now() - pipeline_train_knn))
+        __init__.console_Log.Warning("Done Training Model.....")
         
         # cleans mess as we keep prosessing
         __init__.gc.collect()
+        self.reconitionPipeline()
         
         
     def reconitionPipeline(self):
           # Camera Stream gst setup
         gst_str = ("rtspsrc location={} latency={}  ! rtph264depay  ! nvv4l2decoder ! nvvidconv ! video/x-raw, format=(string)BGRx ! videoconvert !appsink".format(
-            str(self.opencvconfig['Stream_intro']+self.opencvconfig['Stream_ip']+":"+self.opencvconfig['Stream_port']), 400, 720, 480))
+            str(__init__.const.opencvconfig['Stream_intro']+__init__.const.opencvconfig['Stream_ip']+":"+__init__.const.opencvconfig['Stream_port']), 400, 720, 480))
 
-        __init__.console_log.Warning("Looking for Faces...")
+        __init__.console_Log.Warning("Looking for Faces...")
 
         i = 0
         face_index = 0
@@ -63,7 +68,7 @@ class RequiredCode(object):
         pipeline_video_prossesing =  __init__.datetime.now()
 
         cap =  __init__.videoThread.ThreadingClass(gst_str)
-        face_processing_pipeline_timer =  __init__.atetime.now()
+        face_processing_pipeline_timer =  __init__.datetime.now()
         while 0 < 1:
             process_this_frame = process_this_frame + 1
 
@@ -74,7 +79,7 @@ class RequiredCode(object):
                 #frame = cv2.imread("/mnt/SecuServe/user/people/a93121a4-cc4b-11eb-b91f-00044beaf015/a924857a-cc4b-11eb-b91f-00044beaf015 (1).jpg",cv2.IMREAD_COLOR)
                 img =  __init__.cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
                 predictions =  __init__.knnClasifiyer.predict(
-                    img, model_path=self.Modelpath, distance_threshold=0.65)
+                    img, model_path=__init__.const.Modelpath, distance_threshold=0.65)
                 # print(process_this_frame)
 
                 """
@@ -99,12 +104,12 @@ class RequiredCode(object):
                     if(name != None):
 
                         if(name == 'unknown' and status == None):
-                            __init__.userStats.userUnknown(self.opencvconfig, name, frame, font, imagename=self.imagename, imagePath=self.imagePath,
+                            __init__.userStats.userUnknown(__init__.const.opencvconfig, name, frame, font, imagename=self.imagename, imagePath=self.imagePath,
                                              left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                         # print("user is unknown")
                             __init__.logging.info("unknowns Here UwU!")
                             #message.sendCapturedImageMessage("eeeep there is an unknown",4123891615,'http://192.168.5.7:2000/unknown',self.smsconfig['textbelt-key'])
-                            __init__.console_log.PipeLine_Ok("stop face prossesing timer unknown" +
+                            __init__.console_Log.PipeLine_Ok("stop face prossesing timer unknown" +
                                   str( __init__.datetime.now()-face_processing_pipeline_timer))
                           
                             __init__.watchdog +=1
@@ -125,8 +130,8 @@ class RequiredCode(object):
                                     __init__.logging.info(
                                         "got an Admin The name is"+str(name))
                                     __init__.userStats.userAdmin(status, name, frame, font, self.imagename,
-                                                   self.imagePath, left, right, bottom, top, process_this_frame)
-                                    __init__.console_log.PipeLine_Ok("Stping face prossesing timer in admin" + str(datetime.now()-face_processing_pipeline_timer))
+                                                   __init__.const.imagePath, left, right, bottom, top, process_this_frame)
+                                    __init__.console_Log.PipeLine_Ok("Stping face prossesing timer in admin" + str(__init__.datetime.now()-face_processing_pipeline_timer))
                                     __init__.watchdog +=1
                                     
 
@@ -134,11 +139,11 @@ class RequiredCode(object):
                                     __init__.logging.info(
                                         "got an User Human The name is"+str(name))
                                     __init__.userStats.userUser(status=status, name=name, frame=frame, font=font, imagename=self.imagename,
-                                                  imagePath=self.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
+                                                  imagePath=__init__.const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                                     
-                                    __init__.console_log.Warning(
+                                    __init__.console_Log.Warning(
                                         "eeeep there is an User They Might be evil so um let them in"+"  `"+"There Name is:" + str(name))
-                                    __init__.console_log.PipeLine_Ok(
+                                    __init__.console_Log.PipeLine_Ok(
                                         "Stping face prossesing timer in user" + str(__init__.datetime.now()-face_processing_pipeline_timer))
                                     __init__.watchdog +=1
 
@@ -146,29 +151,29 @@ class RequiredCode(object):
                                     __init__.logging.info(
                                         "got an Unwanted Human The name is"+str(name))
                                     __init__.userStats.userUnwanted(status=status, name=name, frame=frame, font=font, imagename=self.imagename,
-                                                      imagepath=self.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
-                                    __init__.console_log.PipeLine_Ok("Stping face prossesing timer in unwanted" + str(
+                                                      imagepath=__init__.const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
+                                    __init__.console_Log.PipeLine_Ok("Stping face prossesing timer in unwanted" + str(
                                     __init__.datetime.now()-face_processing_pipeline_timer))
                                     __init__.watchdog +=1
                                   
 
                                 if(self.getAmountofFaces(__init__.face_recognition, frame) > 1):
                                     __init__.userStats.userGroup(frame=frame, font=font, imagename=self.imagename, imagepath=self.imagePath, left=left, right=right, bottom=bottom, top=top)
-                                    __init__.console_log.PipeLine_Ok("Stping face prossesing timer in Group" + str(__init__.datetime.now()-face_processing_pipeline_timer))
+                                    __init__.console_Log.PipeLine_Ok("Stping face prossesing timer in Group" + str(__init__.datetime.now()-face_processing_pipeline_timer))
                                     #message.sendCapturedImageMessage("eeeep there is Gagle of Peope I dont know what to do",phone,'http://192.168.5.8:2000/group',self.smsconfig['textbelt-key'])
                                     
                                     
 
                             else:
 
-                                __init__.console_log.Warning(
-                                    "not the correct obj in list" + str(__init__.userList[i]))
+                                __init__.console_Log.Warning(
+                                    "not the correct obj in list" + str(__init__.const.userList[i]))
                                 # allows counter ro count up to the ammount in the database
-                                if(i >  len(__init__.userList)):
+                                if(i >  len(__init__.const.userList)):
                                     i+=1
                                     
                                 # allows the countor to reset to zero 
-                                if(i == len(__init__.userList)):
+                                if(i == len(__init__.const.userList)):
                                     i=0
                                     
                                     
@@ -177,7 +182,7 @@ class RequiredCode(object):
 
                     else:
 
-                        __init__.console_log.PipeLine_Ok(
+                        __init__.console_Log.PipeLine_Ok(
                             "Time For non Face processed frames" + str(__init__.datetime.now()-face_processing_pipeline_timer))
 
                         return
@@ -190,12 +195,12 @@ class RequiredCode(object):
     # Makes startup dirs
 
     def makefiledirs(self):
-        __init__.console_log.Warning("Creating Folder Dirs")
+        __init__.console_Log.Warning("Creating Folder Dirs")
         __init__.Path(self.rootDirPath).mkdir(parents=True, exist_ok=True)
         __init__.Path(self.imagePathusers).mkdir(parents=True, exist_ok=True)
         __init__.Path(self.configPath).mkdir(parents=True, exist_ok=True)
         __init__.Path(self.plateImagePath).mkdir(parents=True, exist_ok=True)
-        __init__.console_log.Warning("Made Folder Dirs")
+        __init__.console_Log.Warning("Made Folder Dirs")
 
 
 # Encodes all the Nessiscary User info into Json String so it can be easly moved arround
@@ -208,15 +213,15 @@ class RequiredCode(object):
 
             # this is Where the Data gets Wrapped into am DataList with uuid First key
             local_data = {
-                __init__.db.getUserUUID(__init__.db.getFaces(), i): __init__.UserData(__init__.db.getName(__init__.db.getFaces(), i), __init__.db.getStatus(__init__.db.getFaces(), i), __init__.db.getImageName(__init__.db.getFaces(), i), __init__.db.getImageUrI(__init__.db.getFaces(), i), __init__.db.getPhoneNum(__init__.db.getFaces(), i))
+                __init__.mydb.getUserUUID(__init__.mydb.getFaces(), i): __init__.faceDataStruture.UserData(__init__.mydb.getName(__init__.mydb.getFaces(), i), __init__.mydb.getStatus(__init__.mydb.getFaces(), i), __init__.mydb.getImageName(__init__.mydb.getFaces(), i), __init__.mydb.getImageUrI(__init__.mydb.getFaces(), i), __init__.mydb.getPhoneNum(__init__.mydb.getFaces(), i))
             }
 
-            __init__.userList.append(local_data)
+            __init__.const.userList.append(local_data)
 
             i += 1
 
             # Checks to see if i == the database amount hehe
-            if(i == __init__.db.getAmountOfEntrys()):
+            if(i == __init__.mydb.getAmountOfEntrys()):
                 return
 # saves downloaded Image Converted to black and white
 
@@ -236,19 +241,19 @@ class RequiredCode(object):
 
         # gets users names statuses face iamges and the urls from the tuples
         while True:
-            __init__.userinfo = __init__.userList[index][__init__.db.getUserUUID(
-                __init__.db.getFaces(), index)]
+            __init__.userinfo = __init__.const.userList[index][__init__.mydb.getUserUUID(
+                __init__.mydb.getFaces(), index)]
 
          
 
-            self.downloadFacesAndProssesThem(__init__.userList[index][__init__.db.getUserUUID(
-                __init__.db.getFaces(), index)], imagePath+str(__init__.db.getUserUUID(__init__.db.getFaces(), index)))
-            __init__.console_log.PipeLine_Data("downloaded"+" "+str(index) +" out of " +str(__init__.db.getAmountOfEntrys()) + "\n")
+            self.downloadFacesAndProssesThem(__init__.const.userList[index][__init__.mydb.getUserUUID(
+                __init__.mydb.getFaces(), index)], imagePath+str(__init__.mydb.getUserUUID(__init__.mydb.getFaces(), index)))
+            __init__.console_Log.PipeLine_Data("downloaded"+" "+str(index+1) +" out of " +str(__init__.mydb.getAmountOfEntrys()) + "\n")
 
             index += 1
 
-            if(index == __init__.db.getAmountOfEntrys()):
-                __init__.console_log.Warning("Done Downloading Images UWU....")
+            if(index == __init__.mydb.getAmountOfEntrys()):
+                __init__.console_Log.Warning("Done Downloading Images UWU....")
                 return
 
                 # Add names of the ecodings to thw end of list

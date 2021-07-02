@@ -25,6 +25,6 @@ class NetworkManager(object):
     this is where the other modules
     """    
     def recvContronMessage(self):
-        return str(__init__.const.recv_data)
+       pass
     
     

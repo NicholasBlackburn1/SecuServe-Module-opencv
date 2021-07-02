@@ -7,7 +7,7 @@ import __init__
 
 def getFaces():
     # Read config.ini file
-    config_object = __init__.ConfigParser.ConfigParser()
+    config_object = __init__.ConfigParser()
     config_object.read(__init__.const.PATH)
 
     # Get the password
@@ -29,8 +29,8 @@ Return the amout of Entrys in the  dataBase
 '''
 def getAmountOfEntrys():
     # Read config.ini file
-    config_object = __init__.ConfigParser.ConfigParser()
-    config_object.read(__init__.DATABASE_PATH)
+    config_object = __init__.ConfigParser()
+    config_object.read(__init__.const.PATH)
 
     # Get the password
     database = config_object["DATABASE"]
