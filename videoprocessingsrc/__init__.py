@@ -3,7 +3,7 @@ This is were u config the the start up of the app
 """
 import dataclasses
 
-import pickle
+
 import os
 import wget
 import pathlib
@@ -18,15 +18,11 @@ from configparser import ConfigParser
 from sqlalchemy.orm import sessionmaker
 import zmq
 
-import threading
-import queue
-import math
 import face_recognition
 from face_recognition.face_recognition_cli import image_files_in_folder
 from sklearn import neighbors
 import logging
-import json
-import requests
+
 import logging
 from colorama import init, Fore, Back, Style
 import consoleLog
@@ -36,51 +32,4 @@ from datetime import datetime
 import database
 import videoRequired
 from networkBackend import NetworkManager
-
-# this is all the global paths needed throuht the program
-PATH = str(pathlib.Path().absolute())+"/data/"+"Config.ini"
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
-
-watchdog = 0
-imagename = datetime.now().strftime("%Y_%m_%d-%I_%M_%S")
-os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
-# Read config.ini file
-config_object = ConfigParser()
-config_object.read(PATH)
-
-logconfig = config_object['LOGGING']
-zmqconfig = config_object['ZMQ']
-opencvconfig = config_object['OPENCV']
-fileconfig = config_object['FILE']
-smsconfig = config_object['SMS']
-
-current_time = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p_%s")
-
-rootDirPath = fileconfig['rootDirPath']
-configPath = fileconfig['rootDirPath']+fileconfig['configPath']
-imagePath = fileconfig['rootDirPath'] + fileconfig['imagePath']
-imagePathusers = fileconfig['rootDirPath'] + fileconfig['imagePathusers']
-plateImagePath = fileconfig['rootDirPath'] + fileconfig['platePath']
-loggingPath = fileconfig['rootDirPath'] + fileconfig['loggingPath']
-
-Modelpath = str(imagePathusers+'Face.Model')
-
-
-userList = []
-
-
-logging.basicConfig(level=logging.INFO, format='%(message)s')
-logger = logging.getLogger()
-logger.addHandler(logging.FileHandler(str(loggingPath)+"Cv_PipeLine"+str(current_time)+".uwu", 'a'))
-
-default_endpoint = 'https://textbelt.com/text'
-
-context = zmq.Context()
-socketrecv = context.socket(zmq.SUB)
-socketsend = context.socket(zmq.SUB)
-
-socketrecv.connect("tcp://"+zmqconfig['ip']+":"+zmqconfig['port'])
-socketsend.bind("tcp://"+zmqconfig['ip']+":"+zmqconfig['port-send'])
-
-recv_command = socketrecv.recv_json()
-send_data = socketsend.send_json()
+import const

@@ -236,7 +236,7 @@ class RequiredCode(object):
 
         # gets users names statuses face iamges and the urls from the tuples
         while True:
-            __init__.userinfo = __init__..userList[index][__init__.db.getUserUUID(
+            __init__.userinfo = __init__.userList[index][__init__.db.getUserUUID(
                 __init__.db.getFaces(), index)]
 
          
