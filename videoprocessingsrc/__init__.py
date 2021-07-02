@@ -35,7 +35,7 @@ import knnClasifiyer
 from datetime import datetime
 import database
 import videoRequired
-
+from networkBackend import NetworkManager
 
 # this is all the global paths needed throuht the program
 PATH = str(pathlib.Path().absolute())+"/data/"+"Config.ini"

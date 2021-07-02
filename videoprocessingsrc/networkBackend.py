@@ -21,9 +21,10 @@ class NetworkManager(object):
         __init__.send_data({"dectected": str(detectedNames)})
         
     
-    
     """
     this is where the other modules
     """    
     def recvContronMessage(self):
         return __init__.recv_command
+    
+    

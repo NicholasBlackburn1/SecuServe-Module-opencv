@@ -34,7 +34,7 @@ class RequiredCode(object):
         self.downloadUserFaces(__init__.imagePathusers)
 
         __init__.console_log.PipeLine_Ok("PipeLine Setup End time"+str( __init__.datetime.now() -  __init__.pipeline_start_setup))
-        return True
+        self.trainPipeLine()
             
     # This trains the face model for the  pipeline
     def trainPipeLine(self):
@@ -107,11 +107,11 @@ class RequiredCode(object):
                             __init__.console_log.PipeLine_Ok("stop face prossesing timer unknown" +
                                   str( __init__.datetime.now()-face_processing_pipeline_timer))
                           
-                            self.watchdog +=1
+                            __init__.watchdog +=1
 
                         else:
-                            if name in self.userList[i]:
-                                userinfo = self.userList[i][name]
+                            if name in __init__.userList[i]:
+                                userinfo = __init__.userList[i][name]
                                 status = userinfo.status
                                 name = userinfo.user
                                 phone = userinfo.phoneNum
@@ -162,13 +162,13 @@ class RequiredCode(object):
                             else:
 
                                 __init__.console_log.Warning(
-                                    "not the correct obj in list" + str(self.userList[i]))
+                                    "not the correct obj in list" + str(__init__.userList[i]))
                                 # allows counter ro count up to the ammount in the database
-                                if(i >  len(self.userList)):
+                                if(i >  len(__init__.userList)):
                                     i+=1
                                     
                                 # allows the countor to reset to zero 
-                                if(i == len(self.userList)):
+                                if(i == len(__init__.userList)):
                                     i=0
                                     
                                     
@@ -183,7 +183,7 @@ class RequiredCode(object):
                         return
 
             else:
-                pass
+               pass
         
         
     
@@ -236,7 +236,7 @@ class RequiredCode(object):
 
         # gets users names statuses face iamges and the urls from the tuples
         while True:
-            __init__.userinfo = self.userList[index][__init__.db.getUserUUID(
+            __init__.userinfo = __init__..userList[index][__init__.db.getUserUUID(
                 __init__.db.getFaces(), index)]
 
          
