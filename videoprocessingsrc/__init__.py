@@ -30,7 +30,7 @@ import knnClasifiyer
 from datetime import datetime
 import database
 import videoRequired
-from networkBackend import NetworkManager
+
 import const as const
 import gc
 import videoThread

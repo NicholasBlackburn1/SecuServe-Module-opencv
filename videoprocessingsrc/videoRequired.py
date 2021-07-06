@@ -10,7 +10,10 @@ import __init__
 class RequiredCode(object):
     
     # this allows me to set up pipe line easyerly  but for the cv module
-    def setupPipeline(self):
+    def setupPipeline(self,sender):
+        #this sends a stats message back to the main controller and to the messaging and webserver modules
+        sender.send_json({"status":"starting","pipelinePos":"settingUp","time":__init__.datetime.now()})
+        
         pipeline_start_setup = __init__.datetime.now()
         __init__.gc.enable()
         __init__.sys.stdout.write = __init__.const.logger.info
@@ -37,10 +40,13 @@ class RequiredCode(object):
         self.downloadUserFaces(__init__.const.imagePathusers)
 
         __init__.console_Log.PipeLine_Ok("PipeLine Setup End time"+str( __init__.datetime.now() -  pipeline_start_setup))
-        self.trainPipeLine()
+        # updates stats message 
+        sender.send_json({"status":"finished","pipelinePos":"settingUp","time":str( __init__.datetime.now() -  pipeline_start_setup)})
+        self.trainPipeLine(sender)
             
     # This trains the face model for the  pipeline
-    def trainPipeLine(self):
+    def trainPipeLine(self,sender):
+        sender.send_json({"status":"starting","pipelinePos":"Training Model", "time": str(__init__.datetime.now())})
         pipeline_train_knn = __init__.datetime.now()
         __init__.console_Log.Warning("Training Model Going to take a while UwU..... ")
         __init__.knnClasifiyer.train(train_dir=__init__.const.imagePathusers,
@@ -48,13 +54,15 @@ class RequiredCode(object):
         
         __init__.console_Log.PipeLine_Ok("Done Train Knn pipeline timer" + str(__init__.datetime.now() - pipeline_train_knn))
         __init__.console_Log.Warning("Done Training Model.....")
+        sender.send_json({"status":"starting","pipelinePos":" Done Training Model", "time": str(__init__.datetime.now() - pipeline_train_knn)})
         
         # cleans mess as we keep prosessing
         __init__.gc.collect()
-        self.reconitionPipeline()
+        self.reconitionPipeline(sender)
         
         
-    def reconitionPipeline(self):
+    def reconitionPipeline(self,sender):
+        sender.send_json({"status":"starting","pipelinePos":"Starting reconition", "time": str(__init__.datetime.now())})
           # Camera Stream gst setup
         gst_str = ("rtspsrc location={} latency={}  ! rtph264depay  ! nvv4l2decoder ! nvvidconv ! video/x-raw, format=(string)BGRx ! videoconvert !appsink".format(
             str(__init__.const.opencvconfig['Stream_intro']+__init__.const.opencvconfig['Stream_ip']+":"+__init__.const.opencvconfig['Stream_port']), 400, 720, 480))
@@ -102,7 +110,7 @@ class RequiredCode(object):
                     print(name)
 
                     if(name != None):
-
+                        sender.send_json({"status":"in Face Rec","pipelinePos":"reconizing people", "time": str(__init__.datetime.now())})
                         if(name == 'unknown' and status == None):
                             __init__.userStats.userUnknown(__init__.const.opencvconfig, name, frame, font, imagename=self.imagename, imagePath=self.imagePath,
                                              left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
@@ -183,12 +191,15 @@ class RequiredCode(object):
                     else:
 
                         __init__.console_Log.PipeLine_Ok(
+                   
                             "Time For non Face processed frames" + str(__init__.datetime.now()-face_processing_pipeline_timer))
 
                         return
 
             else:
-               pass
+                sender.send_json({"status":"ending","pipelinePos":"done pipeline", "time": str(__init__.datetime.now())})
+                exit(100)
+            return
         
         
     
