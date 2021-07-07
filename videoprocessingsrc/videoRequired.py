@@ -198,7 +198,7 @@ class RequiredCode(object):
 
             else:
                 sender.send_json({"status":"ending","pipelinePos":"done pipeline", "time": str(__init__.datetime.now())})
-                exit(100)
+                exit(1001)
             return
         
         
