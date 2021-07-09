@@ -3,12 +3,20 @@ this file is for Knn Handler for Face Rec Subsystem to handle
 """
 
 import __init__
-def train(train_dir, model_save_path=None, n_neighbors=2, knn_algo='ball_tree', verbose=True):
-  
-        X = []
-        y = []
-  
-        # Loop through each person in the training set
+"""
+Train method, Train dir ,
+indx all the folders
+TODO: Create class data structure for holdign model data
+TODO: lower ram usage 
+TODO: extract file io from methods 
+
+"""
+
+X = []
+y = []
+
+def loadTrainingData(train_dir, verbose=True):
+    # Loop through each person in the training set
         for class_dir in  __init__.os.listdir(train_dir):
             if not  __init__.os.path.isdir( __init__.os.path.join(train_dir, class_dir)):
                 continue
@@ -26,35 +34,45 @@ def train(train_dir, model_save_path=None, n_neighbors=2, knn_algo='ball_tree', 
                     # Add face encoding for current image to the training set
                     X.append( __init__.face_recognition.face_encodings(image, known_face_locations=face_bounding_boxes)[0])
                     y.append(class_dir)
+                   
+# Trains Knn class model
+def train(train_dir,model_save_path=None, n_neighbors=2, knn_algo='ball_tree',verbose=True):
+  
+    loadTrainingData(train_dir,True)
+    
+    # Determine how many neighbors to use for weighting in the KNN classifier
+    if n_neighbors is None:
+        n_neighbors = int(round( __init__.math.sqrt(len(X))))
+        if verbose:
+            print("Chose n_neighbors automatically:", n_neighbors)
 
-        # Determine how many neighbors to use for weighting in the KNN classifier
-        if n_neighbors is None:
-            n_neighbors = int(round( __init__.math.sqrt(len(X))))
-            if verbose:
-                print("Chose n_neighbors automatically:", n_neighbors)
+    # Create and train the KNN classifier
+    knn_clf =  __init__.neighbors.KNeighborsClassifier(n_neighbors=n_neighbors, algorithm=knn_algo, weights='distance')
+    knn_clf.fit(X, y)
+    
+    saveTrainingData(model_save_path=model_save_path,knn_clf=knn_clf)
 
-        # Create and train the KNN classifier
-        knn_clf =  __init__.neighbors.KNeighborsClassifier(n_neighbors=n_neighbors, algorithm=knn_algo, weights='distance')
-        knn_clf.fit(X, y)
-
-        # Save the trained KNN classifier
+        
+        
+def saveTrainingData(model_save_path,knn_clf):
+    
+    # Save the trained KNN classifier
         if model_save_path is not None:
             with open(model_save_path, 'wb') as f:
-                __init__.pickle.dump(knn_clf, f)
-
-        
-        return knn_clf
-        
-
-def predict(X_frame, knn_clf=None, model_path=None, distance_threshold=0.4):
-
-    if knn_clf is None and model_path is None:
-        raise Exception("Must supply knn classifier either thourgh knn_clf or model_path")
-
+                __init__.json.dump(knn_clf, f)
+                
+def loadTrainedModel(knn_clf, model_path):
+    
     # Load a trained KNN model (if one was passed in)
     if knn_clf is None:
         with open(model_path, 'rb') as f:
             knn_clf =  __init__.pickle.load(f)
+            return knn_clf
+
+def predict(X_frame, knn_clf=None, distance_threshold=0.4):
+    
+    if knn_clf is None is None:
+        raise Exception("Must supply knn classifier either thourgh knn_clf or model_path")
 
     X_face_locations =  __init__.face_recognition.face_locations(X_frame, model="cnn")
 
