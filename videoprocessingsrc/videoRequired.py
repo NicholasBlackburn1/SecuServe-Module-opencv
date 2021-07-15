@@ -5,6 +5,7 @@ TODO: Setup pipeline send mesg basted on what part of pipe line its in
 """
 
 
+from os import stat
 import __init__
 
 class RequiredCode(object):
@@ -22,7 +23,8 @@ class RequiredCode(object):
         if(not __init__.os.path.exists(__init__.const.rootDirPath)):
             __init__.console_Log.Warning("creating Dirs")
             self.makefiledirs()
-            
+        
+        # prints Config of program, the opencv build info and if opencv is optimized
         __init__.console_Log.Debug("Example Config"+str(__init__.const.PATH))
         __init__.console_Log.PipeLine_init(__init__.cv2.getBuildInformation())
         __init__.console_Log.Warning("is opencv opdemised"+str(__init__.cv2.useOptimized()))
@@ -275,3 +277,10 @@ class RequiredCode(object):
                 return
 
                 # Add names of the ecodings to thw end of list
+
+
+    # Sends Program Status to Socket
+    def sendProgramStatus(sender,status,pipelinePos,time):
+        sender.send_string("PIPELINE")
+        sender.send_json({"status":str(status),"pipelinePos":str(pipelinePos),"time": str(time)})
+        
