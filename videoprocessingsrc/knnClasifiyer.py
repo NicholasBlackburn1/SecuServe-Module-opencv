@@ -53,7 +53,7 @@ def train(train_dir,model_save_path=None, n_neighbors=2, knn_algo='ball_tree',ve
     saveTrainingData(model_save_path=model_save_path,knn_clf=knn_clf)
 
         
-        
+    
 def saveTrainingData(model_save_path,knn_clf):
     
     # Save the trained KNN classifier
@@ -73,6 +73,7 @@ def loadTrainedModel(knn_clf, model_path):
         are_matches equles 
         """
 
+# reads modle data and checks what face it is
 def predict(Camera_frame, knn_clf=None, distance_threshold=0.4):
     
     if knn_clf is None is None:
@@ -97,12 +98,13 @@ def predict(Camera_frame, knn_clf=None, distance_threshold=0.4):
     return face_predict_data(knn_clf,faces_encodings,X_face_locations,are_matches)
        
 
-# Handles the data thats returned from the 
+# Handles the data thats returned from the prediction 
 def face_predict_data(knn_clf,faces_encodings,X_face_locations,are_matches):
     for pred, loc, rec in zip(knn_clf.predict(faces_encodings), X_face_locations, are_matches):
         if rec:
             return  (pred, loc) 
         else:
             return("unknown", loc) 
+        
     #
     
