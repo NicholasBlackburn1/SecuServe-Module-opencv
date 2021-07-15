@@ -13,4 +13,4 @@ class TestCVPipeline(unittest.TestCase):
      Mocks and tests  Setup of pipe line
      """
     def Test_Pipeline_Setup(self):
-        
+        pass
