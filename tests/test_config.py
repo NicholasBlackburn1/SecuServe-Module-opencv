@@ -65,12 +65,12 @@ SETUP FOR PIPELINE:
  
 """
 from configparser import ConfigParser
-import __init__
 import unittest
 from unittest.mock import Mock
+from pathlib import Path
 
 
-class TestCVPipeline(unittest.TestCase):
+class TestConfig(unittest.TestCase):
     
     mock = Mock()
      
@@ -79,7 +79,8 @@ class TestCVPipeline(unittest.TestCase):
     """
     def test_config_reading(self):
         
-        
         conf =ConfigParser()
-        config = conf.read(str(__init__.Path().absolute()+"/data/"+"Config.ini"))
+        config = conf.read(str(Path().absolute())+"/data/"+"Config.ini")
         self.assertIsNotNone(config)
+    
+      

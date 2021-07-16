@@ -5,7 +5,7 @@ To make tests think about black box reverse enginnering only what inputs and wha
 """
 import unittest
 from videoprocessingsrc import knnClasifiyer as knn
-from . import config
+import config
 class TestKnnClass(unittest.TestCase):
     
     """
