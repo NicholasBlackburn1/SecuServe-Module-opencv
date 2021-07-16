@@ -1,8 +1,14 @@
 """
 this file is for Knn Handler for Face Rec Subsystem to handle
 """
+import os
+import pickle
+import face_recognition
+import math
 
-import __init__
+from sklearn import neighbors
+from face_recognition.face_recognition_cli import image_files_in_folder
+
 """
 Train method, Train dir ,
 indx all the folders
@@ -17,14 +23,14 @@ y = []
 
 def loadTrainingData(train_dir, verbose=True):
     # Loop through each person in the training set
-        for class_dir in  __init__.os.listdir(train_dir):
-            if not  __init__.os.path.isdir( __init__.os.path.join(train_dir, class_dir)):
+        for class_dir in  os.listdir(train_dir):
+            if not  os.path.isdir( os.path.join(train_dir, class_dir)):
                 continue
 
             # Loop through each training image for the current person
-            for img_path in __init__.image_files_in_folder( __init__.os.path.join(train_dir, class_dir)):
-                image =  __init__.face_recognition.load_image_file(img_path)
-                face_bounding_boxes =  __init__.face_recognition.face_locations(image, model="cnn",number_of_times_to_upsample=0)
+            for img_path in image_files_in_folder( os.path.join(train_dir, class_dir)):
+                image =  face_recognition.load_image_file(img_path)
+                face_bounding_boxes =  face_recognition.face_locations(image, model="cnn",number_of_times_to_upsample=0)
 
                 if len(face_bounding_boxes) != 1:
                     # If there are no people (or too many people) in a training image, skip the image.
@@ -32,7 +38,7 @@ def loadTrainingData(train_dir, verbose=True):
                         print("Image {} not suitable for training: {}".format(img_path, "Didn't find a face" if len(face_bounding_boxes) < 1 else "Found more than one face"))
                 else:
                     # Add face encoding for current image to the training set
-                    X.append( __init__.face_recognition.face_encodings(image, known_face_locations=face_bounding_boxes)[0])
+                    X.append( face_recognition.face_encodings(image, known_face_locations=face_bounding_boxes)[0])
                     y.append(class_dir)
                    
 # Trains Knn class model
@@ -42,12 +48,12 @@ def train(train_dir,model_save_path=None, n_neighbors=2, knn_algo='ball_tree',ve
     
     # Determine how many neighbors to use for weighting in the KNN classifier
     if n_neighbors is None:
-        n_neighbors = int(round( __init__.math.sqrt(len(X))))
+        n_neighbors = int(round(math.sqrt(len(X))))
         if verbose:
             print("Chose n_neighbors automatically:", n_neighbors)
 
     # Create and train the KNN classifier
-    knn_clf =  __init__.neighbors.KNeighborsClassifier(n_neighbors=n_neighbors, algorithm=knn_algo, weights='distance')
+    knn_clf =  neighbors.KNeighborsClassifier(n_neighbors=n_neighbors, algorithm=knn_algo, weights='distance')
     knn_clf.fit(X, y)
     
     saveTrainingData(model_save_path=model_save_path,knn_clf=knn_clf)
@@ -59,14 +65,14 @@ def saveTrainingData(model_save_path,knn_clf):
     # Save the trained KNN classifier
         if model_save_path is not None:
             with open(model_save_path, 'wb') as f:
-                __init__.json.dump(knn_clf, f)
+                pickle.dump(knn_clf, f)
                 
 def loadTrainedModel(knn_clf, model_path):
     
     # Load a trained KNN model (if one was passed in)
     if knn_clf is None:
         with open(model_path, 'rb') as f:
-            knn_clf =  __init__.pickle.load(f)
+            knn_clf =  pickle.load(f)
             return knn_clf
         
         """
@@ -79,14 +85,14 @@ def predict(Camera_frame, knn_clf=None, distance_threshold=0.4):
     if knn_clf is None is None:
         raise Exception("Must supply knn classifier either thourgh knn_clf or model_path")
 
-    X_face_locations =  __init__.face_recognition.face_locations(Camera_frame, model="cnn")
+    X_face_locations =  face_recognition.face_locations(Camera_frame, model="cnn")
 
     # If no faces are found in the image, return an empty result.
     if len(X_face_locations) == 0:
         return []
 
     # Find encodings for faces in the test image
-    faces_encodings =  __init__.face_recognition.face_encodings(Camera_frame, known_face_locations=X_face_locations)
+    faces_encodings =  face_recognition.face_encodings(Camera_frame, known_face_locations=X_face_locations)
 
     # Use the KNN model to find the best matches for the test face
     closest_distances = knn_clf.kneighbors(faces_encodings, n_neighbors=1)

@@ -64,6 +64,8 @@ SETUP FOR PIPELINE:
  
  
 """
+from configparser import ConfigParser
+import __init__
 import unittest
 from unittest.mock import Mock
 
@@ -73,7 +75,11 @@ class TestCVPipeline(unittest.TestCase):
     mock = Mock()
      
     """
-    Mocks and tests  Setup of pipe line
+    this is for testing the reading the config for the pipeline
     """
-    def Test_Pipeline_Setup(self):
-        pass
+    def test_config_reading(self):
+        
+        
+        conf =ConfigParser()
+        config = conf.read(str(__init__.Path().absolute()+"/data/"+"Config.ini"))
+        self.assertIsNotNone(config)
