@@ -13,8 +13,10 @@ class RequiredCode(object):
     
     # this allows me to set up pipe line easyerly  but for the cv module
     def setupPipeline(self,sender):
-        #this sends a stats message back to the main controller and to the messaging and webserver modules
         pipeline_start_setup = __init__.datetime.now()
+        #this sends a stats message back to the main controller and to the messaging and webserver modules
+        self.sendProgramStatus(sender,"setup","seting up pipeline to run",pipeline_start_setup)
+        
         __init__.gc.enable()
         __init__.sys.stdout.write = __init__.const.logger.info
         
@@ -39,22 +41,27 @@ class RequiredCode(object):
 
         # Downlaods all the Faces
         self.downloadUserFaces(__init__.const.imagePathusers)
-
         __init__.console_Log.PipeLine_Ok("PipeLine Setup End time"+str( __init__.datetime.now() -  pipeline_start_setup))
-        # updates stats message 
         
+         # updates stats message 
+        self.sendProgramStatus(sender,"done","finishes up pipeline to run",__init__.datetime.now()-pipeline_start_setup)
+       
         self.trainPipeLine(sender)
             
     # This trains the face model for the  pipeline
     def trainPipeLine(self,sender):
-       
         pipeline_train_knn = __init__.datetime.now()
+         # updates stats message 
+        self.sendProgramStatus(sender,"training","starting  to train model",__init__.datetime.now() - pipeline_train_knn)
+       
         __init__.console_Log.Warning("Training Model Going to take a while UwU..... ")
         __init__.knnClasifiyer.train(train_dir=__init__.const.imagePathusers,
                   model_save_path=__init__.const.Modelpath, n_neighbors=2)
         
         __init__.console_Log.PipeLine_Ok("Done Train Knn pipeline timer" + str(__init__.datetime.now() - pipeline_train_knn))
         __init__.console_Log.Warning("Done Training Model.....")
+        
+        self.sendProgramStatus(sender,"done","done  training model",__init__.datetime.now() - pipeline_train_knn)
        
         # cleans mess as we keep prosessing
         __init__.gc.collect()
@@ -199,8 +206,7 @@ class RequiredCode(object):
                         return
 
             else:
-                sender.send_string("PIPELINE")
-                sender.send_json({"status":"ending","pipelinePos":"done pipeline", "time": str(__init__.datetime.now())})
+               
                 exit(1001)
             return
         
