@@ -106,5 +106,6 @@ def face_predict_data(knn_clf,faces_encodings,X_face_locations,are_matches):
         else:
             return("unknown", loc) 
         
+        
     #
     
