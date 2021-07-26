@@ -7,13 +7,13 @@ TODO: COnvert Pipeline to state macheene
 
 
 from os import stat
-import __init__
+import imports
 
 class RequiredCode(object):
     
     # this allows me to set up pipe line easyerly  but for the cv module
     def setupPipeline(self,sender):
-        pipeline_start_setup = __init__.datetime.now()
+        pipeline_start_setup = imports.datetime.now()
         #this sends a stats message back to the main controller and to the messaging and webserver modules
         self.sendProgramStatus(sender,"setup","seting up pipeline to run",pipeline_start_setup)
         
