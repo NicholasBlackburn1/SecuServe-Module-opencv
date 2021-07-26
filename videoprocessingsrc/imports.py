@@ -25,7 +25,8 @@ from sqlalchemy.orm import sessionmaker
 import wget
 
 import pathlib
-from configparser import ConfigParserfrom logging import log
+from configparser import ConfigParser
+from logging import log
 from numbers import Number
 
 from os.path import join
