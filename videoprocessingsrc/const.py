@@ -2,18 +2,18 @@
 dirty const setup 
 """
 
-import __init__
+import imports
 
 
 # this is all the global paths needed throuht the program
-PATH = str(__init__.pathlib.Path().absolute())+"/data/"+"Config.ini"
+PATH = str(imports.pathlib.Path().absolute())+"/data/"+"Config.ini"
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 watchdog = 0
-imagename = __init__.datetime.now().strftime("%Y_%m_%d-%I_%M_%S")
-__init__.os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
+imagename = imports.datetime.now().strftime("%Y_%m_%d-%I_%M_%S")
+imports.os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
 # Read config.ini file
-config_object = __init__.ConfigParser()
+config_object = imports.ConfigParser()
 config_object.read(PATH)
 
 logconfig = config_object['LOGGING']
@@ -22,7 +22,7 @@ opencvconfig = config_object['OPENCV']
 fileconfig = config_object['FILE']
 smsconfig = config_object['SMS']
 
-current_time = __init__.datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p_%s")
+current_time = imports.datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p_%s")
 
 rootDirPath = fileconfig['rootDirPath']
 configPath = fileconfig['rootDirPath']+fileconfig['configPath']
@@ -37,12 +37,11 @@ Modelpath = str(imagePathusers+'Face.Model')
 userList = []
 
 
-__init__.logging.basicConfig(level=__init__.logging.INFO, format='%(message)s')
-logger = __init__.logging.getLogger()
-logger.addHandler(__init__.logging.FileHandler(str(loggingPath)+"Cv_PipeLine"+str(current_time)+".uwu", 'a'))
+imports.logging.basicConfig(level=imports.logging.INFO, format='%(message)s')
+logger = imports.logging.getLogger()
+logger.addHandler(imports.logging.FileHandler(str(loggingPath)+"Cv_PipeLine"+str(current_time)+".uwu", 'a'))
 
 default_endpoint = 'https://textbelt.com/text'
-
 
 
 print("in const")
