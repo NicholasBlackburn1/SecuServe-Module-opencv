@@ -12,7 +12,7 @@ class UserData:
     _status: str
     _image: str
     _downloadUrl: str
-    _phonenum: str
+    _phonenum: int
 
     USA_PHONE_NUMBER_DIGIT_COUNT = 10
 
@@ -51,7 +51,7 @@ class UserData:
         if (stat.isnumeric()):
             raise(TypeError("Cant have a number in the status "))
         else:
-            self.status = stat
+            self._status = stat
 
         # sets user image in structure
 
@@ -61,7 +61,7 @@ class UserData:
         if(imgage == "" or None):
             raise(TypeError("Cant have No Image"))
         else:
-            self.image = imgage
+            self._image = imgage
 
     # checks url to see if tis formatted correctly
     def setUserUrl(self, url):
@@ -74,20 +74,21 @@ class UserData:
             self.downloadUrl = str(url)
 
     # checks phone to see if tis formatted correctly
-    def setUserPhoneNumber(self, phonenumber):
+    def setUserPhoneNumber(self, phonenumber) -> int:
         phonenum = str(phonenumber)
 
         if(phonenum == "" or None):
             raise(TypeError("Cant have No PhoneNumber"))
 
-        if(phonenum.isnumeric() and self.getSumOfDigits(phonenum) == 000000000):
-            raise NotImplementedError("need to add a default phone number to call from database")
-        
         if(phonenum.isnumeric() and self.getSumOfDigits(phonenum) > self.USA_PHONE_NUMBER_DIGIT_COUNT or  self.getSumOfDigits(phonenum) < self.USA_PHONE_NUMBER_DIGIT_COUNT ):
+            # this is the default no Number in the database for non admin users so this should return 
+            if(int(phonenum) == 0000000000):
+                #raise NotImplementedError("need to have program work with adding default data")
+                pass
             raise IndexError("Number needs to be at "+ " "+ str(self.USA_PHONE_NUMBER_DIGIT_COUNT)+ " "+"Long!")
         
         else:
-            self._phonenum = phonenum
+            self._phonenum = int(phonenum)
     
     
     # gets user name in structure
@@ -115,5 +116,3 @@ class UserData:
         return self._phonenum
 
 
-print(UserData(name="nick", status='user', image="image",
-      downloadurl="https://example.com", phonenumber=000000000).getUserPhoneNumber())
