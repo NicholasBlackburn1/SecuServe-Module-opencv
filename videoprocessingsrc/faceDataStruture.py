@@ -12,7 +12,7 @@ class UserData:
     _status: str
     _image: str
     _downloadUrl: str
-    _phonenum: int
+    _phonenum: str
 
     USA_PHONE_NUMBER_DIGIT_COUNT = 10
 
@@ -71,7 +71,7 @@ class UserData:
             raise(TypeError("Cant have No URL"))
 
         else:
-            self.downloadUrl = str(url)
+            self._downloadUrl = str(url)
 
     # checks phone to see if tis formatted correctly
     def setUserPhoneNumber(self, phonenumber) -> int:
