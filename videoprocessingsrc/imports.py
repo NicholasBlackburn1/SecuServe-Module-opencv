@@ -58,3 +58,4 @@ import wget
 import pathlib
 from configparser import ConfigParser
 
+from colorama import Fore, Back, Style
