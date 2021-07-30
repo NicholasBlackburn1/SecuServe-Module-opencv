@@ -8,73 +8,76 @@ TODO: COnvert Pipeline to state macheene
 
 from os import stat
 import imports
-
+import const
+import enums
 class RequiredCode(object):
-    
+
     # this allows me to set up pipe line easyerly  but for the cv module
     def setupPipeline(self,sender):
         pipeline_start_setup = imports.datetime.now()
         #this sends a stats message back to the main controller and to the messaging and webserver modules
-        self.sendProgramStatus(sender,"setup","seting up pipeline to run",pipeline_start_setup)
+        self.sendProgramStatus(sender,enums.PipeLineStates.SETUP,"seting up pipeline to run",pipeline_start_setup)
         
         imports.gc.enable()
         imports.sys.stdout.write = imports.const.logger.info
         
         if(not imports.os.path.exists(imports.const.rootDirPath)):
-            imports.console_Log.Warning("creating Dirs")
+            imports.consoleLog.Warning("creating Dirs")
             self.makefiledirs()
         
         # prints Config of program, the opencv build info and if opencv is optimized
-        imports.console_Log.Debug("Example Config"+str(imports.config.const.PATH))
-        imports.console_Log.PipeLine_init(imports.cv2.getBuildInformation())
-        imports.console_Log.Warning("is opencv opdemised"+str(imports.cv2.useOptimized()))
+        imports.consoleLog.Debug("Example Config"+str(imports.config.const.PATH))
+        imports.consoleLog.PipeLine_init(imports.cv2.getBuildInformation())
+        imports.consoleLog.Warning("is opencv opdemised"+str(imports.cv2.useOptimized()))
         
          # Database connection handing
-        imports.console_Log.Warning("Connecting to the Database Faces")
-        imports.console_Log.PipeLine_Data( imports.mydb.getFaces())
-        imports.console_Log.Warning("connected to database Faces")
+        imports.consoleLog.Warning("Connecting to the Database Faces")
+        imports.consoleLog.PipeLine_Data( imports.mydb.getFaces())
+        imports.consoleLog.Warning("connected to database Faces")
 
         # Updates Data in the Usable data list uwu
         self.UserDataList()
 
-        imports.console_Log.Warning("Setting up cv")
+        const.consoleLog.Warning("Setting up cv")
 
         # Downlaods all the Faces
         self.downloadUserFaces(imports.const.imagePathusers)
-        __init__.console_Log.PipeLine_Ok("PipeLine Setup End time"+str( imports.datetime.now() -  pipeline_start_setup))
+        const.consoleLog.PipeLine_Ok(enums.PipeLineStates.STAGE_COMPLETE+str( imports.datetime.now() -  pipeline_start_setup))
         
          # updates stats message 
-        self.sendProgramStatus(sender,"done","finishes up pipeline to run",imports.datetime.now()-pipeline_start_setup)
-       
-        self.trainPipeLine(sender)
+        self.sendProgramStatus(sender,enums.PipeLineStates.STAGE_COMPLETE,"finishes up pipeline to run",imports.datetime.now()-pipeline_start_setup)
+        
+        
             
     # This trains the face model for the  pipeline
     def trainPipeLine(self,sender):
         pipeline_train_knn = imports.datetime.now()
          # updates stats message 
-        self.sendProgramStatus(sender,"training","starting  to train model",imports.datetime.now() - pipeline_train_knn)
+        self.sendProgramStatus(sender,enums.PipeLineStates.TRAIN_MODEL,"starting  to train model",imports.datetime.now() - pipeline_train_knn)
        
-        imports.console_Log.Warning("Training Model Going to take a while UwU..... ")
+        imports.consoleLog.Warning("Training Model Going to take a while UwU..... ")
         imports.knnClasifiyer.train(train_dir=imports.const.imagePathusers,
                   model_save_path=imports.const.Modelpath, n_neighbors=2)
         
-        imports.console_Log.PipeLine_Ok("Done Train Knn pipeline timer" + str(imports.datetime.now() - pipeline_train_knn))
-        imports.console_Log.Warning("Done Training Model.....")
+        imports.consoleLog.PipeLine_Ok("Done Train Knn pipeline timer" + str(imports.datetime.now() - pipeline_train_knn))
+        imports.consoleLog.Warning("Done Training Model.....")
         
-        self.sendProgramStatus(sender,"done","done  training model",imports.datetime.now() - pipeline_train_knn)
+        self.sendProgramStatus(sender,enums.PipeLineStates.STAGE_COMPLETE,"done  training model",imports.datetime.now() - pipeline_train_knn)
+
        
-        # cleans mess as we keep prosessing
-        imports.gc.collect()
-        self.reconitionPipeline(sender)
+       
         
         
     def reconitionPipeline(self,sender):
         
+         # cleans mess as we keep prosessing
+        imports.gc.collect()
+    
           # Camera Stream gst setup
         gst_str = ("rtspsrc location={} latency={}  ! rtph264depay  ! nvv4l2decoder ! nvvidconv ! video/x-raw, format=(string)BGRx ! videoconvert !appsink".format(
             str(imports.const.opencvconfig['Stream_intro']+imports.const.opencvconfig['Stream_ip']+":"+imports.const.opencvconfig['Stream_port']), 400, 720, 480))
 
-        imports.console_Log.Warning("Looking for Faces...")
+        imports.consoleLog.Warning("Looking for Faces...")
 
         i = 0
         face_index = 0
@@ -85,8 +88,8 @@ class RequiredCode(object):
         cap =  imports.videoThread.ThreadingClass(gst_str)
         face_processing_pipeline_timer =  imports.datetime.now()
         
-        #TODO: fix this and remove while 0<1
-        while 0 < 1:
+        
+        while enums.PipeLineStates.CURRENT_STATE is enums.PipeLineStates.RECOGNIZE_FACES_RUNNING:
             process_this_frame = process_this_frame + 1
 
             if process_this_frame % 30 == 0:
@@ -103,7 +106,7 @@ class RequiredCode(object):
                     This Section is Dedicated to dealing with user Seperatation via the User Stats data tag
                 """
                 font =  imports.cv2.FONT_HERSHEY_DUPLEX
-                sent = False
+                sent = FalseRECOGNIZE_FACES_RUNNING
 
                 # Display t he results
                 for name, (top, right, bottom, left) in predictions:
@@ -126,14 +129,14 @@ class RequiredCode(object):
                         # print("user is unknown")
                             imports.logging.info("unknowns Here UwU!")
                             #message.sendCapturedImageMessage("eeeep there is an unknown",4123891615,'http://192.168.5.7:2000/unknown',self.smsconfig['textbelt-key'])
-                            imports.console_Log.PipeLine_Ok("stop face prossesing timer unknown" +
+                            imports.consoleLog.PipeLine_Ok("stop face prossesing timer unknown" +
                                   str( imports.datetime.now()-face_processing_pipeline_timer))
                           
                             imports.watchdog +=1
 
                         else:
-                            if name in imports.userList[i]:
-                                userinfo = imports.userList[i][name]
+                            if name in const.userList[i]:
+                                userinfo = const.userList[i][name]
                                 status = userinfo.status
                                 name = userinfo.user
                                 phone = userinfo.phoneNum
@@ -148,7 +151,7 @@ class RequiredCode(object):
                                         "got an Admin The name is"+str(name))
                                     imports.userStats.userAdmin(status, name, frame, font, self.imagename,
                                                    imports.const.imagePath, left, right, bottom, top, process_this_frame)
-                                    imports.console_Log.PipeLine_Ok("Stping face prossesing timer in admin" + str(imports.datetime.now()-face_processing_pipeline_timer))
+                                    imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in admin" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                     imports.watchdog +=1
                                     
 
@@ -158,9 +161,9 @@ class RequiredCode(object):
                                     imports.userStats.userUser(status=status, name=name, frame=frame, font=font, imagename=self.imagename,
                                                   imagePath=imports.const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                                     
-                                    imports.console_Log.Warning(
+                                    imports.consoleLog.Warning(
                                         "eeeep there is an User They Might be evil so um let them in"+"  `"+"There Name is:" + str(name))
-                                    imports.console_Log.PipeLine_Ok(
+                                    imports.consoleLog.PipeLine_Ok(
                                         "Stping face prossesing timer in user" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                     imports.watchdog +=1
 
@@ -169,21 +172,21 @@ class RequiredCode(object):
                                         "got an Unwanted Human The name is"+str(name))
                                     imports.userStats.userUnwanted(status=status, name=name, frame=frame, font=font, imagename=self.imagename,
                                                       imagepath=imports.const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
-                                    imports.console_Log.PipeLine_Ok("Stping face prossesing timer in unwanted" + str(
+                                    imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in unwanted" + str(
                                     imports.datetime.now()-face_processing_pipeline_timer))
                                     imports.watchdog +=1
                                   
 
                                 if(self.getAmountofFaces(imports.face_recognition, frame) > 1):
                                     imports.userStats.userGroup(frame=frame, font=font, imagename=self.imagename, imagepath=self.imagePath, left=left, right=right, bottom=bottom, top=top)
-                                    imports.console_Log.PipeLine_Ok("Stping face prossesing timer in Group" + str(imports.datetime.now()-face_processing_pipeline_timer))
+                                    imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in Group" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                     #message.sendCapturedImageMessage("eeeep there is Gagle of Peope I dont know what to do",phone,'http://192.168.5.8:2000/group',self.smsconfig['textbelt-key'])
                                     
                                     
 
                             else:
 
-                                imports.console_Log.Warning(
+                                imports.consoleLog.Warning(
                                     "not the correct obj in list" + str(imports.const.userList[i]))
                                 # allows counter ro count up to the ammount in the database
                                 if(i >  len(imports.const.userList)):
@@ -199,7 +202,7 @@ class RequiredCode(object):
 
                     else:
 
-                        imports.console_Log.PipeLine_Ok(
+                        imports.consoleLog.PipeLine_Ok(
                    
                             "Time For non Face processed frames" + str(imports.datetime.now()-face_processing_pipeline_timer))
 
@@ -207,20 +210,19 @@ class RequiredCode(object):
 
             else:
                
-                exit(1001)
-            return
+                return
         
         
     
     # Makes startup dirs
 
     def makefiledirs(self):
-        imports.console_Log.Warning("Creating Folder Dirs")
+        imports.consoleLog.Warning("Creating Folder Dirs")
         imports.Path(self.rootDirPath).mkdir(parents=True, exist_ok=True)
         imports.Path(self.imagePathusers).mkdir(parents=True, exist_ok=True)
         imports.Path(self.configPath).mkdir(parents=True, exist_ok=True)
         imports.Path(self.plateImagePath).mkdir(parents=True, exist_ok=True)
-        imports.console_Log.Warning("Made Folder Dirs")
+        imports.consoleLog.Warning("Made Folder Dirs")
 
 
 # Encodes all the Nessiscary User info into Json String so it can be easly moved arround
@@ -233,15 +235,15 @@ class RequiredCode(object):
 
             # this is Where the Data gets Wrapped into am DataList with uuid First key
             local_data = {
-                imports.mydb.getUserUUID(imports.mydb.getFaces(), i): imports.faceDataStruture.UserData(imports.mydb.getName(imports.mydb.getFaces(), i), imports.mydb.getStatus(imports.mydb.getFaces(), i), imports.mydb.getImageName(imports.mydb.getFaces(), i), imports.mydb.getImageUrI(imports.mydb.getFaces(), i), imports.mydb.getPhoneNum(imports.mydb.getFaces(), i))
+                imports.mydb.getUserUUID(imports.mydb.getFaces(), i): imports.userData.UserData(imports.mydb.getName(imports.mydb.getFaces(), i), imports.mydb.getStatus(imports.mydb.getFaces(), i), imports.mydb.getImageName(imports.mydb.getFaces(), i), imports.mydb.getImageUrI(imports.mydb.getFaces(), i), imports.mydb.getPhoneNum(imports.mydb.getFaces(), i))
             }
 
-            __init__.const.userList.append(local_data)
+            const.userList.append(local_data)
 
             i += 1
 
             # Checks to see if i == the database amount hehe
-            if(i == __init__.mydb.getAmountOfEntrys()):
+            if(i == imports.mydb.getAmountOfEntrys()):
                 return
 # saves downloaded Image Converted to black and white
 
@@ -268,12 +270,12 @@ class RequiredCode(object):
 
             self.downloadFacesAndProssesThem(imports.const.userList[index][imports.mydb.getUserUUID(
                 imports.mydb.getFaces(), index)], imagePath+str(imports.mydb.getUserUUID(imports.mydb.getFaces(), index)))
-            imports.console_Log.PipeLine_Data("downloaded"+" "+str(index+1) +" out of " +str(imports.mydb.getAmountOfEntrys()) + "\n")
+            imports.consoleLog.PipeLine_Data("downloaded"+" "+str(index+1) +" out of " +str(imports.mydb.getAmountOfEntrys()) + "\n")
 
             index += 1
 
             if(index == imports.mydb.getAmountOfEntrys()):
-                imports.console_Log.Warning("Done Downloading Images UWU....")
+                imports.consoleLog.Warning("Done Downloading Images UWU....")
                 return
 
                 # Add names of the ecodings to thw end of list

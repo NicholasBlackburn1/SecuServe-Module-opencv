@@ -14,9 +14,21 @@ class UserStatus(enum.Enum):
     
     
 class PipeLineStates(enum.Enum):
-    SETUP = 'SETUP',
+    CURRENT_STATE = None,
+    SETUP_PIPELINE= 'SETUP_PIPELINE',
     TRAIN_MODEL = 'TRAIN_PIPELINE',
     RECOGNIZE_FACES = 'RECOGNIZING_FACES',
+    RECOGNIZE_FACES_RUNNING ='RUNNING',
     IDLE = 'IDLE',
-    ERROR = 'ERROR'
+    ERROR = 'ERROR',
+    STAGE_COMPLETE = 'STAGE COMPLETE'
+  
     
+    
+    # sets current state of state macheene
+    def set_State(self,state):
+        self.CURRENT_STATE = state
+        
+        
+    def getCurrentState(self):
+        return self.CURRENT_STATE

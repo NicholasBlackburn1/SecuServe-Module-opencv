@@ -12,6 +12,7 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 watchdog = 0
 imagename = imports.datetime.now().strftime("%Y_%m_%d-%I_%M_%S")
 imports.os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
+print(PATH)
 # Read config.ini file
 config_object = imports.ConfigParser()
 config_object.read(PATH)
@@ -20,7 +21,7 @@ logconfig = config_object['LOGGING']
 zmqconfig = config_object['ZMQ']
 opencvconfig = config_object['OPENCV']
 fileconfig = config_object['FILE']
-smsconfig = config_object['SMS']
+
 
 current_time = imports.datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p_%s")
 
