@@ -2,7 +2,9 @@
 This class is for the required opencv
 parts 
 TODO: Setup pipeline send mesg basted on what part of pipe line its in
-TODO: COnvert Pipeline to state macheene
+TODO: COnvert Pipeline to state machine
+State machine -> Discreet Finite States of of operations and clear transitions of states, seperation of states, trigger signals, 
+
 """
 
 
@@ -11,6 +13,7 @@ import imports
 import const
 import pipelineStates
 import knnClasifiyer
+import videoThread
 
 class RequiredCode(object):
 
@@ -57,17 +60,13 @@ class RequiredCode(object):
         #self.sendProgramStatus(sender,enums.PipeLineStates.TRAIN_MODEL,"starting  to train model",imports.datetime.now() - pipeline_train_knn)
        
         imports.consoleLog.Warning("Training Model Going to take a while UwU..... ")
-        knnClasifiyer.train(train_dir=imports.const.imagePathusers,
-                  model_save_path=imports.const.Modelpath, n_neighbors=2)
+        knnClasifiyer.train(train_dir=const.imagePathusers,
+                  model_save_path=const.Modelpath, n_neighbors=2)
         
         imports.consoleLog.PipeLine_Ok("Done Train Knn pipeline timer" + str(imports.datetime.now() - pipeline_train_knn))
         imports.consoleLog.Warning("Done Training Model.....")
         
         #self.sendProgramStatus(sender,enums.PipeLineStates.STAGE_COMPLETE,"done  training model",imports.datetime.now() - pipeline_train_knn)
-
-       
-       
-        
         
     def reconitionPipeline(self,sender):
         
@@ -76,7 +75,7 @@ class RequiredCode(object):
     
           # Camera Stream gst setup
         gst_str = ("rtspsrc location={} latency={}  ! rtph264depay  ! nvv4l2decoder ! nvvidconv ! video/x-raw, format=(string)BGRx ! videoconvert !appsink".format(
-            str(imports.const.opencvconfig['Stream_intro']+imports.const.opencvconfig['Stream_ip']+":"+imports.const.opencvconfig['Stream_port']), 400, 720, 480))
+            str(const.opencvconfig['Stream_intro']+const.opencvconfig['Stream_ip']+":"+const.opencvconfig['Stream_port']), 400, 720, 480))
 
         imports.consoleLog.Warning("Looking for Faces...")
 
@@ -86,7 +85,7 @@ class RequiredCode(object):
         status = None
         pipeline_video_prossesing =  imports.datetime.now()
 
-        cap =  imports.videoThread.ThreadingClass(gst_str)
+        cap =  videoThread.ThreadingClass(gst_str)
         face_processing_pipeline_timer =  imports.datetime.now()
         
         #TODO: GET RECONITION TO IDLE when it sees no faces so it does not waste time waiting for faces
@@ -96,7 +95,7 @@ class RequiredCode(object):
             if(const.watchdog == 10):
                 print("WATCHDOG OVERRAIN")
                 pipelineStates.Pipeline.set_state(pipelineStates.Pipeline(),pipelineStates.States.ERROR)
-                return
+                break
                 
             if process_this_frame % 30 == 0:
 

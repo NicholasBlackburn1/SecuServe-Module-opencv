@@ -1,7 +1,11 @@
 """
 this is the file holds the Pipeline and controls Pipline
+watch dog count to frozen 
 """
 import videoRequired
+
+from state import State
+
 
 class States():
     IDLE = 0
@@ -10,9 +14,61 @@ class States():
     RUN_RECONITION = 4
     ERROR = 5
 
+# Start of our states
+class SetupPipeLine(State):
+    """
+    The state which indicates that there are limited device capabilities.
+    """
+
+    def on_event(self, event):
+        if event == States.SETUP_PIPELINE:
+            videoRequired.RequiredCode.setupPipeline(videoRequired.RequiredCode())
+            return TrainPipeline()
+
+        return self
+
+
+class TrainPipeline(State):
+    """
+    The state which indicates that there are no limitations on device
+    capabilities.
+    """
+
+    def on_event(self, event):
+        if event == States.TRAIN_MODEL:
+            
+            return RunReconitionPipeLine()
+
+        return self
+    
+    
+class RunReconitionPipeLine(State):
+    """
+    The state which indicates that there are limited device capabilities.
+    """
+
+    def on_event(self, event):
+        if event == States.RUN_RECONITION:
+            return 
+
+        return self
+
+
+class Idle(State):
+    """
+    The state which indicates that there are no limitations on device
+    capabilities.
+    """
+
+    def on_event(self, event):
+        if event == States.IDLE:
+            return #TODO: add pipeline trained models
+
+        return self
+
 class Pipeline:
     current : int
-    
+    nextState: int 
       
     # returns the current state of the piplien
     def current_state(self):
@@ -22,33 +78,10 @@ class Pipeline:
         self.current = state
         
     def runPipeLine(self, start_state, sender):
-       
-        self.current = start_state
-        if(self.current == States.SETUP_PIPELINE):
-            print(self.current_state())
-            videoRequired.RequiredCode.setupPipeline(videoRequired.RequiredCode(),sender)
-            self.current = States.TRAIN_MODEL
-            
-        if(self.current == States.TRAIN_MODEL):
-            print(self.current_state())
-            videoRequired.RequiredCode.trainPipeLine(videoRequired.RequiredCode(),sender)
-            self.current = States.RUN_RECONITION
-            
-        if(self.current == States.RUN_RECONITION):
-            watchdog+=1
-            print("in Reconitoon")
-            videoRequired.RequiredCode.reconitionPipeline(videoRequired.RequiredCode(),sender)
-            
-            
-        if(self.current == States.IDLE):
-            print("in idle")
-            self.current = States.ERROR
-            
-        if(self.current == States.ERROR):
-            print("in ERROR")
-            
-  
-                
+       pass
+   
+   
+   
 
             
                 

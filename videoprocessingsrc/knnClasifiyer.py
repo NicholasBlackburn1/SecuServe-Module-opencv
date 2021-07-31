@@ -3,9 +3,10 @@ this file is for Knn Handler for Face Rec Subsystem to handle
 """
 import os
 import pickle
+
 import face_recognition
 import math
-
+import json
 from sklearn import neighbors
 from face_recognition.face_recognition_cli import image_files_in_folder
 
