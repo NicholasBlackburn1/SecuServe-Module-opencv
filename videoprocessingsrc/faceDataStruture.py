@@ -4,8 +4,6 @@ Passes data into class validate class data
 like if the user daya is empty i test the data if its 
 
 """
-
-
 class UserData:
 
     _user: str
@@ -23,7 +21,6 @@ class UserData:
         self.setUserImg(image)
         self.setUserUrl(downloadurl)
         self.setUserPhoneNumber(phonenumber)
-
 
     # this gets the  number of digits in the phone number 
     def getSumOfDigits(self,phonenumber) -> int:
@@ -114,5 +111,11 @@ class UserData:
 
     def getUserPhoneNumber(self):
         return self._phonenum
+    
+    
+    def __repr__(self) -> list:
+
+            return [self.getUserName(), self.getUserStatus(),self.getUserImg(),self.getUserUrl(),self.getUserPhoneNumber()]
+
 
 

@@ -10,6 +10,8 @@ from os import stat
 import imports
 import const
 import pipelineStates
+import knnClasifiyer
+
 class RequiredCode(object):
 
     # this allows me to set up pipe line easyerly  but for the cv module
@@ -55,7 +57,7 @@ class RequiredCode(object):
         #self.sendProgramStatus(sender,enums.PipeLineStates.TRAIN_MODEL,"starting  to train model",imports.datetime.now() - pipeline_train_knn)
        
         imports.consoleLog.Warning("Training Model Going to take a while UwU..... ")
-        imports.knnClasifiyer.train(train_dir=imports.const.imagePathusers,
+        knnClasifiyer.train(train_dir=imports.const.imagePathusers,
                   model_save_path=imports.const.Modelpath, n_neighbors=2)
         
         imports.consoleLog.PipeLine_Ok("Done Train Knn pipeline timer" + str(imports.datetime.now() - pipeline_train_knn))
@@ -145,11 +147,11 @@ class RequiredCode(object):
                             else:
                                 if name in const.userList[i]:
                                     userinfo = const.userList[i][name]
-                                    status = userinfo.status
-                                    name = userinfo.user
-                                    phone = userinfo.phoneNum
+                                    status = userinfo[2]
+                                    name = userinfo[1]
+                                    phone = userinfo[4]
 
-                                    if phone == None:
+                                    if phone == None or 0000000000:
                                         phone = 4123891615
 
                                     #print("User UUID:"+ str(userinfo)+ " "+ str(name) + "   "+ str(status))
@@ -228,6 +230,10 @@ class RequiredCode(object):
         imports.Path(self.plateImagePath).mkdir(parents=True, exist_ok=True)
         imports.consoleLog.Warning("Made Folder Dirs")
 
+         
+    def covertDictUserData(self,i):
+        user =const.userList[i][imports.userData.UserData()]
+        print(user)
 
 # Encodes all the Nessiscary User info into Json String so it can be easly moved arround
 
@@ -238,25 +244,35 @@ class RequiredCode(object):
             # example Json string  [{"uuid":"Tesla", "name":2, "status":"New York",image:none, url:}]
 
             # this is Where the Data gets Wrapped into am DataList with uuid First key
+            userinfo = imports.userData.UserData(imports.mydb.getName(imports.mydb.getFaces(), i), imports.mydb.getStatus(imports.mydb.getFaces(), i), imports.mydb.getImageName(imports.mydb.getFaces(), i), imports.mydb.getImageUrI(imports.mydb.getFaces(), i), imports.mydb.getPhoneNum(imports.mydb.getFaces(), i))
             local_data = {
-                imports.mydb.getUserUUID(imports.mydb.getFaces(), i): imports.userData.UserData(imports.mydb.getName(imports.mydb.getFaces(), i), imports.mydb.getStatus(imports.mydb.getFaces(), i), imports.mydb.getImageName(imports.mydb.getFaces(), i), imports.mydb.getImageUrI(imports.mydb.getFaces(), i), imports.mydb.getPhoneNum(imports.mydb.getFaces(), i))
-            }
+                imports.mydb.getUserUUID(imports.mydb.getFaces(), i) : userinfo.__repr__()}
 
-            const.userList.append(local_data)
+            const.userList.append(local_data)   
+            print(local_data)
+            
+            
+            
 
             i += 1
 
             # Checks to see if i == the database amount hehe
             if(i == imports.mydb.getAmountOfEntrys()):
                 return
+            
+   
+        
 # saves downloaded Image Converted to black and white
 
-    def downloadFacesAndProssesThem(self, userData, filepath):
-
+    def downloadFacesAndProssesThem(self, data, filepath):
+        # pulls right info from data
+        filename = str(data[2])
+        url = str(data[3])
+        
         imports.Path(filepath+"/").mkdir(parents=True, exist_ok=True)
         
-        if(not imports.os.path.exists(filepath+userData.image+".jpg")):
-            imports.wget.download(userData.downloadUrl, str(filepath))
+        if(not imports.os.path.exists(filepath+filename)):
+            imports.wget.download(url, str(filepath))
 
         # this function will load and prepare face encodes  for
     # Fully Downloades USer Images and Returns No data
@@ -267,12 +283,13 @@ class RequiredCode(object):
 
         # gets users names statuses face iamges and the urls from the tuples
         while True:
-            imports.userinfo = imports.const.userList[index][imports.mydb.getUserUUID(
+            imports.userinfo = const.userList[index][imports.mydb.getUserUUID(
                 imports.mydb.getFaces(), index)]
+            
+            print(const.userList[index][imports.mydb.getUserUUID(
+                imports.mydb.getFaces(), index)])
 
-         
-
-            self.downloadFacesAndProssesThem(imports.const.userList[index][imports.mydb.getUserUUID(
+            self.downloadFacesAndProssesThem(const.userList[index][imports.mydb.getUserUUID(
                 imports.mydb.getFaces(), index)], imagePath+str(imports.mydb.getUserUUID(imports.mydb.getFaces(), index)))
             imports.consoleLog.PipeLine_Data("downloaded"+" "+str(index+1) +" out of " +str(imports.mydb.getAmountOfEntrys()) + "\n")
 
