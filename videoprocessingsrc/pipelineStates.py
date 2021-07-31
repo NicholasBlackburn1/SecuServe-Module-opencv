@@ -1,54 +1,54 @@
 """
-this is the file holds the Pipeline FSM wide enums 
+this is the file holds the Pipeline and controls Pipline
 """
-from typing import Counter
+import videoRequired
 
-import imports
-
-class States:
+class States():
     IDLE = 0
     SETUP_PIPELINE = 1
     TRAIN_MODEL = 2
-    INIT_RECONITION =3 
     RUN_RECONITION = 4
     ERROR = 5
 
-
-class State(object):
-    """
-    We define a state object which provides some utility functions for the
-    individual states within the state machine.
-    """
-
-    def __init__(self):
-        print ('Processing current state:', str(self))
-
-    def on_event(self, event,sender):
-        """
-        Handle events that are delegated to this State.
-        """
-        pass
-
-    def __repr__(self):
-        """
-        Leverages the __str__ method to describe the State.
-        """
-        return self.__str__()
-
-    def __str__(self):
-        """
-        Returns the name of the State.
-        """
-        return self.__class__.__name__
+class Pipeline:
+    current : int
     
-# this is for seting up the pipeline
-class SetupState(State):
-    def on_event(self, event,sender):
-        if event == States.SETUP_PIPELINE:
-            imports.pipeline.RequiredCode.setupPipeline(imports.pipeline.RequiredCode(),sender)
-            return UnlockedState()
-
-        return self
+      
+    # returns the current state of the piplien
+    def current_state(self):
+        return self.current
+    
+    def set_state(self,state):
+        self.current = state
         
-
+    def runPipeLine(self, start_state, sender):
+       
+        self.current = start_state
+        if(self.current == States.SETUP_PIPELINE):
+            print(self.current_state())
+            videoRequired.RequiredCode.setupPipeline(videoRequired.RequiredCode(),sender)
+            self.current = States.TRAIN_MODEL
+            
+        if(self.current == States.TRAIN_MODEL):
+            print(self.current_state())
+            videoRequired.RequiredCode.trainPipeLine(videoRequired.RequiredCode(),sender)
+            self.current = States.RUN_RECONITION
+            
+        if(self.current == States.RUN_RECONITION):
+            watchdog+=1
+            print("in Reconitoon")
+            videoRequired.RequiredCode.reconitionPipeline(videoRequired.RequiredCode(),sender)
+            
+            
+        if(self.current == States.IDLE):
+            print("in idle")
+            self.current = States.ERROR
+            
+        if(self.current == States.ERROR):
+            print("in ERROR")
+            
   
+                
+
+            
+                

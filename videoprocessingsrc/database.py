@@ -1,24 +1,24 @@
 
-import __init__
-
+import imports
+import const
 # Gets the Face Data from the Face data
 
 #TODO: NEED TO ONLY USE LIFE TIME DATABASE FOR FACES 
 
 def getFaces():
     # Read config.ini file
-    config_object = __init__.ConfigParser()
-    config_object.read(__init__.const.PATH)
+    config_object = imports.ConfigParser()
+    config_object.read(const.PATH)
 
     # Get the password
     database = config_object["DATABASE"]
 
-    engine = __init__.db.create_engine('postgresql://'+ str(database['user'])+":"+str(database['pass'])+"@"+str(database['ip'])+":"+str(database['port'])+"/"+str(database['databasename']))
+    engine = imports.db.create_engine('postgresql://'+ str(database['user'])+":"+str(database['pass'])+"@"+str(database['ip'])+":"+str(database['port'])+"/"+str(database['databasename']))
     connection = engine.connect()
-    metadata = __init__.db.MetaData()
-    faces = __init__.db.Table(database['table'], metadata,
+    metadata = imports.db.MetaData()
+    faces = imports.db.Table(database['table'], metadata,
                      autoload=True, autoload_with=engine)
-    query = __init__.db.select([faces])
+    query = imports.db.select([faces])
     result_proxy = connection.execute(query)
     result_set = result_proxy.fetchall()
     return(result_set)
@@ -29,18 +29,18 @@ Return the amout of Entrys in the  dataBase
 '''
 def getAmountOfEntrys():
     # Read config.ini file
-    config_object = __init__.ConfigParser()
-    config_object.read(__init__.const.PATH)
+    config_object = imports.ConfigParser()
+    config_object.read(const.PATH)
 
     # Get the password
     database = config_object["DATABASE"]
 
-    engine = __init__.db.create_engine('postgresql://'+ str(database['user'])+":"+str(database['pass'])+"@"+str(database['ip'])+":"+str(database['port'])+"/"+str(database['databasename']))
-    Session = __init__.sessionmaker(bind=engine)
+    engine = imports.db.create_engine('postgresql://'+ str(database['user'])+":"+str(database['pass'])+"@"+str(database['ip'])+":"+str(database['port'])+"/"+str(database['databasename']))
+    Session = imports.sessionmaker(bind=engine)
     session = Session()
 
-    metadata = __init__.db.MetaData()
-    faces = __init__.db.Table(database['table'], metadata,
+    metadata = imports.db.MetaData()
+    faces = imports.db.Table(database['table'], metadata,
                      autoload=True, autoload_with=engine)
     databasecount = int(float(session.query(faces).count()))
     return databasecount

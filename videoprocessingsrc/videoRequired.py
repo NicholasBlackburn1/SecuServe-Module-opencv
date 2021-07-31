@@ -9,24 +9,23 @@ TODO: COnvert Pipeline to state macheene
 from os import stat
 import imports
 import const
-import enums
+import pipelineStates
 class RequiredCode(object):
 
     # this allows me to set up pipe line easyerly  but for the cv module
     def setupPipeline(self,sender):
         pipeline_start_setup = imports.datetime.now()
-        #this sends a stats message back to the main controller and to the messaging and webserver modules
-        self.sendProgramStatus(sender,enums.PipeLineStates.SETUP,"seting up pipeline to run",pipeline_start_setup)
+        #this sends a stats message back to the main controller and to the messaging and webserver module
         
         imports.gc.enable()
-        imports.sys.stdout.write = imports.const.logger.info
+        imports.sys.stdout.write = const.logger.info
         
-        if(not imports.os.path.exists(imports.const.rootDirPath)):
+        if(not imports.os.path.exists(const.rootDirPath)):
             imports.consoleLog.Warning("creating Dirs")
             self.makefiledirs()
         
         # prints Config of program, the opencv build info and if opencv is optimized
-        imports.consoleLog.Debug("Example Config"+str(imports.config.const.PATH))
+        imports.consoleLog.Debug("Example Config"+str(const.PATH))
         imports.consoleLog.PipeLine_init(imports.cv2.getBuildInformation())
         imports.consoleLog.Warning("is opencv opdemised"+str(imports.cv2.useOptimized()))
         
@@ -38,14 +37,14 @@ class RequiredCode(object):
         # Updates Data in the Usable data list uwu
         self.UserDataList()
 
-        const.consoleLog.Warning("Setting up cv")
+        imports.consoleLog.Warning("Setting up cv")
 
         # Downlaods all the Faces
-        self.downloadUserFaces(imports.const.imagePathusers)
-        const.consoleLog.PipeLine_Ok(enums.PipeLineStates.STAGE_COMPLETE+str( imports.datetime.now() -  pipeline_start_setup))
+        self.downloadUserFaces(const.imagePathusers)
+        imports.consoleLog.PipeLine_Ok("STAGE COMPLETE"+str( imports.datetime.now() -  pipeline_start_setup))
         
          # updates stats message 
-        self.sendProgramStatus(sender,enums.PipeLineStates.STAGE_COMPLETE,"finishes up pipeline to run",imports.datetime.now()-pipeline_start_setup)
+        #self.sendProgramStatus(sender,enums.PipeLineStates.STAGE_COMPLETE,"finishes up pipeline to run",imports.datetime.now()-pipeline_start_setup)
         
         
             
@@ -53,7 +52,7 @@ class RequiredCode(object):
     def trainPipeLine(self,sender):
         pipeline_train_knn = imports.datetime.now()
          # updates stats message 
-        self.sendProgramStatus(sender,enums.PipeLineStates.TRAIN_MODEL,"starting  to train model",imports.datetime.now() - pipeline_train_knn)
+        #self.sendProgramStatus(sender,enums.PipeLineStates.TRAIN_MODEL,"starting  to train model",imports.datetime.now() - pipeline_train_knn)
        
         imports.consoleLog.Warning("Training Model Going to take a while UwU..... ")
         imports.knnClasifiyer.train(train_dir=imports.const.imagePathusers,
@@ -62,7 +61,7 @@ class RequiredCode(object):
         imports.consoleLog.PipeLine_Ok("Done Train Knn pipeline timer" + str(imports.datetime.now() - pipeline_train_knn))
         imports.consoleLog.Warning("Done Training Model.....")
         
-        self.sendProgramStatus(sender,enums.PipeLineStates.STAGE_COMPLETE,"done  training model",imports.datetime.now() - pipeline_train_knn)
+        #self.sendProgramStatus(sender,enums.PipeLineStates.STAGE_COMPLETE,"done  training model",imports.datetime.now() - pipeline_train_knn)
 
        
        
@@ -88,15 +87,18 @@ class RequiredCode(object):
         cap =  imports.videoThread.ThreadingClass(gst_str)
         face_processing_pipeline_timer =  imports.datetime.now()
         
-        
-        while enums.PipeLineStates.CURRENT_STATE is enums.PipeLineStates.RECOGNIZE_FACES_RUNNING:
+        #TODO: GET RECONITION TO IDLE when it sees no faces so it does not waste time waiting for faces
+        while pipelineStates.Pipeline().current_state() == pipelineStates.States.RUN_RECONITION:
             process_this_frame = process_this_frame + 1
-
+            
+            if(const.watchdog == 10):
+                print("WATCHDOG OVERRAIN")
+                pipelineStates.Pipeline.set_state(pipelineStates.Pipeline(),pipelineStates.States.ERROR)
+                return
+                
             if process_this_frame % 30 == 0:
 
                 frame = cap.read()
-                #print(cap.read().get(cv2. CV_CAP_PROP_FPS))
-                #frame = cv2.imread("/mnt/SecuServe/user/people/a93121a4-cc4b-11eb-b91f-00044beaf015/a924857a-cc4b-11eb-b91f-00044beaf015 (1).jpg",cv2.IMREAD_COLOR)
                 img =  imports.cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
                 predictions =  imports.knnClasifiyer.predict(
                     img, model_path=imports.const.Modelpath, distance_threshold=0.65)
@@ -106,111 +108,113 @@ class RequiredCode(object):
                     This Section is Dedicated to dealing with user Seperatation via the User Stats data tag
                 """
                 font =  imports.cv2.FONT_HERSHEY_DUPLEX
-                sent = FalseRECOGNIZE_FACES_RUNNING
+                sent = False
 
-                # Display t he results
-                for name, (top, right, bottom, left) in predictions:
+                if(self.getAmountofFaces(imports.face_recognition, frame) <= 0):
+                    pipelineStates.Pipeline().set_state(pipelineStates.States.IDLE) 
+                    imports.consoleLog.Warning("No faces seen waiting for faces")
+                    return
                     
-                    
+                if(self.getAmountofFaces(imports.face_recognition, frame) > 0):
+                    # Display t he results
+                    for name, (top, right, bottom, left) in predictions:
+                        
+                        
 
-                    # Scale back up face locations since the frame we detected in was scaled to 1/4 size
-                    top *= 2
-                    right *= 2
-                    bottom *= 2
-                    left *= 2
-                    print(process_this_frame)
-                    print(name)
+                        # Scale back up face locations since the frame we detected in was scaled to 1/4 size
+                        top *= 2
+                        right *= 2
+                        bottom *= 2
+                        left *= 2
+                        print(process_this_frame)
+                        print(name)
 
-                    if(name != None):
-                       
-                        if(name == 'unknown' and status == None):
-                            imports.userStats.userUnknown(imports.const.opencvconfig, name, frame, font, imagename=self.imagename, imagePath=self.imagePath,
-                                             left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
-                        # print("user is unknown")
-                            imports.logging.info("unknowns Here UwU!")
-                            #message.sendCapturedImageMessage("eeeep there is an unknown",4123891615,'http://192.168.5.7:2000/unknown',self.smsconfig['textbelt-key'])
-                            imports.consoleLog.PipeLine_Ok("stop face prossesing timer unknown" +
-                                  str( imports.datetime.now()-face_processing_pipeline_timer))
-                          
-                            imports.watchdog +=1
-
-                        else:
-                            if name in const.userList[i]:
-                                userinfo = const.userList[i][name]
-                                status = userinfo.status
-                                name = userinfo.user
-                                phone = userinfo.phoneNum
-
-                                if phone == None:
-                                    phone = 4123891615
-
-                                #print("User UUID:"+ str(userinfo)+ " "+ str(name) + "   "+ str(status))
-
-                                if (status == 'Admin'):
-                                    imports.logging.info(
-                                        "got an Admin The name is"+str(name))
-                                    imports.userStats.userAdmin(status, name, frame, font, self.imagename,
-                                                   imports.const.imagePath, left, right, bottom, top, process_this_frame)
-                                    imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in admin" + str(imports.datetime.now()-face_processing_pipeline_timer))
-                                    imports.watchdog +=1
-                                    
-
-                                if (status == 'User'):
-                                    imports.logging.info(
-                                        "got an User Human The name is"+str(name))
-                                    imports.userStats.userUser(status=status, name=name, frame=frame, font=font, imagename=self.imagename,
-                                                  imagePath=imports.const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
-                                    
-                                    imports.consoleLog.Warning(
-                                        "eeeep there is an User They Might be evil so um let them in"+"  `"+"There Name is:" + str(name))
-                                    imports.consoleLog.PipeLine_Ok(
-                                        "Stping face prossesing timer in user" + str(imports.datetime.now()-face_processing_pipeline_timer))
-                                    imports.watchdog +=1
-
-                                if (status == 'Unwanted'):
-                                    imports.logging.info(
-                                        "got an Unwanted Human The name is"+str(name))
-                                    imports.userStats.userUnwanted(status=status, name=name, frame=frame, font=font, imagename=self.imagename,
-                                                      imagepath=imports.const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
-                                    imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in unwanted" + str(
-                                    imports.datetime.now()-face_processing_pipeline_timer))
-                                    imports.watchdog +=1
-                                  
-
-                                if(self.getAmountofFaces(imports.face_recognition, frame) > 1):
-                                    imports.userStats.userGroup(frame=frame, font=font, imagename=self.imagename, imagepath=self.imagePath, left=left, right=right, bottom=bottom, top=top)
-                                    imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in Group" + str(imports.datetime.now()-face_processing_pipeline_timer))
-                                    #message.sendCapturedImageMessage("eeeep there is Gagle of Peope I dont know what to do",phone,'http://192.168.5.8:2000/group',self.smsconfig['textbelt-key'])
-                                    
-                                    
+                        if(name != None):
+                        
+                            if(name == 'unknown' and status == None):
+                                imports.userStats.userUnknown(imports.const.opencvconfig, name, frame, font, imagename=self.imagename, imagePath=self.imagePath,
+                                                left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
+                            # print("user is unknown")
+                                imports.logging.info("unknowns Here UwU!")
+                                #message.sendCapturedImageMessage("eeeep there is an unknown",4123891615,'http://192.168.5.7:2000/unknown',self.smsconfig['textbelt-key'])
+                                imports.consoleLog.PipeLine_Ok("stop face prossesing timer unknown" +
+                                    str( imports.datetime.now()-face_processing_pipeline_timer))
+                            
+                                imports.watchdog +=1
 
                             else:
+                                if name in const.userList[i]:
+                                    userinfo = const.userList[i][name]
+                                    status = userinfo.status
+                                    name = userinfo.user
+                                    phone = userinfo.phoneNum
 
-                                imports.consoleLog.Warning(
-                                    "not the correct obj in list" + str(imports.const.userList[i]))
-                                # allows counter ro count up to the ammount in the database
-                                if(i >  len(imports.const.userList)):
-                                    i+=1
+                                    if phone == None:
+                                        phone = 4123891615
+
+                                    #print("User UUID:"+ str(userinfo)+ " "+ str(name) + "   "+ str(status))
+
+                                    if (status == 'Admin'):
+                                        imports.logging.info(
+                                            "got an Admin The name is"+str(name))
+                                        imports.userStats.userAdmin(status, name, frame, font, self.imagename,
+                                                    imports.const.imagePath, left, right, bottom, top, process_this_frame)
+                                        imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in admin" + str(imports.datetime.now()-face_processing_pipeline_timer))
+                                        imports.watchdog +=1
+                                        
+
+                                    if (status == 'User'):
+                                        imports.logging.info(
+                                            "got an User Human The name is"+str(name))
+                                        imports.userStats.userUser(status=status, name=name, frame=frame, font=font, imagename=self.imagename,
+                                                    imagePath=imports.const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
+                                        
+                                        imports.consoleLog.Warning(
+                                            "eeeep there is an User They Might be evil so um let them in"+"  `"+"There Name is:" + str(name))
+                                        imports.consoleLog.PipeLine_Ok(
+                                            "Stping face prossesing timer in user" + str(imports.datetime.now()-face_processing_pipeline_timer))
+                                        imports.watchdog +=1
+
+                                    if (status == 'Unwanted'):
+                                        imports.logging.info(
+                                            "got an Unwanted Human The name is"+str(name))
+                                        imports.userStats.userUnwanted(status=status, name=name, frame=frame, font=font, imagename=self.imagename,
+                                                        imagepath=imports.const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
+                                        imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in unwanted" + str(
+                                        imports.datetime.now()-face_processing_pipeline_timer))
+                                        imports.watchdog +=1
                                     
-                                # allows the countor to reset to zero 
-                                if(i == len(imports.const.userList)):
-                                    i=0
+
+                                    if(self.getAmountofFaces(imports.face_recognition, frame) > 1):
+                                        imports.userStats.userGroup(frame=frame, font=font, imagename=self.imagename, imagepath=self.imagePath, left=left, right=right, bottom=bottom, top=top)
+                                        imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in Group" + str(imports.datetime.now()-face_processing_pipeline_timer))
+                                        #message.sendCapturedImageMessage("eeeep there is Gagle of Peope I dont know what to do",phone,'http://192.168.5.8:2000/group',self.smsconfig['textbelt-key'])
+                                        
+                                        
+
+                                else:
+
+                                    imports.consoleLog.Warning(
+                                        "not the correct obj in list" + str(imports.const.userList[i]))
+                                    # allows counter ro count up to the ammount in the database
+                                    if(i >  len(imports.const.userList)):
+                                        i+=1
+                                        
+                                    # allows the countor to reset to zero 
+                                    if(i == len(imports.const.userList)):
+                                        i=0
+                                        
+                                        
                                     
                                     
-                                
-                                
 
-                    else:
+                        else:
+                            
+                            imports.consoleLog.PipeLine_Ok("Time For non Face processed frames" + str(imports.datetime.now()-face_processing_pipeline_timer))
+                            return
 
-                        imports.consoleLog.PipeLine_Ok(
-                   
-                            "Time For non Face processed frames" + str(imports.datetime.now()-face_processing_pipeline_timer))
-
-                        return
-
-            else:
-               
-                return
+                else:
+                    return
         
         
     

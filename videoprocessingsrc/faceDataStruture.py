@@ -83,8 +83,8 @@ class UserData:
         if(phonenum.isnumeric() and self.getSumOfDigits(phonenum) > self.USA_PHONE_NUMBER_DIGIT_COUNT or  self.getSumOfDigits(phonenum) < self.USA_PHONE_NUMBER_DIGIT_COUNT ):
             # this is the default no Number in the database for non admin users so this should return 
             if(int(phonenum) == 0000000000):
-                #raise NotImplementedError("need to have program work with adding default data")
-                pass
+                self._phonenum = int(phonenum)
+                
             raise IndexError("Number needs to be at "+ " "+ str(self.USA_PHONE_NUMBER_DIGIT_COUNT)+ " "+"Long!")
         
         else:

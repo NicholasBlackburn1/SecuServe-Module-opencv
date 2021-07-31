@@ -4,7 +4,7 @@ TODO: add code to launc from zmq
 """
 
 import imports
-
+import pipelineStates
 
             
 
@@ -20,32 +20,16 @@ def main():
     controller.connect("tcp://"+"127.0.0.1:5000")
     imports.consoleLog.PipeLine_Ok("running zmq")
     imports.consoleLog.Debug("Waiting for Zmq to recv Control Message...")
-
-    pipelineState = imports.enums.PipeLineStates()
+    watchdog = 0
+    
     
     # loops to recv json message
     while True:
         #if(controller.recv_json() == {"controller":"start"}):
-           # imports.consoleLog.Warning("running VideoProcessing Pipeline...")
+        imports.consoleLog.Warning("running VideoProcessing Pipeline...")
 
         # this is the setup state in pipeline 
-        if(imports.enums.PipeLineStates().is):
-            imports.consoleLog.Warning("in state:"+str(imports.enums.PipeLineStates.getCurrentState(imports.enums.PipeLineStates())))
-            imports.pipeline.RequiredCode.setupPipeline(imports.pipeline.RequiredCode(),sender)
-            imports.enums.PipeLineStates.set_State(imports.enums.PipeLineStates(),imports.enums.PipeLineStates().TRAIN_MODEL)
-        
-        # this is the TrainModel State in Pipeline
-        if(imports.enums.PipeLineStates.getCurrentState(imports.enums.PipeLineStates()) == imports.enums.PipeLineStates.TRAIN_MODEL):
-            imports.consoleLog.Warning("in state:"+str(imports.enums.PipeLineStates.getCurrentState(imports.enums.PipeLineStates())))
-            imports.pipeline.RequiredCode.trainPipeLine(imports.pipeline.RequiredCode(),sender)
-            imports.enums.PipeLineStates.set_State(imports.enums.PipeLineStates(),imports.enums.PipeLineStates().RECOGNIZE_FACES)
-            
-            
-                    # this is the TrainModel State in Pipeline
-        if(imports.enums.PipeLineStates.getCurrentState(imports.enums.PipeLineStates()) == imports.enums.PipeLineStates.RECOGNIZE_FACES):
-            imports.consoleLog.Warning("in state:"+str(imports.enums.PipeLineStates.getCurrentState(imports.enums.PipeLineStates())))
-            imports.pipeline.RequiredCode.reconitionPipeline(imports.pipeline.RequiredCode(),sender)
-            
+        pipelineStates.Pipeline.runPipeLine(pipelineStates.Pipeline(),start_state =pipelineStates.States.SETUP_PIPELINE,sender= sender)
     
         
         
