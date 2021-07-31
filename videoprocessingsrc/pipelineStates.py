@@ -3,7 +3,6 @@ this is the file holds the Pipeline and controls Pipline
 watch dog count to frozen 
 """
 import videoRequired
-
 from state import State
 
 
@@ -17,7 +16,7 @@ class States():
 # Start of our states
 class SetupPipeLine(State):
     """
-    The state which indicates that there are limited device capabilities.
+    The state which Sets Up Whole opencv pipeline
     """
 
     def on_event(self, event):
@@ -30,13 +29,12 @@ class SetupPipeLine(State):
 
 class TrainPipeline(State):
     """
-    The state which indicates that there are no limitations on device
-    capabilities.
+    The state which Trains the Reconized face Models
     """
 
     def on_event(self, event):
         if event == States.TRAIN_MODEL:
-            
+            videoRequired.RequiredCode.trainPipeLine(videoRequired.RequiredCode())
             return RunReconitionPipeLine()
 
         return self
@@ -44,11 +42,12 @@ class TrainPipeline(State):
     
 class RunReconitionPipeLine(State):
     """
-    The state which indicates that there are limited device capabilities.
+    The state which Reconizes Faces
     """
 
     def on_event(self, event):
         if event == States.RUN_RECONITION:
+            videoRequired.RequiredCode.reconitionPipeline(videoRequired.RequiredCode())
             return 
 
         return self
@@ -56,8 +55,7 @@ class RunReconitionPipeLine(State):
 
 class Idle(State):
     """
-    The state which indicates that there are no limitations on device
-    capabilities.
+    The state which The program waits for a face to be spotted 
     """
 
     def on_event(self, event):
@@ -65,23 +63,29 @@ class Idle(State):
             return #TODO: add pipeline trained models
 
         return self
-
-class Pipeline:
-    current : int
-    nextState: int 
-      
-    # returns the current state of the piplien
-    def current_state(self):
-        return self.current
     
-    def set_state(self,state):
-        self.current = state
-        
-    def runPipeLine(self, start_state, sender):
-       pass
-   
-   
-   
+
+class PipeLine(object):
+    """ 
+    A simple state machine that mimics the functionality of a device from a 
+    high level.
+    """
+
+    def __init__(self):
+        """ Initialize the components. """
+
+        # Start with a default state.
+        self.state =SetupPipeLine()
+
+    def on_event(self, event):
+        """
+        This is the bread and butter of the state machine. Incoming events are
+        delegated to the given states which then handle the event. The result is
+        then assigned as the new state.
+        """
+
+        # The next state will be the result of the on_event function.
+        self.state = self.state.on_event(event)
 
             
                 
