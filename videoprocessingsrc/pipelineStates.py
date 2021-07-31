@@ -5,7 +5,6 @@ watch dog count to frozen
 import videoRequired
 from state import State
 
-
 class States():
     IDLE = 0
     SETUP_PIPELINE = 1
@@ -60,6 +59,7 @@ class Idle(State):
 
     def on_event(self, event):
         if event == States.IDLE:
+            videoRequired.imports.consoleLog.Warning("Idleing....")
             return #TODO: add pipeline trained models
 
         return self
@@ -86,6 +86,11 @@ class PipeLine(object):
 
         # The next state will be the result of the on_event function.
         self.state = self.state.on_event(event)
+        
+        
+    def getCurrentStat(self):
+        return self.state
 
-            
+    def setState(self,State):
+        self.state = State
                 

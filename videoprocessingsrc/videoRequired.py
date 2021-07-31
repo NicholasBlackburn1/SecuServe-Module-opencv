@@ -112,7 +112,7 @@ class RequiredCode(object):
                 sent = False
 
                 if(self.getAmountofFaces(imports.face_recognition, frame) <= 0):
-                    pipelineStates.Pipeline().set_state(pipelineStates.States.IDLE) 
+                    pipelineStates.PipeLine().setState(pipelineStates.States.IDLE) 
                     imports.consoleLog.Warning("No faces seen waiting for faces")
                     return
                     

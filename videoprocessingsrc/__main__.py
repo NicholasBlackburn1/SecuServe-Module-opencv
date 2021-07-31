@@ -29,7 +29,7 @@ def main():
         imports.consoleLog.Warning("running VideoProcessing Pipeline...")
 
         # this is the setup state in pipeline 
-        pipelineStates.Pipeline.runPipeLine(pipelineStates.Pipeline(),start_state =pipelineStates.States.SETUP_PIPELINE,sender= sender)
+        pipelineStates.PipeLine.on_event( pipelineStates.PipeLine(),pipelineStates.States.SETUP_PIPELINE)
     
         
         
