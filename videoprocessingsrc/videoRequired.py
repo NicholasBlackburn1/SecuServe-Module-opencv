@@ -89,20 +89,19 @@ class RequiredCode(object):
         face_processing_pipeline_timer =  imports.datetime.now()
         
         #TODO: GET RECONITION TO IDLE when it sees no faces so it does not waste time waiting for faces
-        while pipelineStates.Pipeline().current_state() == pipelineStates.States.RUN_RECONITION:
+        while True:
             process_this_frame = process_this_frame + 1
             
             if(const.watchdog == 10):
                 print("WATCHDOG OVERRAIN")
-                pipelineStates.Pipeline.set_state(pipelineStates.Pipeline(),pipelineStates.States.ERROR)
                 break
                 
             if process_this_frame % 30 == 0:
 
                 frame = cap.read()
                 img =  imports.cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
-                predictions =  imports.knnClasifiyer.predict(
-                    img, model_path=imports.const.Modelpath, distance_threshold=0.65)
+                predictions =  knnClasifiyer.predict(
+                    img, knn_clf= knnClasifiyer.loadTrainedModel(knn_clf =None, model_path=const.Modelpath), distance_threshold=0.65)
                 # print(process_this_frame)
 
                 """
@@ -111,12 +110,11 @@ class RequiredCode(object):
                 font =  imports.cv2.FONT_HERSHEY_DUPLEX
                 sent = False
 
-                if(self.getAmountofFaces(imports.face_recognition, frame) <= 0):
-                    pipelineStates.PipeLine().setState(pipelineStates.States.IDLE) 
+                if(self.getAmmountOfFaces(frame) <= 0):
                     imports.consoleLog.Warning("No faces seen waiting for faces")
-                    return
-                    
-                if(self.getAmountofFaces(imports.face_recognition, frame) > 0):
+                    pipeline.on_event(pipelineStates.States.IDLE) 
+                              
+                if(self.getAmmountOfFaces(frame) > 0):
                     # Display t he results
                     for name, (top, right, bottom, left) in predictions:
                         
@@ -161,8 +159,7 @@ class RequiredCode(object):
                                         imports.userStats.userAdmin(status, name, frame, font, self.imagename,
                                                     imports.const.imagePath, left, right, bottom, top, process_this_frame)
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in admin" + str(imports.datetime.now()-face_processing_pipeline_timer))
-                                        imports.watchdog +=1
-                                        
+                                        imports.watchdog +=1 
 
                                     if (status == 'User'):
                                         imports.logging.info(
@@ -174,7 +171,7 @@ class RequiredCode(object):
                                             "eeeep there is an User They Might be evil so um let them in"+"  `"+"There Name is:" + str(name))
                                         imports.consoleLog.PipeLine_Ok(
                                             "Stping face prossesing timer in user" + str(imports.datetime.now()-face_processing_pipeline_timer))
-                                        imports.watchdog +=1
+                                        
 
                                     if (status == 'Unwanted'):
                                         imports.logging.info(
@@ -183,7 +180,7 @@ class RequiredCode(object):
                                                         imagepath=imports.const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in unwanted" + str(
                                         imports.datetime.now()-face_processing_pipeline_timer))
-                                        imports.watchdog +=1
+                                        
                                     
 
                                     if(self.getAmountofFaces(imports.face_recognition, frame) > 1):
@@ -213,11 +210,12 @@ class RequiredCode(object):
                             
                             imports.consoleLog.PipeLine_Ok("Time For non Face processed frames" + str(imports.datetime.now()-face_processing_pipeline_timer))
                             return
-
-                else:
-                    return
+                if const.watchdog == 10:
+                    break
         
-        
+    # returns ammount of seenfaces
+    def getAmmountOfFaces(self,image):
+        return len(imports.face_recognition.face_locations(image, model="cnn",number_of_times_to_upsample=0))
     
     # Makes startup dirs
 

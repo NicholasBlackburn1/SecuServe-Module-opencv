@@ -33,6 +33,7 @@ def main():
     pipeline.on_event(pipelineStates.States.SETUP_PIPELINE)
     pipeline.on_event(pipelineStates.States.TRAIN_MODEL)
     pipeline.on_event(pipelineStates.States.RUN_RECONITION)
+
    
 
 

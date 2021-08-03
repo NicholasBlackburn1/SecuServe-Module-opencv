@@ -3,6 +3,7 @@ this is the file holds the Pipeline and controls Pipline
 watch dog count to frozen 
 """
 import videoRequired
+import consoleLog
 from state import State
 
 class States():
@@ -49,11 +50,7 @@ class RunReconitionPipeLine(State):
     def on_event(self, event):
         if event == States.RUN_RECONITION:
             videoRequired.RequiredCode.reconitionPipeline(videoRequired.RequiredCode())
-            self.next_state(States.IDLE)
-            return 
-
         return self
-
 
 class Idle(State):
     """
@@ -63,10 +60,25 @@ class Idle(State):
     def on_event(self, event):
         if event == States.IDLE:
             videoRequired.imports.consoleLog.Warning("Idleing....")
+            videoRequired.imports.time.sleep(.5)
+            return 
+
+        return self
+    
+    
+class Error(State):
+    """
+    The state which The program waits for a face to be spotted 
+    """
+
+    def on_event(self, event):
+        if event == States.ERROR:
+            videoRequired.imports.consoleLog.Error("ERROR....")
             return #TODO: add pipeline trained models
 
         return self
     
+
 
 class PipeLine(object):
     """ 
@@ -94,6 +106,4 @@ class PipeLine(object):
     def getCurrentStat(self):
         return self.state
 
-    def setState(self,State):
-        self.state = State
                 
