@@ -1,6 +1,6 @@
 # SecuServe-Module-opencv
 
-*this is my Face Reconition module forthe SecurSeve Security System*
+*This is my Face Reconition module forthe SecurSeve Security System*
 
 
 ### What is this for 
