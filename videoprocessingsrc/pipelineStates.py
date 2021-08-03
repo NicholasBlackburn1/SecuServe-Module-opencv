@@ -21,6 +21,7 @@ class SetupPipeLine(State):
     def on_event(self, event):
         if event == States.SETUP_PIPELINE:
             videoRequired.RequiredCode.setupPipeline(videoRequired.RequiredCode())
+            self.next_state(States.TRAIN_MODEL)
             return TrainPipeline()
 
         return self
@@ -34,6 +35,7 @@ class TrainPipeline(State):
     def on_event(self, event):
         if event == States.TRAIN_MODEL:
             videoRequired.RequiredCode.trainPipeLine(videoRequired.RequiredCode())
+            self.next_state(States.RUN_RECONITION)
             return RunReconitionPipeLine()
 
         return self
@@ -47,6 +49,7 @@ class RunReconitionPipeLine(State):
     def on_event(self, event):
         if event == States.RUN_RECONITION:
             videoRequired.RequiredCode.reconitionPipeline(videoRequired.RequiredCode())
+            self.next_state(States.IDLE)
             return 
 
         return self
@@ -76,6 +79,7 @@ class PipeLine(object):
 
         # Start with a default state.
         self.state =SetupPipeLine()
+     
 
     def on_event(self, event):
         """
@@ -86,7 +90,6 @@ class PipeLine(object):
 
         # The next state will be the result of the on_event function.
         self.state = self.state.on_event(event)
-        
         
     def getCurrentStat(self):
         return self.state

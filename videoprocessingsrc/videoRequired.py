@@ -16,9 +16,9 @@ import knnClasifiyer
 import videoThread
 
 class RequiredCode(object):
-
+    
     # this allows me to set up pipe line easyerly  but for the cv module
-    def setupPipeline(self,sender):
+    def setupPipeline(self):
         pipeline_start_setup = imports.datetime.now()
         #this sends a stats message back to the main controller and to the messaging and webserver module
         
@@ -47,14 +47,14 @@ class RequiredCode(object):
         # Downlaods all the Faces
         self.downloadUserFaces(const.imagePathusers)
         imports.consoleLog.PipeLine_Ok("STAGE COMPLETE"+str( imports.datetime.now() -  pipeline_start_setup))
-        
+        return
          # updates stats message 
         #self.sendProgramStatus(sender,enums.PipeLineStates.STAGE_COMPLETE,"finishes up pipeline to run",imports.datetime.now()-pipeline_start_setup)
         
         
             
     # This trains the face model for the  pipeline
-    def trainPipeLine(self,sender):
+    def trainPipeLine(self):
         pipeline_train_knn = imports.datetime.now()
          # updates stats message 
         #self.sendProgramStatus(sender,enums.PipeLineStates.TRAIN_MODEL,"starting  to train model",imports.datetime.now() - pipeline_train_knn)
@@ -65,10 +65,10 @@ class RequiredCode(object):
         
         imports.consoleLog.PipeLine_Ok("Done Train Knn pipeline timer" + str(imports.datetime.now() - pipeline_train_knn))
         imports.consoleLog.Warning("Done Training Model.....")
-        
+        return
         #self.sendProgramStatus(sender,enums.PipeLineStates.STAGE_COMPLETE,"done  training model",imports.datetime.now() - pipeline_train_knn)
         
-    def reconitionPipeline(self,sender):
+    def reconitionPipeline(self):
         
          # cleans mess as we keep prosessing
         imports.gc.collect()
