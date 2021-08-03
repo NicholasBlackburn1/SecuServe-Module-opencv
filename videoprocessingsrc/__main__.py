@@ -5,8 +5,7 @@ TODO: add code to launc from zmq
 
 import imports
 import pipelineStates
-
-            
+import const
 
 def main():
     imports.consoleLog.Warning("Initing zmq")
@@ -23,16 +22,18 @@ def main():
     imports.consoleLog.Debug("Waiting for Zmq to recv Control Message...")
     watchdog = 0
     
-    pipeline = pipelineStates.PipeLine()
+  
     
     # loops to recv json message
 
     #if(controller.recv_json() == {"controller":"start"}):
     imports.consoleLog.Warning("running VideoProcessing Pipeline...")
-
-    pipeline.on_event(pipelineStates.States.SETUP_PIPELINE)
-    pipeline.on_event(pipelineStates.States.TRAIN_MODEL)
-    pipeline.on_event(pipelineStates.States.RUN_RECONITION)
+    
+    # sets pipeline starting state so Fsm has all needed to run
+    pipe = pipelineStates.PipeLine()
+    pipe.on_event(pipelineStates.States.SETUP_PIPELINE)
+    pipe.on_event(pipelineStates.States.TRAIN_MODEL)
+    pipe.on_event(pipelineStates.States.RUN_RECONITION)
 
    
 

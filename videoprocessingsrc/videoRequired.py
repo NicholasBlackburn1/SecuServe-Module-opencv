@@ -15,7 +15,9 @@ import pipelineStates
 import knnClasifiyer
 import videoThread
 
+
 class RequiredCode(object):
+  
     
     # this allows me to set up pipe line easyerly  but for the cv module
     def setupPipeline(self):
@@ -87,6 +89,7 @@ class RequiredCode(object):
 
         cap =  videoThread.ThreadingClass(gst_str)
         face_processing_pipeline_timer =  imports.datetime.now()
+        pipe = pipelineStates.PipeLine()
         
         #TODO: GET RECONITION TO IDLE when it sees no faces so it does not waste time waiting for faces
         while True:
@@ -110,10 +113,16 @@ class RequiredCode(object):
                 font =  imports.cv2.FONT_HERSHEY_DUPLEX
                 sent = False
 
+                # runs like an idle stage so program can wait for face to be recived 
                 if(self.getAmmountOfFaces(frame) <= 0):
                     imports.consoleLog.Warning("No faces seen waiting for faces")
-                    pipeline.on_event(pipelineStates.States.IDLE) 
-                              
+                    imports.consoleLog.Warning("Idleing....")
+                    imports.time.sleep(.5)
+            
+                    pipe.on_event(pipelineStates.States.IDLE)
+                    
+                    
+                #processes faces when seen
                 if(self.getAmmountOfFaces(frame) > 0):
                     # Display t he results
                     for name, (top, right, bottom, left) in predictions:

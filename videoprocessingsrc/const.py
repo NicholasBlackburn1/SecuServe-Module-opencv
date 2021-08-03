@@ -3,7 +3,7 @@ dirty const setup
 """
 
 import imports
-
+import pipelineStates
 
 # this is all the global paths needed throuht the program
 PATH = str(imports.pathlib.Path().absolute())+"/data/"+"Config.ini"
@@ -45,4 +45,6 @@ logger.addHandler(imports.logging.FileHandler(str(loggingPath)+"Cv_PipeLine"+str
 default_endpoint = 'https://textbelt.com/text'
 
 
+
 print("in const")
+

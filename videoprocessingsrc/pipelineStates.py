@@ -2,11 +2,13 @@
 this is the file holds the Pipeline and controls Pipline
 watch dog count to frozen 
 """
+from enum import Enum
+from pickle import NONE
 import videoRequired
 import consoleLog
 from state import State
 
-class States():
+class States(Enum):
     IDLE = 0
     SETUP_PIPELINE = 1
     TRAIN_MODEL = 2
@@ -50,6 +52,7 @@ class RunReconitionPipeLine(State):
     def on_event(self, event):
         if event == States.RUN_RECONITION:
             videoRequired.RequiredCode.reconitionPipeline(videoRequired.RequiredCode())
+           
         return self
 
 class Idle(State):
@@ -61,7 +64,7 @@ class Idle(State):
         if event == States.IDLE:
             videoRequired.imports.consoleLog.Warning("Idleing....")
             videoRequired.imports.time.sleep(.5)
-            return 
+            
 
         return self
     
@@ -85,12 +88,12 @@ class PipeLine(object):
     A simple state machine that mimics the functionality of a device from a 
     high level.
     """
-
+    
     def __init__(self):
         """ Initialize the components. """
 
         # Start with a default state.
-        self.state =SetupPipeLine()
+        self.state  = SetupPipeLine()
      
 
     def on_event(self, event):
@@ -105,5 +108,4 @@ class PipeLine(object):
         
     def getCurrentStat(self):
         return self.state
-
                 
