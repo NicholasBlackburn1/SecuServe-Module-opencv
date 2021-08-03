@@ -1,6 +1,6 @@
 # SecuServe-Module-opencv
 
-*this is my Opencv module for secue UwU*
+*This is my Face Reconition module forthe SecurSeve Security System*
 
 
 ### What is this for 
