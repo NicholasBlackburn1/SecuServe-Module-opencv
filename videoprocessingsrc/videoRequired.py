@@ -14,6 +14,7 @@ import const
 import pipelineStates
 import knnClasifiyer
 import videoThread
+import userStats
 
 
 class RequiredCode(object):
@@ -140,7 +141,7 @@ class RequiredCode(object):
                         if(name != None):
                         
                             if(name == 'unknown' and status == None):
-                                imports.userStats.userUnknown(imports.const.opencvconfig, name, frame, font, imagename=self.imagename, imagePath=self.imagePath,
+                                userStats.userUnknown(imports.const.opencvconfig, name, frame, font, imagename=self.imagename, imagePath=self.imagePath,
                                                 left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                             # print("user is unknown")
                                 imports.logging.info("unknowns Here UwU!")
@@ -165,7 +166,7 @@ class RequiredCode(object):
                                     if (status == 'Admin'):
                                         imports.logging.info(
                                             "got an Admin The name is"+str(name))
-                                        imports.userStats.userAdmin(status, name, frame, font, self.imagename,
+                                        userStats.userAdmin(status, name, frame, font, self.imagename,
                                                     imports.const.imagePath, left, right, bottom, top, process_this_frame)
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in admin" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         imports.watchdog +=1 
@@ -173,7 +174,7 @@ class RequiredCode(object):
                                     if (status == 'User'):
                                         imports.logging.info(
                                             "got an User Human The name is"+str(name))
-                                        imports.userStats.userUser(status=status, name=name, frame=frame, font=font, imagename=self.imagename,
+                                        userStats.userUser(status=status, name=name, frame=frame, font=font, imagename=self.imagename,
                                                     imagePath=imports.const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                                         
                                         imports.consoleLog.Warning(
@@ -185,7 +186,7 @@ class RequiredCode(object):
                                     if (status == 'Unwanted'):
                                         imports.logging.info(
                                             "got an Unwanted Human The name is"+str(name))
-                                        imports.userStats.userUnwanted(status=status, name=name, frame=frame, font=font, imagename=self.imagename,
+                                        userStats.userUnwanted(status=status, name=name, frame=frame, font=font, imagename=self.imagename,
                                                         imagepath=imports.const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in unwanted" + str(
                                         imports.datetime.now()-face_processing_pipeline_timer))
@@ -193,7 +194,7 @@ class RequiredCode(object):
                                     
 
                                     if(self.getAmountofFaces(imports.face_recognition, frame) > 1):
-                                        imports.userStats.userGroup(frame=frame, font=font, imagename=self.imagename, imagepath=self.imagePath, left=left, right=right, bottom=bottom, top=top)
+                                        userStats.userGroup(frame=frame, font=font, imagename=self.imagename, imagepath=self.imagePath, left=left, right=right, bottom=bottom, top=top)
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in Group" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         #message.sendCapturedImageMessage("eeeep there is Gagle of Peope I dont know what to do",phone,'http://192.168.5.8:2000/group',self.smsconfig['textbelt-key'])
                                         

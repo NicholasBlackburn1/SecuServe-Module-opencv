@@ -102,17 +102,23 @@ def predict(Camera_frame, knn_clf=None, distance_threshold=0.4):
     are_matches = [closest_distances[0][i][0] <= distance_threshold for i in range(len(X_face_locations))]
 
     # Predict classes and remove classifications that aren't within the threshold
+    
     return face_predict_data(knn_clf,faces_encodings,X_face_locations,are_matches)
        
 
 # Handles the data thats returned from the prediction 
 def face_predict_data(knn_clf,faces_encodings,X_face_locations,are_matches):
+    return [(pred, loc) if rec else ("unknown", loc) for pred, loc, rec in zip(knn_clf.predict(faces_encodings), X_face_locations, are_matches)]
+
+    '''
+    Suppost to be like this but it wont work so reverting it back to og state
     for pred, loc, rec in zip(knn_clf.predict(faces_encodings), X_face_locations, are_matches):
         if rec:
-            return  (pred, loc) 
+             return (pred, loc) 
         else:
             return("unknown", loc) 
+    '''
+
         
         
-    #
     

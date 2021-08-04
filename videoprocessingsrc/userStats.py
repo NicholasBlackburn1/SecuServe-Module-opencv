@@ -2,13 +2,13 @@
 User stas this is where i have the seperate classes for the main opencv 
 """
 
-import __init__
+import imports
 
 class UserStats(object):
 
     # saves owner images and sends Frame
     def saveImage(self,imagepath, imagename, frame):
-        __init__.cv2.imwrite(imagepath + imagename + ".jpg", frame)
+        imports.cv2.imwrite(imagepath + imagename + ".jpg", frame)
 
 
     # this is for Handling User Admin Stats
@@ -16,25 +16,25 @@ class UserStats(object):
         
             print(status)
             # Draw a box around the face
-            __init__.cv2.rectangle(frame, (left, top),
+            imports.cv2.rectangle(frame, (left, top),
                         (right, bottom), (0, 255, 0), 2)
 
 
-            __init__.cv2.putText(frame, name, (left, top),
+            imports.cv2.putText(frame, name, (left, top),
                         font, 0.5, (255, 255, 255), 1)
-            __init__.cv2.putText(
+            imports.cv2.putText(
                 frame, "Known Person..", (0,
                                         430), font, 0.5, (255, 255, 255), 1
             )
-            __init__.cv2.putText(frame, status, (0, 450),
+            imports.cv2.putText(frame, status, (0, 450),
                         font, 0.5, (255, 255, 255), 1)
-            __init__.cv2.putText(frame, name, (0, 470), font,
+            imports.cv2.putText(frame, name, (0, 470), font,
                         0.5, (255, 255, 255), 1)
                 
-            __init__.cv2.putText(frame, "Frame num" + str(framenum), (0, 480), font,
+            imports.cv2.putText(frame, "Frame num" + str(framenum), (0, 480), font,
                     0.5, (255, 255, 255), 1)
 
-        
+            self.saveImage(imagepath=imagePath,imagename=imagename,frame=frame)
 
 
     # User Grade Status
@@ -42,29 +42,29 @@ class UserStats(object):
     def userUser(self,status,name,frame,font,left,right,bottom,top,framenum):
 
         # Draw a box around the face
-        __init__.cv2.rectangle(frame, (left, top),
+        imports.cv2.rectangle(frame, (left, top),
                     (right, bottom), (255, 255, 0), 2)
 
 
-        __init__.cv2.putText(frame, name, (left, top),
+        imports.cv2.putText(frame, name, (left, top),
                     font, 0.5, (255, 255, 255), 1)
-        __init__.cv2.putText(
+        imports.cv2.putText(
             frame, "Known Person..", (0,
                                     430), font, 0.5, (255, 255, 255), 1
         )
-        __init__.cv2.putText(
+        imports.cv2.putText(
             frame, status, (0,
                             450), font, 0.5, (255, 255, 255), 1
         )
-        __init__.cv2.putText(frame, name, (0, 470), font,
+        imports.cv2.putText(frame, name, (0, 470), font,
                     0.5, (255, 255, 255), 1)
 
         
-        __init__.cv2.putText(frame, "Frame num" + str(framenum), (0, 480), font,
+        imports.cv2.putText(frame, "Frame num" + str(framenum), (0, 480), font,
                     0.5, (255, 255, 255), 1)
 
         # Distance info
-        __init__.cv2.putText(
+        imports.cv2.putText(
             frame,
             "T&B" + str(top) + "," + str(bottom),
             (474, 430),
@@ -73,49 +73,53 @@ class UserStats(object):
             (255, 255, 255),
             1,
         )
-        
+       # self.saveImage(imagepath=imagePath,imagename=imagename,frame=frame)
       
 
 
     # Handles Unwanted Usr Stats
     def userUnwanted(self,status,name,frame,font,imagename,imagePath,left,right,bottom,top):
         
-            __init__.cv2.rectangle(frame, (left, top),
+            imports.cv2.rectangle(frame, (left, top),
                         (right, bottom), (0, 0, 255), 2)
-            __init__.cv2.putText(frame, name, (left, top),
+            imports.cv2.putText(frame, name, (left, top),
                         font, 0.5, (255, 255, 255), 1)
+            self.saveImage(imagepath=imagePath,imagename=imagename,frame=frame)
+            
             
             
     # Handles unKnown User
     def userUnknown(self,opencvconfig,name,frame,font,imagePath,imagename,left,right,bottom,top,framenum):
 
-            __init__.cv2.rectangle(frame, (left, top),
+            imports.cv2.rectangle(frame, (left, top),
                         (right, bottom), (0, 0, 255), 2)
-            __init__.cv2.putText(frame, name, (left, top),
+            imports.cv2.putText(frame, name, (left, top),
                         font, 0.5, (255, 255, 255), 1)
                     
-            __init__.cv2.putText(frame, "Frame num" + str(framenum), (0, 480), font,
+            imports.cv2.putText(frame, "Frame num" + str(framenum), (0, 480), font,
                         0.5, (255, 255, 255), 1)
 
             # Distance info
-            __init__.cv2.putText(frame, opencvconfig['unreconizedPerson'], (0, 450),
+            imports.cv2.putText(frame, opencvconfig['unreconizedPerson'], (0, 450),
                         font, 0.5, (255, 255, 255), 1)
-            __init__.cv2.putText(frame, name, (0, 470), font,
+            imports.cv2.putText(frame, name, (0, 470), font,
                         0.5, (255, 255, 255), 1)
+            
+            self.saveImage(imagepath=imagePath,imagename=imagename,frame=frame)
             
 
     # User Groups 
     def userGroup(self,frame,font,imagePath,imagename,left,right,bottom,top):
         
-                __init__.cv2.rectangle(
+                imports.cv2.rectangle(
                     frame, (left, top), (right,
                                         bottom), (255, 0, 255), 2
                 )
-                __init__.cv2.putText(frame, "Group", (left, top),
+                imports.cv2.putText(frame, "Group", (left, top),
                             font, 0.5, (255, 255, 255), 1)
 
                 # Distance info
-                __init__.cv2.putText(
+                imports.cv2.putText(
                     frame,
                     "There's a group..",
                     (474, 430),
@@ -124,7 +128,7 @@ class UserStats(object):
                     (255, 255, 255),
                     1,
                 )
-                __init__.cv2.putText(
+                imports.cv2.putText(
                     frame,
                     "be carfull now!",
                     (474, 450),
