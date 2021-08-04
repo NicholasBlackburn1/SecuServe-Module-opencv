@@ -101,8 +101,9 @@ class RequiredCode(object):
                 break
                 
             if process_this_frame % 30 == 0:
+                #imports.cv2.imread("/home/nick/Face-Door_Moudles/Video-processing/data/images/me.jpg")
                 #cap.read()
-                frame = imports.cv2.imread("/home/nick/Face-Door_Moudles/Video-processing/data/images/me.jpg")
+                frame = cap.read()
                 img =  imports.cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
                 predictions =  knnClasifiyer.predict(
                     img, knn_clf= knnClasifiyer.loadTrainedModel(knn_clf =None, model_path=const.Modelpath), distance_threshold=0.65)
@@ -113,6 +114,8 @@ class RequiredCode(object):
                 """
                 font =  imports.cv2.FONT_HERSHEY_DUPLEX
                 sent = False
+                
+                userstat =  userStats.UserStats
 
                 # runs like an idle stage so program can wait for face to be recived 
                 if(self.getAmmountOfFaces(frame) <= 0):
@@ -135,13 +138,14 @@ class RequiredCode(object):
                         right *= 2
                         bottom *= 2
                         left *= 2
+                        print(status)
                         print(process_this_frame)
                         print(name)
 
                         if(name != None):
                         
                             if(name == 'unknown' and status == None):
-                                userStats.userUnknown(imports.const.opencvconfig, name, frame, font, imagename=self.imagename, imagePath=self.imagePath,
+                                userStats.userUnknown(imports.const.opencvconfig, name, frame, font, imagename=const.imagename, imagePath=self.imagePath,
                                                 left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                             # print("user is unknown")
                                 imports.logging.info("unknowns Here UwU!")
@@ -154,8 +158,8 @@ class RequiredCode(object):
                             else:
                                 if name in const.userList[i]:
                                     userinfo = const.userList[i][name]
-                                    status = userinfo[2]
-                                    name = userinfo[1]
+                                    status = userinfo[1]
+                                    name = userinfo[0]
                                     phone = userinfo[4]
 
                                     if phone == None or 0000000000:
@@ -166,16 +170,16 @@ class RequiredCode(object):
                                     if (status == 'Admin'):
                                         imports.logging.info(
                                             "got an Admin The name is"+str(name))
-                                        userStats.userAdmin(status, name, frame, font, self.imagename,
-                                                    imports.const.imagePath, left, right, bottom, top, process_this_frame)
+                                        userstat.userAdmin(self=userstat,status=status, name=name, frame=frame, font=font, imagename=const.imagename,
+                                                    imagePath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in admin" + str(imports.datetime.now()-face_processing_pipeline_timer))
-                                        imports.watchdog +=1 
+                                        
 
                                     if (status == 'User'):
                                         imports.logging.info(
                                             "got an User Human The name is"+str(name))
-                                        userStats.userUser(status=status, name=name, frame=frame, font=font, imagename=self.imagename,
-                                                    imagePath=imports.const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
+                                        userstat.userUser(self=userstat,status=status, name=name, frame=frame, font=font, imagename=const.imagename,
+                                                    imagePath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                                         
                                         imports.consoleLog.Warning(
                                             "eeeep there is an User They Might be evil so um let them in"+"  `"+"There Name is:" + str(name))
@@ -186,15 +190,15 @@ class RequiredCode(object):
                                     if (status == 'Unwanted'):
                                         imports.logging.info(
                                             "got an Unwanted Human The name is"+str(name))
-                                        userStats.userUnwanted(status=status, name=name, frame=frame, font=font, imagename=self.imagename,
-                                                        imagepath=imports.const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
+                                        userstat.userUnwanted(self=userstat,status=status, name=name, frame=frame, font=font, imagename=const.imagename,
+                                                        imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in unwanted" + str(
                                         imports.datetime.now()-face_processing_pipeline_timer))
                                         
                                     
 
-                                    if(self.getAmmountOfFacess(imports.face_recognition, frame) > 1):
-                                        userStats.userGroup(frame=frame, font=font, imagename=self.imagename, imagepath=self.imagePath, left=left, right=right, bottom=bottom, top=top)
+                                    if(self.getAmmountOfFaces(frame) > 1):
+                                        userStats.UserStats.userGroup(self=userstat,frame=frame, font=font, imagename=const.imagename, imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top)
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in Group" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         #message.sendCapturedImageMessage("eeeep there is Gagle of Peope I dont know what to do",phone,'http://192.168.5.8:2000/group',self.smsconfig['textbelt-key'])
                                         

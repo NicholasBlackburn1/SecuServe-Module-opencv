@@ -34,12 +34,12 @@ class UserStats(object):
             imports.cv2.putText(frame, "Frame num" + str(framenum), (0, 480), font,
                     0.5, (255, 255, 255), 1)
 
-            self.saveImage(imagepath=imagePath,imagename=imagename,frame=frame)
+            self.saveImage(self,imagepath=imagePath+"Admin/",imagename=imagename,frame=frame)
 
 
     # User Grade Status
     # this is for Handling User Stats
-    def userUser(self,status,name,frame,font,left,right,bottom,top,framenum):
+    def userUser(self,status,name,frame,font,left,right,bottom,top,framenum,imagename,imagepath):
 
         # Draw a box around the face
         imports.cv2.rectangle(frame, (left, top),
@@ -73,7 +73,7 @@ class UserStats(object):
             (255, 255, 255),
             1,
         )
-       # self.saveImage(imagepath=imagePath,imagename=imagename,frame=frame)
+        self.saveImage(self,imagepath=imagepath+"User/",imagename=imagename,frame=frame)
       
 
 
@@ -87,7 +87,7 @@ class UserStats(object):
             imports.cv2.putText(frame, str(status), (left, top),
                     font, 0.5, (255, 255, 255), 1)
 
-            self.saveImage(imagepath=imagePath,imagename=imagename,frame=frame)
+            self.saveImage(imagepath=imagePath+"Unwanted/",imagename=imagename,frame=frame)
             
             
             
@@ -108,7 +108,7 @@ class UserStats(object):
             imports.cv2.putText(frame, name, (0, 470), font,
                         0.5, (255, 255, 255), 1)
             
-            self.saveImage(imagepath=imagePath,imagename=imagename,frame=frame)
+            self.saveImage(self,imagepath=imagePath+"unknown/",imagename=imagename,frame=frame)
             
 
     # User Groups 
