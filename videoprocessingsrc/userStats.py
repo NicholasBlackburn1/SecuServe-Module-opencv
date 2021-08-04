@@ -84,6 +84,9 @@ class UserStats(object):
                         (right, bottom), (0, 0, 255), 2)
             imports.cv2.putText(frame, name, (left, top),
                         font, 0.5, (255, 255, 255), 1)
+            imports.cv2.putText(frame, str(status), (left, top),
+                    font, 0.5, (255, 255, 255), 1)
+
             self.saveImage(imagepath=imagePath,imagename=imagename,frame=frame)
             
             

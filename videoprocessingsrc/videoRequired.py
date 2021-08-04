@@ -101,8 +101,8 @@ class RequiredCode(object):
                 break
                 
             if process_this_frame % 30 == 0:
-
-                frame = cap.read()
+                #cap.read()
+                frame = imports.cv2.imread("/home/nick/Face-Door_Moudles/Video-processing/data/images/me.jpg")
                 img =  imports.cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
                 predictions =  knnClasifiyer.predict(
                     img, knn_clf= knnClasifiyer.loadTrainedModel(knn_clf =None, model_path=const.Modelpath), distance_threshold=0.65)
@@ -193,7 +193,7 @@ class RequiredCode(object):
                                         
                                     
 
-                                    if(self.getAmountofFaces(imports.face_recognition, frame) > 1):
+                                    if(self.getAmmountOfFacess(imports.face_recognition, frame) > 1):
                                         userStats.userGroup(frame=frame, font=font, imagename=self.imagename, imagepath=self.imagePath, left=left, right=right, bottom=bottom, top=top)
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in Group" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         #message.sendCapturedImageMessage("eeeep there is Gagle of Peope I dont know what to do",phone,'http://192.168.5.8:2000/group',self.smsconfig['textbelt-key'])
@@ -203,13 +203,13 @@ class RequiredCode(object):
                                 else:
 
                                     imports.consoleLog.Warning(
-                                        "not the correct obj in list" + str(imports.const.userList[i]))
+                                        "not the correct obj in list" + str(const.userList[i]))
                                     # allows counter ro count up to the ammount in the database
-                                    if(i >  len(imports.const.userList)):
+                                    if(i >  len(const.userList)):
                                         i+=1
                                         
                                     # allows the countor to reset to zero 
-                                    if(i == len(imports.const.userList)):
+                                    if(i == len(const.userList)):
                                         i=0
                                         
                                         
