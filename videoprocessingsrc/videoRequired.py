@@ -90,7 +90,7 @@ class RequiredCode(object):
         pipeline_video_prossesing =  imports.datetime.now()
 
         cap =  videoThread.ThreadingClass(gst_str)
-        face_processing_pipeline_timer =  imports.datetime.now()
+        
         pipe = pipelineStates.PipeLine()
         
         #TODO: GET RECONITION TO IDLE when it sees no faces so it does not waste time waiting for faces
@@ -129,6 +129,7 @@ class RequiredCode(object):
                     
                 #processes faces when seen
                 if(self.getAmmountOfFaces(frame) > 0):
+                    face_processing_pipeline_timer =  imports.datetime.now()
                     # Display t he results
                     for name, (top, right, bottom, left) in predictions:
                         
