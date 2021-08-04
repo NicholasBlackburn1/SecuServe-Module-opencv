@@ -21,7 +21,7 @@ logconfig = config_object['LOGGING']
 zmqconfig = config_object['ZMQ']
 opencvconfig = config_object['OPENCV']
 fileconfig = config_object['FILE']
-
+phoneconfig = config_object['PHONE']
 
 current_time = imports.datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p_%s")
 

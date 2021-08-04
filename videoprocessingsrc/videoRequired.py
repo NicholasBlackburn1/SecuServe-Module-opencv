@@ -146,7 +146,7 @@ class RequiredCode(object):
                         if(name != None):
                         
                             if(name == 'unknown' and status == None):
-                                userStats.userUnknown(imports.const.opencvconfig, name, frame, font, imagename=const.imagename, imagePath=self.imagePath,
+                                userStats.userUnknown(const.opencvconfig, name, frame, font, imagename=const.imagename, imagePath=self.imagePath,
                                                 left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                             # print("user is unknown")
                                 imports.logging.info("unknowns Here UwU!")
@@ -164,7 +164,7 @@ class RequiredCode(object):
                                     phone = userinfo[4]
 
                                     if phone == None or 0000000000:
-                                        phone = 4123891615
+                                        self.phone = int(const.phoneconfig['default_num'])
 
                                     #print("User UUID:"+ str(userinfo)+ " "+ str(name) + "   "+ str(status))
 
@@ -319,7 +319,7 @@ class RequiredCode(object):
         sender.send_string("PIPELINE")
         sender.send_json({"status":str(status),"pipelinePos":str(pipelinePos),"time": str(time)})
         
-        
+    # this sets up the gpio pinout and system light 
     def setUpIndicatorLight(self):
         
         GPIO.setmode(GPIO.BOARD)
@@ -339,5 +339,3 @@ class RequiredCode(object):
         else:
             GPIO.output(const.processing_led, 0)
             
-            
-        
