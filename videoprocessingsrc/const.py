@@ -44,7 +44,5 @@ logger.addHandler(imports.logging.FileHandler(str(loggingPath)+"Cv_PipeLine"+str
 
 default_endpoint = 'https://textbelt.com/text'
 
-
-
-print("in const")
-
+system_on_led = 12 #BOARD pin 12
+processing_led = 18  # BOARD pin 18

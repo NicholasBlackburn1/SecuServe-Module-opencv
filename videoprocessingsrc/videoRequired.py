@@ -15,7 +15,7 @@ import pipelineStates
 import knnClasifiyer
 import videoThread
 import userStats
-
+import RPi.GPIO as GPIO
 
 class RequiredCode(object):
   
@@ -24,6 +24,7 @@ class RequiredCode(object):
     def setupPipeline(self):
         pipeline_start_setup = imports.datetime.now()
         #this sends a stats message back to the main controller and to the messaging and webserver module
+        self.setUpIndicatorLight()
         
         imports.gc.enable()
         imports.sys.stdout.write = const.logger.info
@@ -96,6 +97,8 @@ class RequiredCode(object):
         while True:
             process_this_frame = process_this_frame + 1
             
+            self.setProcessingLed(True)
+            
             if(const.watchdog == 10):
                 print("WATCHDOG OVERRAIN")
                 break
@@ -119,10 +122,8 @@ class RequiredCode(object):
 
                 # runs like an idle stage so program can wait for face to be recived 
                 if(self.getAmmountOfFaces(frame) <= 0):
-                    imports.consoleLog.Warning("No faces seen waiting for faces")
-                    imports.consoleLog.Warning("Idleing....")
                     imports.time.sleep(.5)
-            
+                    self.setProcessingLed(False)
                     pipe.on_event(pipelineStates.States.IDLE)
                     
                     
@@ -317,4 +318,26 @@ class RequiredCode(object):
     def sendProgramStatus(self,sender,status,pipelinePos,time):
         sender.send_string("PIPELINE")
         sender.send_json({"status":str(status),"pipelinePos":str(pipelinePos),"time": str(time)})
+        
+        
+    def setUpIndicatorLight(self):
+        
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(const.system_on_led, GPIO.OUT)  # system on pin set as output
+        GPIO.setup(const.processing_led, GPIO.OUT)  # system on pin set as output
+        GPIO.output(const.system_on_led, 1)
+        
+        
+    # simply controls status lef of program to show user its working / processing
+    def setProcessingLed(self,processing):
+        
+        if processing:
+            GPIO.output(const.processing_led, 1)
+            GPIO.output(const.processing_led, 0)
+            GPIO.output(const.processing_led, 1)
+            GPIO.output(const.processing_led, 0)
+        else:
+            GPIO.output(const.processing_led, 0)
+            
+            
         
