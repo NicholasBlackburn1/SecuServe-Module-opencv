@@ -147,7 +147,7 @@ class RequiredCode(object):
                         if(name != None):
                         
                             if(name == 'unknown' and status == None):
-                                userStats.UserStats.userUnknown(opencvconfig= const.opencvconfig, name=name, frame=frame, font=font, imagename=const.imagename, imagePath=const.imagePath,
+                                userstat.userUnknown(self = userstat,opencvconfig= const.opencvconfig, name=name, frame=frame, font=font, imagename=const.imagename, imagePath=const.imagePath,
                                                 left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                             # print("user is unknown")
                                 imports.logging.info("unknowns Here UwU!")

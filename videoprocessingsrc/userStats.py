@@ -14,27 +14,27 @@ class UserStats(object):
     # this is for Handling User Admin Stats
     def userAdmin(self,status,name,frame,font,imagename,imagePath,left,right,bottom,top,framenum):
         
-            print(status)
-            # Draw a box around the face
-            imports.cv2.rectangle(frame, (left, top),
-                        (right, bottom), (0, 255, 0), 2)
+        print(status)
+        # Draw a box around the face
+        imports.cv2.rectangle(frame, (left, top),
+                    (right, bottom), (0, 255, 0), 2)
 
 
-            imports.cv2.putText(frame, name, (left, top),
-                        font, 0.5, (255, 255, 255), 1)
-            imports.cv2.putText(
-                frame, "Known Person..", (0,
-                                        430), font, 0.5, (255, 255, 255), 1
-            )
-            imports.cv2.putText(frame, status, (0, 450),
-                        font, 0.5, (255, 255, 255), 1)
-            imports.cv2.putText(frame, name, (0, 470), font,
-                        0.5, (255, 255, 255), 1)
-                
-            imports.cv2.putText(frame, "Frame num" + str(framenum), (0, 480), font,
+        imports.cv2.putText(frame, name, (left, top),
+                    font, 0.5, (255, 255, 255), 1)
+        imports.cv2.putText(
+            frame, "Known Person..", (0,
+                                    430), font, 0.5, (255, 255, 255), 1
+        )
+        imports.cv2.putText(frame, status, (0, 450),
+                    font, 0.5, (255, 255, 255), 1)
+        imports.cv2.putText(frame, name, (0, 470), font,
                     0.5, (255, 255, 255), 1)
+            
+        imports.cv2.putText(frame, "Frame num" + str(framenum), (0, 480), font,
+                0.5, (255, 255, 255), 1)
 
-            self.saveImage(self,imagepath=imagePath+"Admin/",imagename=imagename,frame=frame)
+        self.saveImage(self,imagepath=imagePath+"Admin/",imagename=imagename,frame=frame)
 
 
     # User Grade Status
@@ -80,36 +80,36 @@ class UserStats(object):
     # Handles Unwanted Usr Stats
     def userUnwanted(self,status,name,frame,font,imagename,imagePath,left,right,bottom,top):
         
-            imports.cv2.rectangle(frame, (left, top),
-                        (right, bottom), (0, 0, 255), 2)
-            imports.cv2.putText(frame, name, (left, top),
-                        font, 0.5, (255, 255, 255), 1)
-            imports.cv2.putText(frame, str(status), (left, top),
+        imports.cv2.rectangle(frame, (left, top),
+                    (right, bottom), (0, 0, 255), 2)
+        imports.cv2.putText(frame, name, (left, top),
                     font, 0.5, (255, 255, 255), 1)
+        imports.cv2.putText(frame, str(status), (left, top),
+                font, 0.5, (255, 255, 255), 1)
 
-            self.saveImage(imagepath=imagePath+"Unwanted/",imagename=imagename,frame=frame)
-            
+        self.saveImage(imagepath=imagePath+"Unwanted/",imagename=imagename,frame=frame)
+        
             
             
     # Handles unKnown User
     def userUnknown(self,opencvconfig,name,frame,font,imagePath,imagename,left,right,bottom,top,framenum):
 
-            imports.cv2.rectangle(frame, (left, top),
-                        (right, bottom), (0, 0, 255), 2)
-            imports.cv2.putText(frame, name, (left, top),
-                        font, 0.5, (255, 255, 255), 1)
-                    
-            imports.cv2.putText(frame, "Frame num" + str(framenum), (0, 480), font,
-                        0.5, (255, 255, 255), 1)
+        imports.cv2.rectangle(frame, (left, top),
+                    (right, bottom), (0, 0, 255), 2)
+        imports.cv2.putText(frame, name, (left, top),
+                    font, 0.5, (255, 255, 255), 1)
+                
+        imports.cv2.putText(frame, "Frame num" + str(framenum), (0, 480), font,
+                    0.5, (255, 255, 255), 1)
 
-            # Distance info
-            imports.cv2.putText(frame, opencvconfig['unreconizedPerson'], (0, 450),
-                        font, 0.5, (255, 255, 255), 1)
-            imports.cv2.putText(frame, name, (0, 470), font,
-                        0.5, (255, 255, 255), 1)
-            
-            self.saveImage(self,imagepath=imagePath+"unknown/",imagename=imagename,frame=frame)
-            
+        # Distance info
+        imports.cv2.putText(frame, opencvconfig['unreconizedPerson'], (0, 450),
+                    font, 0.5, (255, 255, 255), 1)
+        imports.cv2.putText(frame, name, (0, 470), font,
+                    0.5, (255, 255, 255), 1)
+        
+        self.saveImage(imagepath=imagePath+"unknown/",imagename=imagename,frame=frame)
+        
 
     # User Groups 
     def userGroup(self,frame,font,imagePath,imagename,left,right,bottom,top):
