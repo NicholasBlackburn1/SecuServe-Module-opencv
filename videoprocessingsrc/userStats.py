@@ -108,7 +108,7 @@ class UserStats(object):
         imports.cv2.putText(frame, name, (0, 470), font,
                     0.5, (255, 255, 255), 1)
         
-        self.saveImage(imagepath=imagePath+"unknown/",imagename=imagename,frame=frame)
+        self.saveImage(self,imagepath=imagePath+"unknown/",imagename=imagename,frame=frame)
         
 
     # User Groups 

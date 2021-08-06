@@ -7,12 +7,16 @@ import imports
 import pipelineStates
 import const
 
+context = imports.zmq.Context()
+sender = context.socket(imports.zmq.PUB)
+controller = context.socket(imports.zmq.SUB)
+
 def main():
     imports.consoleLog.Warning("Initing zmq")
-    context = imports.zmq.Context()
-    sender = context.socket(imports.zmq.PUB)
+
+   
     
-    controller = context.socket(imports.zmq.SUB)
+ 
     controller.setsockopt(imports.zmq.SUBSCRIBE, b'')
     
     sender.bind("tcp://"+"127.0.0.1:5001")
@@ -31,9 +35,9 @@ def main():
     
     # sets pipeline starting state so Fsm has all needed to run
     pipe = pipelineStates.PipeLine()
-    pipe.on_event(pipelineStates.States.SETUP_PIPELINE)
-    pipe.on_event(pipelineStates.States.TRAIN_MODEL)
-    pipe.on_event(pipelineStates.States.RUN_RECONITION)
+    pipe.on_event(pipelineStates.States.SETUP_PIPELINE,sender)
+    pipe.on_event(pipelineStates.States.TRAIN_MODEL,sender)
+    pipe.on_event(pipelineStates.States.RUN_RECONITION,sender)
 
    
 

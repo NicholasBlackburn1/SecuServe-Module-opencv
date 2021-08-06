@@ -46,3 +46,9 @@ default_endpoint = 'https://textbelt.com/text'
 
 system_on_led = 12 #BOARD pin 12
 processing_led = 18  # BOARD pin 18
+reconizing_face = 20
+
+admin_pic_url = 'http://192.168.5.8/admin'
+user_pic_url = 'http://192.168.5.8/user'
+unwanted_pic_url = 'http://192.168.5.8/unwanted'
+unknown_pic_url = 'http://192.168.5.8/unknown'

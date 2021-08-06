@@ -21,8 +21,9 @@ class RequiredCode(object):
   
     
     # this allows me to set up pipe line easyerly  but for the cv module
-    def setupPipeline(self):
+    def setupPipeline(self,sender):
         pipeline_start_setup = imports.datetime.now()
+        self.sendProgramStatus(sender,"SETUP_PIPELINE","Starting to run pipleline",imports.datetime.now()-pipeline_start_setup)
         #this sends a stats message back to the main controller and to the messaging and webserver module
         self.setUpIndicatorLight()
         
@@ -51,17 +52,16 @@ class RequiredCode(object):
         # Downlaods all the Faces
         self.downloadUserFaces(const.imagePathusers)
         imports.consoleLog.PipeLine_Ok("STAGE COMPLETE"+str( imports.datetime.now() -  pipeline_start_setup))
-        return
          # updates stats message 
-        #self.sendProgramStatus(sender,enums.PipeLineStates.STAGE_COMPLETE,"finishes up pipeline to run",imports.datetime.now()-pipeline_start_setup)
-        
+        self.sendProgramStatus(sender,"SETUP_PIPELINE","finishes setup pipeline to run",imports.datetime.now()-pipeline_start_setup)
+        return
         
             
     # This trains the face model for the  pipeline
-    def trainPipeLine(self):
+    def trainPipeLine(self,sender):
         pipeline_train_knn = imports.datetime.now()
          # updates stats message 
-        #self.sendProgramStatus(sender,enums.PipeLineStates.TRAIN_MODEL,"starting  to train model",imports.datetime.now() - pipeline_train_knn)
+        self.sendProgramStatus(sender,"TRAIN_MODEL","starting  to train model",imports.datetime.now() - pipeline_train_knn)
        
         imports.consoleLog.Warning("Training Model Going to take a while UwU..... ")
         knnClasifiyer.train(train_dir=const.imagePathusers,
@@ -69,11 +69,12 @@ class RequiredCode(object):
         
         imports.consoleLog.PipeLine_Ok("Done Train Knn pipeline timer" + str(imports.datetime.now() - pipeline_train_knn))
         imports.consoleLog.Warning("Done Training Model.....")
+        self.sendProgramStatus(sender,"STAGE_COMPLETE","done training model",imports.datetime.now() - pipeline_train_knn)
         return
-        #self.sendProgramStatus(sender,enums.PipeLineStates.STAGE_COMPLETE,"done  training model",imports.datetime.now() - pipeline_train_knn)
+    
+    def reconitionPipeline(self,sender):
         
-    def reconitionPipeline(self):
-        
+        self.sendProgramStatus(sender,"SETUP_PIPELINE","Starting Face rec",imports.datetime.now())
          # cleans mess as we keep prosessing
         imports.gc.collect()
     
@@ -101,6 +102,7 @@ class RequiredCode(object):
             
             if(const.watchdog == 10):
                 print("WATCHDOG OVERRAIN")
+                self.sendProgramStatus(sender,"ERROR","WATCHDOG OVERRRAN",imports.datetime.now())
                 break
                 
             if process_this_frame % 30 == 0:
@@ -109,7 +111,7 @@ class RequiredCode(object):
                 frame = cap.read()
                 img =  imports.cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
                 predictions =  knnClasifiyer.predict(
-                    img, knn_clf= knnClasifiyer.loadTrainedModel(knn_clf =None, model_path=const.Modelpath), distance_threshold=0.65)
+                    img, knn_clf= knnClasifiyer.loadTrainedModel(knn_clf =None, model_path=const.Modelpath), distance_threshold=0.55)
                 # print(process_this_frame)
 
                 """
@@ -122,14 +124,16 @@ class RequiredCode(object):
 
                 # runs like an idle stage so program can wait for face to be recived 
                 if(self.getAmmountOfFaces(frame) <= 0):
+                    
                     imports.time.sleep(.5)
                     self.setProcessingLed(False)
-                    pipe.on_event(pipelineStates.States.IDLE)
+                    pipe.on_event(pipelineStates.States.IDLE,sender)
                     
                     
                 #processes faces when seen
                 if(self.getAmmountOfFaces(frame) > 0):
                     face_processing_pipeline_timer =  imports.datetime.now()
+                    self.setProcessingLed(True)
                     # Display t he results
                     for name, (top, right, bottom, left) in predictions:
                         
@@ -149,13 +153,12 @@ class RequiredCode(object):
                             if(name == 'unknown' and status == None):
                                 userstat.userUnknown(self = userstat,opencvconfig= const.opencvconfig, name=name, frame=frame, font=font, imagename=const.imagename, imagePath=const.imagePath,
                                                 left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
-                            # print("user is unknown")
+                       
                                 imports.logging.info("unknowns Here UwU!")
-                                #message.sendCapturedImageMessage("eeeep there is an unknown",4123891615,'http://192.168.5.7:2000/unknown',self.smsconfig['textbelt-key'])
-                                imports.consoleLog.PipeLine_Ok("stop face prossesing timer unknown" +
-                                    str( imports.datetime.now()-face_processing_pipeline_timer))
+                                self.sendUserInfoToSocket(sender=sender,status=status,user=name,image=const.unknown_pic_url,time= imports.datetime.now())
+                                imports.consoleLog.PipeLine_Ok("stop face prossesing timer unknown" +str( imports.datetime.now()-face_processing_pipeline_timer))
                             
-                                imports.watchdog +=1
+                                const.watchdog +=1
 
                             else:
                                 if name in const.userList[i]:
@@ -174,6 +177,7 @@ class RequiredCode(object):
                                             "got an Admin The name is"+str(name))
                                         userstat.userAdmin(self=userstat,status=status, name=name, frame=frame, font=font, imagename=const.imagename,
                                                     imagePath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
+                                        self.sendUserInfoToSocket(sender=sender,status=status,user=name,image=const.admin_pic_url,time=imports.datetime.now())
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in admin" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         
 
@@ -183,8 +187,8 @@ class RequiredCode(object):
                                         userstat.userUser(self=userstat,status=status, name=name, frame=frame, font=font, imagename=const.imagename,
                                                     imagePath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                                         
-                                        imports.consoleLog.Warning(
-                                            "eeeep there is an User They Might be evil so um let them in"+"  `"+"There Name is:" + str(name))
+                                        imports.consoleLog.Warning("eeeep there is an User They Might be evil so um let them in"+"  `"+"There Name is:" + str(name))
+                                        self.sendUserInfoToSocket(sender=sender,status=status,user=name,image=const.user_pic_url,time=imports.datetime.now())
                                         imports.consoleLog.PipeLine_Ok(
                                             "Stping face prossesing timer in user" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         
@@ -194,6 +198,8 @@ class RequiredCode(object):
                                             "got an Unwanted Human The name is"+str(name))
                                         userstat.userUnwanted(self=userstat,status=status, name=name, frame=frame, font=font, imagename=const.imagename,
                                                         imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
+                                        
+                                        self.sendUserInfoToSocket(sender=sender,status=status,user=name,image=const.unwanted_pic_url,time=imports.datetime.now())
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in unwanted" + str(
                                         imports.datetime.now()-face_processing_pipeline_timer))
                                         
@@ -212,6 +218,7 @@ class RequiredCode(object):
                                         "not the correct obj in list" + str(const.userList[i]))
                                     # allows counter ro count up to the ammount in the database
                                     if(i >  len(const.userList)):
+                                        print(str(const.userList[i]))
                                         i+=1
                                         
                                     # allows the countor to reset to zero 
@@ -227,6 +234,7 @@ class RequiredCode(object):
                             imports.consoleLog.PipeLine_Ok("Time For non Face processed frames" + str(imports.datetime.now()-face_processing_pipeline_timer))
                             return
                 if const.watchdog == 10:
+                    self.sendProgramStatus(sender,"ERROR","WATCHDOG OVERRRAN",imports.datetime.now())
                     break
         
     # returns ammount of seenfaces
@@ -320,12 +328,20 @@ class RequiredCode(object):
         sender.send_string("PIPELINE")
         sender.send_json({"status":str(status),"pipelinePos":str(pipelinePos),"time": str(time)})
         
+        
+        
+     # Sends Seen Users Info to Socket
+    def sendUserInfoToSocket(self,sender,status,user,image,time):
+        sender.send_string("RECONIZED")
+        sender.send_json({"usr":str(user),"status":str(status),"image":str(image),"time": str(time)})
+        
     # this sets up the gpio pinout and system light 
     def setUpIndicatorLight(self):
         
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(const.system_on_led, GPIO.OUT)  # system on pin set as output
         GPIO.setup(const.processing_led, GPIO.OUT)  # system on pin set as output
+   
         GPIO.output(const.system_on_led, 1)
         
         
@@ -340,3 +356,4 @@ class RequiredCode(object):
         else:
             GPIO.output(const.processing_led, 0)
             
+     
