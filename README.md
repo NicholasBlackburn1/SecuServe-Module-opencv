@@ -4,7 +4,7 @@
 
 
 ### What is this for 
-this is for easy testing and  dev of my SecurSeve Security System In Modules form UwU
+this is for easy testing and  dev of my SecurSeve Security System In Modules form and allows me To follow S.O.L.I.D Software princeables
 
 # What this Module does 
 
