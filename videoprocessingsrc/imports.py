@@ -63,3 +63,4 @@ from colorama import Fore, Back, Style
 import database as mydb
 
 import threading,queue
+import zmq.asyncio

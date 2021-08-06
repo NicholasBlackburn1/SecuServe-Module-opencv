@@ -7,20 +7,17 @@ import imports
 import pipelineStates
 import const
 
-context = imports.zmq.Context()
+imports.zmq.asyncio.install()
+
+context = imports.zmq.asyncio.Context()
+
 sender = context.socket(imports.zmq.PUB)
-controller = context.socket(imports.zmq.SUB)
+
 
 def main():
     imports.consoleLog.Warning("Initing zmq")
 
-   
-    
- 
-    controller.setsockopt(imports.zmq.SUBSCRIBE, b'')
-    
-    sender.bind("tcp://"+"127.0.0.1:5001")
-    controller.connect("tcp://"+"127.0.0.1:5000")
+    sender.bind("tcp://"+"127.0.0.1:5001") 
     
     imports.consoleLog.PipeLine_Ok("running zmq")
     imports.consoleLog.Debug("Waiting for Zmq to recv Control Message...")

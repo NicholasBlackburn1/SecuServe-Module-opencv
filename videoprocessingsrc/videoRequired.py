@@ -322,11 +322,12 @@ class RequiredCode(object):
 
                 # Add names of the ecodings to thw end of list
 
-
+    
     # Sends Program Status to Socket
     def sendProgramStatus(self,sender,status,pipelinePos,time):
-        sender.send_string("PIPELINE")
-        sender.send_json({"status":str(status),"pipelinePos":str(pipelinePos),"time": str(time)})
+      sender.send_string("PIPELINE")
+      sender.send_json({"status":str(status),"pipelinePos":str(pipelinePos),"time": str(time)})
+        
         
         
         
