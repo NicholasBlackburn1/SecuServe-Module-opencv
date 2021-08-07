@@ -101,7 +101,7 @@ class RequiredCode(object):
         pipeline_video_prossesing =  imports.datetime.now()
 
         cap =  videoThread.ThreadingClass(gst_str)
-        
+
         pipe = pipelineStates.PipeLine()
         
         #TODO: GET RECONITION TO IDLE when it sees no faces so it does not waste time waiting for faces
@@ -121,7 +121,7 @@ class RequiredCode(object):
                 frame = cap.read()
                 img =  imports.cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
                 predictions =  knnClasifiyer.predict(
-                    img, knn_clf= knnClasifiyer.loadTrainedModel(knn_clf =None, model_path=const.Modelpath), distance_threshold=0.55)
+                    img, knn_clf= knnClasifiyer.loadTrainedModel(knn_clf =None, model_path=const.Modelpath), distance_threshold=0.65)
                 # print(process_this_frame)
 
                 """
@@ -173,7 +173,12 @@ class RequiredCode(object):
                             else:
                                 
                                 if name not in const.userList[self.i]:
-                                    self.i+=1
+                                    
+                                    if(self.i > len(const.userList[self.i])):
+                                        self.i+=1
+                                    
+                                        
+                                    
                                   
                                     
                                 if  name in const.userList[self.i]:
@@ -191,7 +196,7 @@ class RequiredCode(object):
                                     if (status == Status.ADMIN):
                                         imports.logging.info(
                                             "got an Admin The name is"+str(name))
-                                        self.sendProgramStatus(sender,"UWU","UWU",imports.datetime.now())
+                                        self.sendUserInfoToSocket(sender=sender,status=status,user=name,image=const.admin_pic_url ,time= imports.datetime.now())
                                         userstat.userAdmin(self=userstat,status=status, name=name, frame=frame, font=font, imagename=const.imagename,imagePath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in admin" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         
@@ -333,7 +338,7 @@ class RequiredCode(object):
      # Sends Seen Users Info to Socket
     def sendUserInfoToSocket(self,sender,status,user,image,time):
         imports.time.sleep(.5)
-        sender.send_string("RECONIZED")
+        sender.send_string("USERS")
         sender.send_json({"usr":str(user),"status":str(status),"image":str(image),"time": str(time)})
         
     # this sets up the gpio pinout and system light 

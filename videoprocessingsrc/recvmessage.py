@@ -1,6 +1,7 @@
 
 
 import zmq
+from colorama import Fore, Back, Style
 
 context = zmq.Context()
 controller = context.socket(zmq.SUB)
@@ -13,8 +14,20 @@ poller.register(controller, zmq.POLLIN)
 
 while True:
     
-    evts = dict(poller.poll(timeout=.5))
+    evts = dict(poller.poll(timeout=100))
     if controller in evts:
+        
+        
         topic = controller.recv_string()
         status = controller.recv_json()
-        print(f"Topic: {topic} => {status}")
+        print(topic)
+        
+        if(topic == "PIPELINE"):
+            print(Fore.YELLOW+f"Topic: {topic} => {status}")
+            
+        if(topic == "USERS"):
+            print(Fore.GREEN+f"Topic: {topic} => {status}")
+             
+        if(topic == "ERROR"):
+            print(Fore.RED+f"Topic: {topic} => {status}")
+        
