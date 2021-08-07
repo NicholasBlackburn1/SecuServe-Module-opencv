@@ -14,10 +14,12 @@ context = imports.zmq.asyncio.Context()
 sender = context.socket(imports.zmq.PUB)
 
 
+
+
 def main():
     imports.consoleLog.Warning("Initing zmq")
-
-    sender.bind("tcp://"+"127.0.0.1:5001") 
+    
+    sender.bind("tcp://"+"*:5001") 
     
     imports.consoleLog.PipeLine_Ok("running zmq")
     imports.consoleLog.Debug("Waiting for Zmq to recv Control Message...")

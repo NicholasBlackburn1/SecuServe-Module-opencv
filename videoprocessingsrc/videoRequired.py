@@ -8,7 +8,10 @@ State machine -> Discreet Finite States of of operations and clear transitions o
 """
 
 
+from enum import Enum
 from os import stat
+
+from Jetson.GPIO.gpio import UNKNOWN
 import imports
 import const
 import pipelineStates
@@ -17,9 +20,16 @@ import videoThread
 import userStats
 import RPi.GPIO as GPIO
 
+
+class Status():
+    ADMIN = 'Admin',
+    USER = 'User',
+    UNWANTED = 'Unwanted',
+    UNKNOWN = None
+
 class RequiredCode(object):
   
-    
+    i = 0
     # this allows me to set up pipe line easyerly  but for the cv module
     def setupPipeline(self,sender):
         pipeline_start_setup = imports.datetime.now()
@@ -84,7 +94,7 @@ class RequiredCode(object):
 
         imports.consoleLog.Warning("Looking for Faces...")
 
-        i = 0
+        
         face_index = 0
         process_this_frame = 25
         status = None
@@ -106,7 +116,7 @@ class RequiredCode(object):
                 break
                 
             if process_this_frame % 30 == 0:
-                #imports.cv2.imread("/home/nick/Face-Door_Moudles/Video-processing/data/images/me.jpg")
+                #frame=imports.cv2.imread("/home/nick/Face-Door_Moudles/Video-processing/data/images/me.jpg")
                 #cap.read()
                 frame = cap.read()
                 img =  imports.cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
@@ -151,9 +161,9 @@ class RequiredCode(object):
                         if(name != None):
                         
                             if(name == 'unknown' and status == None):
-                                userstat.userUnknown(self = userstat,opencvconfig= const.opencvconfig, name=name, frame=frame, font=font, imagename=const.imagename, imagePath=const.imagePath,
+                                userstat.userUnknown(self = userstat,opencvconfig= const.opencvconfig, name=name, frame=frame, font=font, imagename=const.imagename, imagepath=const.imagePath,
                                                 left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
-                       
+                        
                                 imports.logging.info("unknowns Here UwU!")
                                 self.sendUserInfoToSocket(sender=sender,status=status,user=name,image=const.unknown_pic_url,time= imports.datetime.now())
                                 imports.consoleLog.PipeLine_Ok("stop face prossesing timer unknown" +str( imports.datetime.now()-face_processing_pipeline_timer))
@@ -161,31 +171,35 @@ class RequiredCode(object):
                                 const.watchdog +=1
 
                             else:
-                                if name in const.userList[i]:
-                                    userinfo = const.userList[i][name]
+                                
+                                if name not in const.userList[self.i]:
+                                    self.i+=1
+                                  
+                                    
+                                if  name in const.userList[self.i]:
+                                    userinfo = const.userList[self.i][name]
                                     status = userinfo[1]
                                     name = userinfo[0]
                                     phone = userinfo[4]
+                                    
 
                                     if phone == None or 0000000000:
                                         self.phone = int(const.phoneconfig['default_num'])
 
                                     #print("User UUID:"+ str(userinfo)+ " "+ str(name) + "   "+ str(status))
 
-                                    if (status == 'Admin'):
+                                    if (status == Status.ADMIN):
                                         imports.logging.info(
                                             "got an Admin The name is"+str(name))
-                                        userstat.userAdmin(self=userstat,status=status, name=name, frame=frame, font=font, imagename=const.imagename,
-                                                    imagePath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
-                                        self.sendUserInfoToSocket(sender=sender,status=status,user=name,image=const.admin_pic_url,time=imports.datetime.now())
+                                        self.sendProgramStatus(sender,"UWU","UWU",imports.datetime.now())
+                                        userstat.userAdmin(self=userstat,status=status, name=name, frame=frame, font=font, imagename=const.imagename,imagePath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in admin" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         
 
-                                    if (status == 'User'):
+                                    if (status == Status.USER):
                                         imports.logging.info(
                                             "got an User Human The name is"+str(name))
-                                        userstat.userUser(self=userstat,status=status, name=name, frame=frame, font=font, imagename=const.imagename,
-                                                    imagePath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
+                                        userstat.userUser(self=userstat,status=status, name=name, frame=frame, font=font, imagename=const.imagename,imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                                         
                                         imports.consoleLog.Warning("eeeep there is an User They Might be evil so um let them in"+"  `"+"There Name is:" + str(name))
                                         self.sendUserInfoToSocket(sender=sender,status=status,user=name,image=const.user_pic_url,time=imports.datetime.now())
@@ -193,7 +207,7 @@ class RequiredCode(object):
                                             "Stping face prossesing timer in user" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         
 
-                                    if (status == 'Unwanted'):
+                                    if (status == Status.UNWANTED):
                                         imports.logging.info(
                                             "got an Unwanted Human The name is"+str(name))
                                         userstat.userUnwanted(self=userstat,status=status, name=name, frame=frame, font=font, imagename=const.imagename,
@@ -205,28 +219,13 @@ class RequiredCode(object):
                                         
                                     
 
-                                    if(self.getAmmountOfFaces(frame) > 1):
+                                    if(self.getAmmountOfFaces(frame) > 2):
                                         userStats.UserStats.userGroup(self=userstat,frame=frame, font=font, imagename=const.imagename, imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top)
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in Group" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         #message.sendCapturedImageMessage("eeeep there is Gagle of Peope I dont know what to do",phone,'http://192.168.5.8:2000/group',self.smsconfig['textbelt-key'])
                                         
                                         
 
-                                else:
-
-                                    imports.consoleLog.Warning(
-                                        "not the correct obj in list" + str(const.userList[i]))
-                                    # allows counter ro count up to the ammount in the database
-                                    if(i >  len(const.userList)):
-                                        print(str(const.userList[i]))
-                                        i+=1
-                                        
-                                    # allows the countor to reset to zero 
-                                    if(i == len(const.userList)):
-                                        i=0
-                                        
-                                        
-                                    
                                     
 
                         else:
@@ -333,6 +332,7 @@ class RequiredCode(object):
         
      # Sends Seen Users Info to Socket
     def sendUserInfoToSocket(self,sender,status,user,image,time):
+        imports.time.sleep(.5)
         sender.send_string("RECONIZED")
         sender.send_json({"usr":str(user),"status":str(status),"image":str(image),"time": str(time)})
         
