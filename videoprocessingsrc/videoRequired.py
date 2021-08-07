@@ -21,14 +21,14 @@ import userStats
 import RPi.GPIO as GPIO
 
 
-class Status():
-    ADMIN = 'Admin',
-    USER = 'User',
-    UNWANTED = 'Unwanted',
-    UNKNOWN = None
 
 class RequiredCode(object):
-  
+    # enums for the user status 
+    ADMIN = 'Admin'
+    USER = 'User'
+    UNWANTED = 'Unwanted'
+    UNKNOWN = None
+    
     i = 0
     # this allows me to set up pipe line easyerly  but for the cv module
     def setupPipeline(self,sender):
@@ -193,32 +193,31 @@ class RequiredCode(object):
 
                                     #print("User UUID:"+ str(userinfo)+ " "+ str(name) + "   "+ str(status))
 
-                                    if (status == Status.ADMIN):
-                                        imports.logging.info(
-                                            "got an Admin The name is"+str(name))
+                                    if (status == 'Admin'):
                                         self.sendUserInfoToSocket(sender=sender,status=status,user=name,image=const.admin_pic_url ,time= imports.datetime.now())
-                                        userstat.userAdmin(self=userstat,status=status, name=name, frame=frame, font=font, imagename=const.imagename,imagePath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
+                                        imports.logging.info("got an Admin The name is"+str(name))
+                                        userstat.userAdmin(self=userstat,status=status, name=name, frame=frame, font=font, imagename=const.imagename,imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in admin" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         
 
                                     if (status == Status.USER):
+                                        self.sendUserInfoToSocket(sender=sender,status=status,user=name,image=const.user_pic_url,time=imports.datetime.now())
                                         imports.logging.info(
                                             "got an User Human The name is"+str(name))
                                         userstat.userUser(self=userstat,status=status, name=name, frame=frame, font=font, imagename=const.imagename,imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                                         
                                         imports.consoleLog.Warning("eeeep there is an User They Might be evil so um let them in"+"  `"+"There Name is:" + str(name))
-                                        self.sendUserInfoToSocket(sender=sender,status=status,user=name,image=const.user_pic_url,time=imports.datetime.now())
                                         imports.consoleLog.PipeLine_Ok(
                                             "Stping face prossesing timer in user" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         
 
                                     if (status == Status.UNWANTED):
+                                        self.sendUserInfoToSocket(sender=sender,status=status,user=name,image=const.unwanted_pic_url,time=imports.datetime.now())
                                         imports.logging.info(
                                             "got an Unwanted Human The name is"+str(name))
                                         userstat.userUnwanted(self=userstat,status=status, name=name, frame=frame, font=font, imagename=const.imagename,
                                                         imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                                         
-                                        self.sendUserInfoToSocket(sender=sender,status=status,user=name,image=const.unwanted_pic_url,time=imports.datetime.now())
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in unwanted" + str(
                                         imports.datetime.now()-face_processing_pipeline_timer))
                                         
@@ -331,15 +330,16 @@ class RequiredCode(object):
     def sendProgramStatus(self,sender,status,pipelinePos,time):
       sender.send_string("PIPELINE")
       sender.send_json({"status":str(status),"pipelinePos":str(pipelinePos),"time": str(time)})
+      imports.time.sleep(.5)
         
         
         
         
      # Sends Seen Users Info to Socket
     def sendUserInfoToSocket(self,sender,status,user,image,time):
-        imports.time.sleep(.5)
         sender.send_string("USERS")
         sender.send_json({"usr":str(user),"status":str(status),"image":str(image),"time": str(time)})
+        imports.time.sleep(.5)
         
     # this sets up the gpio pinout and system light 
     def setUpIndicatorLight(self):

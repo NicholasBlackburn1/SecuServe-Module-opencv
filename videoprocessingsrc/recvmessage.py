@@ -24,10 +24,13 @@ while True:
         
         if(topic == "PIPELINE"):
             print(Fore.YELLOW+f"Topic: {topic} => {status}")
+            print(Fore.RESET)
             
         if(topic == "USERS"):
             print(Fore.GREEN+f"Topic: {topic} => {status}")
+            print(Fore.RESET)
              
         if(topic == "ERROR"):
             print(Fore.RED+f"Topic: {topic} => {status}")
+            print(Fore.RESET)
         
