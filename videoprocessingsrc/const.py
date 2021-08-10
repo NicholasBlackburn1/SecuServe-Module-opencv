@@ -23,7 +23,7 @@ opencvconfig = config_object['OPENCV']
 fileconfig = config_object['FILE']
 phoneconfig = config_object['PHONE']
 
-current_time = imports.datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p_%s")
+current_time = imports.datetime.now()
 
 rootDirPath = fileconfig['rootDirPath']
 configPath = fileconfig['rootDirPath']+fileconfig['configPath']

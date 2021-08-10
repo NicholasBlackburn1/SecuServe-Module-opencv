@@ -32,6 +32,7 @@ class RequiredCode(object):
     i = 0
     # this allows me to set up pipe line easyerly  but for the cv module
     def setupPipeline(self,sender):
+        const.watchdog = 0 
         pipeline_start_setup = imports.datetime.now()
         self.sendProgramStatus(sender,"SETUP_PIPELINE","Starting to run pipleline",imports.datetime.now()-pipeline_start_setup)
         #this sends a stats message back to the main controller and to the messaging and webserver module
@@ -121,7 +122,8 @@ class RequiredCode(object):
                 frame = cap.read()
                 img =  imports.cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
                 predictions =  knnClasifiyer.predict(
-                    img, knn_clf= knnClasifiyer.loadTrainedModel(knn_clf =None, model_path=const.Modelpath), distance_threshold=0.65)
+                    img, knn_clf= knnClasifiyer.loadTrainedModel(knn_clf =None, model_path=const.Modelpath), distance_threshold=0.4
+                    )
                 # print(process_this_frame)
 
                 """
@@ -154,26 +156,24 @@ class RequiredCode(object):
                         right *= 2
                         bottom *= 2
                         left *= 2
-                        print(status)
+                    
                         print(process_this_frame)
                         print(name)
 
                         if(name != None):
-                        
-                            if(name == 'unknown' and status == None):
-                                userstat.userUnknown(self = userstat,opencvconfig= const.opencvconfig, name=name, frame=frame, font=font, imagename=const.imagename, imagepath=const.imagePath,
-                                                left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
-                        
-                                imports.logging.info("unknowns Here UwU!")
-                                self.sendUserInfoToSocket(sender=sender,status=status,user=name,image=const.unknown_pic_url,time= imports.datetime.now())
-                                imports.consoleLog.PipeLine_Ok("stop face prossesing timer unknown" +str( imports.datetime.now()-face_processing_pipeline_timer))
                             
-                                const.watchdog +=1
-
-                            else:
-                                
                                 if name not in const.userList[self.i]:
                                     
+                                                    
+                                    if(status == None):
+                                        userstat.userUnknown(self = userstat,opencvconfig= const.opencvconfig, name=name, frame=frame, font=font, imagename=const.imagename, imagepath=const.imagePath,
+                                                        left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
+                                
+                                        imports.logging.info("unknowns Here UwU!")
+                                        self.sendUserInfoToSocket(sender=sender,status=status,user=name,image=const.unknown_pic_url,time= imports.datetime.now())
+                                        imports.consoleLog.PipeLine_Ok("stop face prossesing timer unknown" +str( imports.datetime.now()-face_processing_pipeline_timer))
+                                    
+                                        const.watchdog +=1
                                     if(self.i > len(const.userList[self.i])):
                                         self.i+=1
                                     
@@ -182,10 +182,16 @@ class RequiredCode(object):
                                   
                                     
                                 if  name in const.userList[self.i]:
+                                    
                                     userinfo = const.userList[self.i][name]
+                                    
                                     status = userinfo[1]
                                     name = userinfo[0]
                                     phone = userinfo[4]
+                                    
+                                    
+                                    print(imports.consoleLog.PipeLine_Data(userinfo))
+                                    print(imports.consoleLog.Warning(status))
                                     
 
                                     if phone == None or 0000000000:
@@ -200,7 +206,7 @@ class RequiredCode(object):
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in admin" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         
 
-                                    if (status == Status.USER):
+                                    if (status == 'User'):
                                         self.sendUserInfoToSocket(sender=sender,status=status,user=name,image=const.user_pic_url,time=imports.datetime.now())
                                         imports.logging.info(
                                             "got an User Human The name is"+str(name))
@@ -211,7 +217,7 @@ class RequiredCode(object):
                                             "Stping face prossesing timer in user" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         
 
-                                    if (status == Status.UNWANTED):
+                                    if (status == 'Unwanted'):
                                         self.sendUserInfoToSocket(sender=sender,status=status,user=name,image=const.unwanted_pic_url,time=imports.datetime.now())
                                         imports.logging.info(
                                             "got an Unwanted Human The name is"+str(name))
@@ -238,7 +244,7 @@ class RequiredCode(object):
                             return
                 if const.watchdog == 10:
                     self.sendProgramStatus(sender,"ERROR","WATCHDOG OVERRRAN",imports.datetime.now())
-                    break
+                    return pipelineStates.States.ERROR
         
     # returns ammount of seenfaces
     def getAmmountOfFaces(self,image):

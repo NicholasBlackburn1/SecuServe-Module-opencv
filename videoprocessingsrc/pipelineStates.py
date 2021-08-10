@@ -3,10 +3,13 @@ this is the file holds the Pipeline and controls Pipline
 watch dog count to frozen 
 """
 from enum import Enum
-from pickle import NONE
+
+
+from zmq.sugar.frame import Message
 import videoRequired
 import consoleLog
 from state import State
+from datetime import datetime, time
 
 class States(Enum):
     IDLE = 0
@@ -52,7 +55,10 @@ class RunReconitionPipeLine(State):
     def on_event(self, event,sender):
         if event == States.RUN_RECONITION:
             videoRequired.RequiredCode.reconitionPipeline(videoRequired.RequiredCode(),sender)
-           
+            
+            if(videoRequired.RequiredCode.reconitionPipeline(videoRequired.RequiredCode(),sender) == States.ERROR):
+                return Error()
+            
         return self
 
 class Idle(State):
@@ -73,11 +79,17 @@ class Error(State):
     """
     The state which The program waits for a face to be spotted 
     """
+    msg = None
+    def __init__(self,message):
+        self.msg = message
+    
 
-    def on_event(self, event):
+    def on_event(self, event,sender):
         if event == States.ERROR:
             videoRequired.imports.consoleLog.Error("ERROR....")
-            return #TODO: add pipeline trained models
+            sender.send_string("ERROR")
+            sender.send_json({"error":str(self.msg),"time":str(datetime.now())})
+            return 
 
         return self
     
