@@ -1,7 +1,7 @@
 """
 This class is for the required opencv
 parts 
-State machine -> Discreet Finite States of of operations and clear transitions of states, seperation of states, trigger signals, 
+State machine -> Discreet Finite States of of operations and clear transitions of states, seperation of states, trigger signals
 
 """
 
