@@ -181,7 +181,7 @@ class RequiredCode(object):
                                     
                                     userinfo = const.userList[self.i][name]
                                     
-                                    status = userinfo[1]
+                                    int(status) = userinfo[1]
                                     usrname = userinfo[0]
                                     phone = userinfo[4]
                                     
