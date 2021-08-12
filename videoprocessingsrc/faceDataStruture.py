@@ -42,14 +42,12 @@ class UserData:
         # sets user status in structure
     def setUserStatus(self, status) -> str:
         stat = str(status)
-
+       
         if(stat == "" or None):
             raise(TypeError("Cant have No Name status"))
-        if (stat.isnumeric()):
-            raise(TypeError("Cant have a number in the status "))
         else:
-            self._status = stat
-
+            self._status = int(stat)
+            
         # sets user image in structure
 
     def setUserImg(self, img) -> str:

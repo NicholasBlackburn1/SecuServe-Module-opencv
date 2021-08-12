@@ -181,10 +181,11 @@ class RequiredCode(object):
                                     
                                     userinfo = const.userList[self.i][name]
                                     
-                                    int(status) = userinfo[1]
+                                    status= userinfo[1]
                                     usrname = userinfo[0]
                                     phone = userinfo[4]
                                     
+                                    status = int(status)
                                     
                                    
                                     print(imports.consoleLog.Warning(status))
