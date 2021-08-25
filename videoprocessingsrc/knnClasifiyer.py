@@ -31,7 +31,7 @@ def loadTrainingData(train_dir, verbose=True):
             # Loop through each training image for the current person
             for img_path in image_files_in_folder( os.path.join(train_dir, class_dir)):
                 image =  face_recognition.load_image_file(img_path)
-                face_bounding_boxes =  face_recognition.face_locations(image, model="cnn",number_of_times_to_upsample=0)
+                face_bounding_boxes =  face_recognition.face_locations(image, model="cnn",number_of_times_to_upsample=1)
 
                 if len(face_bounding_boxes) != 1:
                     # If there are no people (or too many people) in a training image, skip the image.
@@ -96,7 +96,7 @@ def predict(Camera_frame, knn_clf=None, distance_threshold=0.4):
     faces_encodings =  face_recognition.face_encodings(Camera_frame, known_face_locations=X_face_locations)
 
     # Use the KNN model to find the best matches for the test face
-    closest_distances = knn_clf.kneighbors(faces_encodings, n_neighbors=1)
+    closest_distances = knn_clf.kneighbors(faces_encodings, n_neighbors=2)
     
     # checks to see if faces are maches 
     are_matches = [closest_distances[0][i][0] <= distance_threshold for i in range(len(X_face_locations))]
