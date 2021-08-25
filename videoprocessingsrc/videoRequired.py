@@ -332,26 +332,32 @@ class RequiredCode(object):
     
     # Sends Program Status to Socket
     def sendProgramStatus(self,sender,status,pipelinePos,time):
+      imports.consoleLog.Warning("sending Program status to zmq socket")
       sender.send_string("PIPELINE")
       sender.send_json({"status":str(status),"pipelinePos":str(pipelinePos),"time": str(time)})
       imports.time.sleep(.5)
+      imports.consoleLog.PipeLine_Ok("Sent Program status to zmq socket")
         
         
       
     # Sends Face count to the web server to create database entryies
     def sendFaceCount(self,sender,total,unknown,reconized,time):
+      imports.consoleLog.Warning("sending Face count to zmq")
       sender.send_string("FACECOUNT")
       sender.send_json({"total": int(total),"unknown":int(unknown),"reconized":str(reconized),"time": str(time)})
       imports.time.sleep(.5)
+      imports.consoleLog.PipeLine_Ok("sent Face Count to zmq socket")
         
         
         
         
      # Sends Seen Users Info to Socket
     def sendUserInfoToSocket(self,sender,status,user,image,time,phonenumber):
+        imports.consoleLog.Warning("sending User indo to zmq")
         sender.send_string("USERS")
         sender.send_json({"usr":str(user),"status":str(status),"image":str(image),"phone":str(phonenumber),"time": str(time)})
         imports.time.sleep(.5)
+        imports.consoleLog.PipeLine_Ok("sent User info to zmq socket")
         
     # this sets up the gpio pinout and system light 
     def setUpIndicatorLight(self):
