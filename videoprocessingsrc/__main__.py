@@ -13,24 +13,14 @@ context = imports.zmq.asyncio.Context()
 
 # inits Sender and reciver Sockets for the Module
 sender = context.socket(imports.zmq.PUB)
-receiver = context.socket(imports.zmq.SUB)
-
-receiver.setsockopt(imports.zmq.SUBSCRIBE, b'')
 
 def main():
     imports.consoleLog.Warning("Initing zmq")
     
-    receiver.connect("tcp://"+"127.0.0.1:5000")
     sender.bind("tcp://"+"*:5001") 
     
     imports.consoleLog.PipeLine_Ok("running zmq")
-    imports.consoleLog.Debug("Waiting for Zmq to recv Control Message...")
     watchdog = 0
-    
-    
-    poller = imports.zmq.Poller()
-    poller.register(receiver, imports.zmq.POLLIN)
-        
     while True:
     
     

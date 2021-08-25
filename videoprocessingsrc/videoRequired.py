@@ -2,7 +2,7 @@
 This class is for the required opencv
 parts 
 State machine -> Discreet Finite States of of operations and clear transitions of states, seperation of states, trigger signals
-
+TODO: work on getting the total of reconized and unreconized peole there are in the group
 """
 
 
@@ -28,6 +28,12 @@ class RequiredCode(object):
 
     
     i = 0
+    
+    # these are vars for storing the num faces that are seen
+    Total = 0
+    Reconized = 0
+    Unreconized = 0
+    
     # this allows me to set up pipe line easyerly  but for the cv module
     def setupPipeline(self,sender):
         const.watchdog = 0 
@@ -158,6 +164,21 @@ class RequiredCode(object):
 
                         if(name != None):
                             
+
+                                userinfo = const.userList[self.i][name]
+                                
+                                status= userinfo[1]
+                                usrname = userinfo[0]
+                                phone = userinfo[4]
+                                
+                                imports.consoleLog.PipeLine_Data("User seen name is"+ " "+ name)
+                                imports.consoleLog.PipeLine_Data("User seen user is"+ " "+ usrname)
+                                
+                                # allows total var to incrament All Seen Faces
+                                self.Total += self.getAmmountOfFaces(frame)
+                                
+                                self.sendFaceCount(sender,self.Total,self.Unreconized,self.Reconized,imports.datetime.now())
+                        
                                 if name not in const.userList[self.i]:
                                     
                                                     
@@ -169,6 +190,7 @@ class RequiredCode(object):
                                         self.sendUserInfoToSocket(sender=sender,status=status,user=name,image=const.unknown_pic_url,time= imports.datetime.now(),phonenumber=4123891615)
                                         imports.consoleLog.PipeLine_Ok("stop face prossesing timer unknown" +str( imports.datetime.now()-face_processing_pipeline_timer))
                                         const.watchdog +=1
+                            
                                     if(self.i > len(const.userList[self.i])):
                                         self.i+=1
                                     
