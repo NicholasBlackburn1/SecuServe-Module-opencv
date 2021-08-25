@@ -9,6 +9,7 @@ import pipelineStates
 PATH = str(imports.pathlib.Path().absolute())+"/data/"+"Config.ini"
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
+unknown_faces = 0
 watchdog = 0
 imagename = imports.datetime.now().strftime("%Y_%m_%d-%I_%M_%S")
 imports.os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"

@@ -168,7 +168,6 @@ class RequiredCode(object):
                                         imports.logging.info("unknowns Here UwU!")
                                         self.sendUserInfoToSocket(sender=sender,status=status,user=name,image=const.unknown_pic_url,time= imports.datetime.now(),phonenumber=4123891615)
                                         imports.consoleLog.PipeLine_Ok("stop face prossesing timer unknown" +str( imports.datetime.now()-face_processing_pipeline_timer))
-                                    
                                         const.watchdog +=1
                                     if(self.i > len(const.userList[self.i])):
                                         self.i+=1
@@ -296,6 +295,7 @@ class RequiredCode(object):
         # pulls right info from data
         filename = str(data[2])
         url = str(data[3])
+        print(url)
         
         imports.Path(filepath+"/").mkdir(parents=True, exist_ok=True)
         
@@ -337,12 +337,20 @@ class RequiredCode(object):
       imports.time.sleep(.5)
         
         
+      
+    # Sends Face count to the web server to create database entryies
+    def sendFaceCount(self,sender,total,unknown,reconized,time):
+      sender.send_string("FACECOUNT")
+      sender.send_json({"total": int(total),"unknown":int(unknown),"reconized":str(reconized),"time": str(time)})
+      imports.time.sleep(.5)
+        
+        
         
         
      # Sends Seen Users Info to Socket
     def sendUserInfoToSocket(self,sender,status,user,image,time,phonenumber):
         sender.send_string("USERS")
-        sender.send_json({"usr":str(user),"status":str(status),"image":str(image),"phone":str(phonenum),"time": str(time)})
+        sender.send_json({"usr":str(user),"status":str(status),"image":str(image),"phone":str(phonenumber),"time": str(time)})
         imports.time.sleep(.5)
         
     # this sets up the gpio pinout and system light 
