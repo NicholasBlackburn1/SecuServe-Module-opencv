@@ -164,16 +164,21 @@ class RequiredCode(object):
 
                         if(name != None):
                             
-
-                                userinfo = const.userList[self.i][name]
-                                
-                                status= userinfo[1]
-                                usrname = userinfo[0]
-                                phone = userinfo[4]
-                                
-                                imports.consoleLog.PipeLine_Data("User seen name is"+ " "+ name)
-                                imports.consoleLog.PipeLine_Data("User seen user is"+ " "+ usrname)
-                                
+                                for  name in const.userList[self.i]:
+                                        
+                                        userinfo = const.userList[self.i][name]
+                                        
+                                        status= userinfo[1]
+                                        usrname = userinfo[0]
+                                        phone = userinfo[4]
+                                        
+                                        status = int(status)
+                                        
+                                    
+                                        imports.consoleLog.Warning(status)
+                                        imports.consoleLog.PipeLine_Data(usrname)
+                                    
+                                    
                                 # allows total var to incrament All Seen Faces
                                 self.Total += self.getAmmountOfFaces(frame)
                                 
@@ -187,7 +192,7 @@ class RequiredCode(object):
                                                         left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                                 
                                         imports.logging.info("unknowns Here UwU!")
-                                        self.sendUserInfoToSocket(sender=sender,status=status,user=name,image=const.unknown_pic_url,time= imports.datetime.now(),phonenumber=4123891615)
+                                        self.sendUserInfoToSocket(sender=sender,status="Unknown",user=name,image=const.unknown_pic_url,time= imports.datetime.now(),phonenumber=4123891615)
                                         imports.consoleLog.PipeLine_Ok("stop face prossesing timer unknown" +str( imports.datetime.now()-face_processing_pipeline_timer))
                                         const.watchdog +=1
                             
@@ -221,7 +226,7 @@ class RequiredCode(object):
                                     if (status == Status.ADMIN):
                                         self.sendUserInfoToSocket(sender=sender,status=status,user=usrname,image=const.admin_pic_url ,time= imports.datetime.now(),phonenumber=phone)
                                         imports.logging.info("got an Admin The name is"+str(usrname))
-                                        userstat.userAdmin(self=userstat,status=status, name=name, frame=frame, font=font, imagename=const.imagename,imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
+                                        userstat.userAdmin(self=userstat,status="Admin", name=name, frame=frame, font=font, imagename=const.imagename,imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in admin" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         
 
@@ -229,7 +234,7 @@ class RequiredCode(object):
                                         self.sendUserInfoToSocket(sender=sender,status=status,user=usrname,image=const.user_pic_url,time=imports.datetime.now(),phonenumber=phone)
                                         imports.logging.info(
                                             "got an User Human The name is"+str(name))
-                                        userstat.userUser(self=userstat,status=status, name=usrname, frame=frame, font=font, imagename=const.imagename,imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
+                                        userstat.userUser(self=userstat,status="User", name=usrname, frame=frame, font=font, imagename=const.imagename,imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                                         
                                         imports.consoleLog.Warning("eeeep there is an User They Might be evil so um let them in"+"  `"+"There Name is:" + str(name))
                                         imports.consoleLog.PipeLine_Ok(
@@ -240,7 +245,7 @@ class RequiredCode(object):
                                         self.sendUserInfoToSocket(sender=sender,status=status,user=usrname,image=const.unwanted_pic_url,time=imports.datetime.now(),phonenumber=phone)
                                         imports.logging.info(
                                             "got an Unwanted Human The name is"+str(usrname))
-                                        userstat.userUnwanted(self=userstat,status=status, name=usrname, frame=frame, font=font, imagename=const.imagename,
+                                        userstat.userUnwanted(self=userstat,status="Unwanted", name=usrname, frame=frame, font=font, imagename=const.imagename,
                                                         imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
                                         
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in unwanted" + str(
