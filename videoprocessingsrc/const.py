@@ -53,3 +53,7 @@ admin_pic_url = 'http://192.168.5.8/admin'
 user_pic_url = 'http://192.168.5.8/user'
 unwanted_pic_url = 'http://192.168.5.8/unwanted'
 unknown_pic_url = 'http://192.168.5.8/unknown'
+
+
+
+facepredict = 0

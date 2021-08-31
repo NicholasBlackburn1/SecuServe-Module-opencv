@@ -149,12 +149,15 @@ class RequiredCode(object):
                 #processes faces when seen
                 if(self.getAmmountOfFaces(frame) > 0):
                     face_processing_pipeline_timer =  imports.datetime.now()
+                    
+                      # allows total var to incrament All Seen Faces
+                    self.Total += self.getAmmountOfFaces(frame)-1
                     self.setProcessingLed(True)
                     # Display t he results
                     for name, (top, right, bottom, left) in predictions:
+                    
                         
                         
-
                         # Scale back up face locations since the frame we detected in was scaled to 1/4 size
                         top *= 2
                         right *= 2
@@ -164,23 +167,8 @@ class RequiredCode(object):
 
                         if(name != None):
                             
-                                for  name in const.userList[self.i]:
-                                        
-                                        userinfo = const.userList[self.i][name]
-                                        
-                                        status= userinfo[1]
-                                        usrname = userinfo[0]
-                                        phone = userinfo[4]
-                                        
-                                        status = int(status)
-                                        
-                                    
-                                        imports.consoleLog.Warning(status)
-                                        imports.consoleLog.PipeLine_Data(usrname)
-                                    
-                                    
-                                # allows total var to incrament All Seen Faces
-                                self.Total += self.getAmmountOfFaces(frame)
+                              
+                                imports.consoleLog.Warning("the amout of faces seen are"+ str(self.Total))
                                 
                                 self.sendFaceCount(sender,self.Total,self.Unreconized,self.Reconized,imports.datetime.now())
                         
@@ -226,7 +214,7 @@ class RequiredCode(object):
                                     if (status == Status.ADMIN):
                                         self.sendUserInfoToSocket(sender=sender,status=status,user=usrname,image=const.admin_pic_url ,time= imports.datetime.now(),phonenumber=phone)
                                         imports.logging.info("got an Admin The name is"+str(usrname))
-                                        userstat.userAdmin(self=userstat,status="Admin", name=name, frame=frame, font=font, imagename=const.imagename,imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
+                                        userstat.userAdmin(self=userstat,status="Admin", name=name, frame=frame, font=font, imagename=const.imagename,imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, recperesntage=const.facepredict)
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in admin" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         
 
@@ -234,7 +222,7 @@ class RequiredCode(object):
                                         self.sendUserInfoToSocket(sender=sender,status=status,user=usrname,image=const.user_pic_url,time=imports.datetime.now(),phonenumber=phone)
                                         imports.logging.info(
                                             "got an User Human The name is"+str(name))
-                                        userstat.userUser(self=userstat,status="User", name=usrname, frame=frame, font=font, imagename=const.imagename,imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
+                                        userstat.userUser(self=userstat,status="User", name=usrname, frame=frame, font=font, imagename=const.imagename,imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, recperesntage=const.facepredict)
                                         
                                         imports.consoleLog.Warning("eeeep there is an User They Might be evil so um let them in"+"  `"+"There Name is:" + str(name))
                                         imports.consoleLog.PipeLine_Ok(
@@ -246,7 +234,7 @@ class RequiredCode(object):
                                         imports.logging.info(
                                             "got an Unwanted Human The name is"+str(usrname))
                                         userstat.userUnwanted(self=userstat,status="Unwanted", name=usrname, frame=frame, font=font, imagename=const.imagename,
-                                                        imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
+                                                        imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, recperesntage=const.facepredict)
                                         
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in unwanted" + str(
                                         imports.datetime.now()-face_processing_pipeline_timer))
@@ -269,7 +257,8 @@ class RequiredCode(object):
                 if const.watchdog == 10:
                     self.sendProgramStatus(sender,"ERROR","WATCHDOG OVERRRAN",imports.datetime.now())
                     return pipelineStates.States.ERROR
-        
+    
+    
     # returns ammount of seenfaces
     def getAmmountOfFaces(self,image):
         return len(imports.face_recognition.face_locations(image, model="cnn",number_of_times_to_upsample=0))
@@ -382,7 +371,7 @@ class RequiredCode(object):
     def sendUserInfoToSocket(self,sender,status,user,image,time,phonenumber):
         imports.consoleLog.Warning("sending User indo to zmq")
         sender.send_string("USERS")
-        sender.send_json({"usr":str(user),"status":str(status),"image":str(image),"phone":str(phonenumber),"time": str(time)})
+        sender.send_json({"usr":str(user),"status":str(status),"image":str(image),"phone":str(phonenumber),"Accuracy":str(const.facepredict),"time": str(time)})
         imports.time.sleep(.5)
         imports.consoleLog.PipeLine_Ok("sent User info to zmq socket")
         
@@ -407,4 +396,5 @@ class RequiredCode(object):
         else:
             GPIO.output(const.processing_led, 0)
             
+     
      

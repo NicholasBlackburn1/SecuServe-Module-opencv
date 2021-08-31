@@ -12,7 +12,7 @@ class UserStats(object):
 
 
     # this is for Handling User Admin Stats
-    def userAdmin(self,status,name,frame,font,imagename,imagepath,left,right,bottom,top,framenum):
+    def userAdmin(self,status,name,frame,font,imagename,imagepath,left,right,bottom,top,recperesntage):
         
         print(status)
         # Draw a box around the face
@@ -26,12 +26,7 @@ class UserStats(object):
             frame, "Known Person..", (0,
                                     430), font, 0.5, (255, 255, 255), 1
         )
-        imports.cv2.putText(frame, status, (0, 450),
-                    font, 0.5, (255, 255, 255), 1)
-        imports.cv2.putText(frame, name, (0, 470), font,
-                    0.5, (255, 255, 255), 1)
-            
-        imports.cv2.putText(frame, "Frame num" + str(framenum), (0, 480), font,
+        imports.cv2.putText(frame, "Face Accuracy" + str(recperesntage), (0, 480), font,
                 0.5, (255, 255, 255), 1)
 
         self.saveImage(self,imagepath=imagepath+"Admin/",imagename=imagename,frame=frame)
@@ -39,7 +34,7 @@ class UserStats(object):
 
     # User Grade Status
     # this is for Handling User Stats
-    def userUser(self,status,name,frame,font,left,right,bottom,top,framenum,imagename,imagepath):
+    def userUser(self,status,name,frame,font,left,right,bottom,top,recperesntage,imagename,imagepath):
 
         # Draw a box around the face
         imports.cv2.rectangle(frame, (left, top),
@@ -60,7 +55,7 @@ class UserStats(object):
                     0.5, (255, 255, 255), 1)
 
         
-        imports.cv2.putText(frame, "Frame num" + str(framenum), (0, 480), font,
+        imports.cv2.putText(frame, "Face accuracy" + str(recperesntage), (0, 480), font,
                     0.5, (255, 255, 255), 1)
 
         # Distance info
@@ -78,7 +73,7 @@ class UserStats(object):
 
 
     # Handles Unwanted Usr Stats
-    def userUnwanted(self,status,name,frame,font,imagename,imagePath,left,right,bottom,top):
+    def userUnwanted(self,status,name,frame,font,imagename,imagePath,left,right,bottom,top,recperesntage):
         
         imports.cv2.rectangle(frame, (left, top),
                     (right, bottom), (0, 0, 255), 2)
@@ -86,6 +81,9 @@ class UserStats(object):
                     font, 0.5, (255, 255, 255), 1)
         imports.cv2.putText(frame, str(status), (left, top),
                 font, 0.5, (255, 255, 255), 1)
+    
+        imports.cv2.putText(frame, "Face accuracy" + str(recperesntage), (0, 480), font,
+                0.5, (255, 255, 255), 1)
 
         self.saveImage(imagepath=imagePath+"Unwanted/",imagename=imagename,frame=frame)
         
