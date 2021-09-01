@@ -32,6 +32,7 @@ def main():
         pipe.on_event(pipelineStates.States.SETUP_PIPELINE,sender)
         pipe.on_event(pipelineStates.States.TRAIN_MODEL,sender)
         pipe.on_event(pipelineStates.States.RUN_RECONITION,sender)
+        
         """    
             if(topic == "MANAGER" and status['mode'] == "stopcv"):
                 sender.send_string("SHUTDOWN")

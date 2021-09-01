@@ -47,27 +47,11 @@ class UserStats(object):
             frame, "Known Person..", (0,
                                     430), font, 0.5, (255, 255, 255), 1
         )
-        imports.cv2.putText(
-            frame, status, (0,
-                            450), font, 0.5, (255, 255, 255), 1
-        )
-        imports.cv2.putText(frame, name, (0, 470), font,
-                    0.5, (255, 255, 255), 1)
-
-        
+    
         imports.cv2.putText(frame, "Face accuracy" + str(recperesntage), (0, 480), font,
                     0.5, (255, 255, 255), 1)
 
-        # Distance info
-        imports.cv2.putText(
-            frame,
-            "T&B" + str(top) + "," + str(bottom),
-            (474, 430),
-            font,
-            0.5,
-            (255, 255, 255),
-            1,
-        )
+      
         self.saveImage(self,imagepath=imagepath+"User/",imagename=imagename,frame=frame)
       
 
@@ -79,9 +63,6 @@ class UserStats(object):
                     (right, bottom), (0, 0, 255), 2)
         imports.cv2.putText(frame, name, (left, top),
                     font, 0.5, (255, 255, 255), 1)
-        imports.cv2.putText(frame, str(status), (left, top),
-                font, 0.5, (255, 255, 255), 1)
-    
         imports.cv2.putText(frame, "Face accuracy" + str(recperesntage), (0, 480), font,
                 0.5, (255, 255, 255), 1)
 
@@ -90,7 +71,7 @@ class UserStats(object):
             
             
     # Handles unKnown User
-    def userUnknown(self,opencvconfig,name,frame,font,imagepath,imagename,left,right,bottom,top,framenum):
+    def userUnknown(self,opencvconfig,name,frame,font,imagepath,imagename,left,right,bottom,top,framenum,recperesntage):
 
         imports.cv2.rectangle(frame, (left, top),
                     (right, bottom), (0, 0, 255), 2)
@@ -106,6 +87,9 @@ class UserStats(object):
         imports.cv2.putText(frame, name, (0, 470), font,
                     0.5, (255, 255, 255), 1)
         
+        imports.cv2.putText(frame, "Face accuracy" + str(recperesntage), (0, 480), font,
+            0.5, (255, 255, 255), 1)
+
         self.saveImage(self,imagepath=imagepath+"unknown/",imagename=imagename,frame=frame)
         
 

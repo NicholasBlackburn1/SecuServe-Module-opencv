@@ -121,7 +121,7 @@ class RequiredCode(object):
                 break
                 
             if process_this_frame % 30 == 0:
-                #frame=imports.cv2.imread("/home/nick/Face-Door_Moudles/Video-processing/data/images/me.jpg")
+                #frame=imports.cv2.imread("/home/nick/Face-Door_Moudles/Video-processing/data/images/test.jpg")
                 #cap.read()
                 frame = cap.read()
                 img =  imports.cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
@@ -151,7 +151,7 @@ class RequiredCode(object):
                     face_processing_pipeline_timer =  imports.datetime.now()
                     
                       # allows total var to incrament All Seen Faces
-                    self.Total += self.getAmmountOfFaces(frame)-1
+                    self.Total += self.getAmmountOfFaces(frame)
                     self.setProcessingLed(True)
                     # Display t he results
                     for name, (top, right, bottom, left) in predictions:
@@ -292,7 +292,7 @@ class RequiredCode(object):
                 imports.mydb.getUserUUID(imports.mydb.getFaces(), i) : userinfo.__repr__()}
 
             const.userList.append(local_data)   
-            print(local_data)
+         
             
             
             
