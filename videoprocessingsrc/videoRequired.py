@@ -126,7 +126,7 @@ class RequiredCode(object):
                 frame = cap.read()
                 img =  imports.cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
                 predictions =  knnClasifiyer.predict(
-                    img, knn_clf= knnClasifiyer.loadTrainedModel(knn_clf =None, model_path=const.Modelpath), distance_threshold=0.56
+                    img, knn_clf= knnClasifiyer.loadTrainedModel(knn_clf =None, model_path=const.Modelpath), distance_threshold=0.45
                     )
                 # print(process_this_frame)
 
@@ -177,7 +177,7 @@ class RequiredCode(object):
                                                     
                                     if(status == Status.UNKNOWN):
                                         userstat.userUnknown(self = userstat,opencvconfig= const.opencvconfig, name=name, frame=frame, font=font, imagename=const.imagename, imagepath=const.imagePath,
-                                                        left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame)
+                                                        left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame,recperesntage=const.facepredict)
                                 
                                         imports.logging.info("unknowns Here UwU!")
                                         self.sendUserInfoToSocket(sender=sender,status="Unknown`",user=name,image=const.unknown_pic_url,time= imports.datetime.now(),phonenumber=4123891615)
