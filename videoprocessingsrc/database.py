@@ -13,7 +13,7 @@ def getFaces():
     # Get the password
     database = config_object["DATABASE"]
 
-    engine = imports.db.create_engine('sqlite:///db.sqlite3')
+    engine = imports.db.create_engine('sqlite:////mnt/SecuServe/db.sqlite3')
     connection = engine.connect()
     metadata = imports.db.MetaData()
     faces = imports.db.Table(database['table'], metadata,
@@ -35,7 +35,7 @@ def getAmountOfEntrys():
     # Get the password
     database = config_object["DATABASE"]
 
-    engine = imports.db.create_engine('sqlite:///db.sqlite3')
+    engine = imports.db.create_engine('sqlite:////mnt/SecuServe/db.sqlite3')
     Session = imports.sessionmaker(bind=engine)
     session = Session()
 
