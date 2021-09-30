@@ -35,7 +35,7 @@ def getAmountOfEntrys():
     # Get the password
     database = config_object["DATABASE"]
 
-    engine = imports.db.create_engine('postgresql://'+ str(database['user'])+":"+str(database['pass'])+"@"+str(database['ip'])+":"+str(database['port'])+"/"+str(database['databasename']))
+    engine = imports.db.create_engine('sqlite:///db.sqlite3')
     Session = imports.sessionmaker(bind=engine)
     session = Session()
 
