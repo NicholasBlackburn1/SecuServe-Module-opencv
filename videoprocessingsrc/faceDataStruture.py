@@ -40,7 +40,7 @@ class UserData:
             self._user = Username
 
         # sets user status in structure
-    def setUserStatus(self, status) -> str:
+    def setUserStatus(self, status) -> int:
         stat = str(status)
        
         if(stat == "" or None):

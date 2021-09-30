@@ -31,7 +31,7 @@ def loadTrainingData(train_dir, verbose=True):
             # Loop through each training image for the current person
             for img_path in image_files_in_folder( os.path.join(train_dir, class_dir)):
                 image =  face_recognition.load_image_file(img_path)
-                face_bounding_boxes =  face_recognition.face_locations(image, model="cnn",number_of_times_to_upsample=1)
+                face_bounding_boxes =  face_recognition.face_locations(image, model="cnn",number_of_times_to_upsample=0)
 
                 if len(face_bounding_boxes) != 1:
                     # If there are no people (or too many people) in a training image, skip the image.
