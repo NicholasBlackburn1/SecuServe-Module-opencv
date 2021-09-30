@@ -126,7 +126,7 @@ class RequiredCode(object):
                 frame = cap.read()
                 img =  imports.cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
                 predictions =  knnClasifiyer.predict(
-                    img, knn_clf= knnClasifiyer.loadTrainedModel(knn_clf =None, model_path=const.Modelpath), distance_threshold=0.45
+                    img, knn_clf= knnClasifiyer.loadTrainedModel(knn_clf =None, model_path=const.Modelpath), distance_threshold=0.65
                     )
                 # print(process_this_frame)
 
@@ -171,7 +171,7 @@ class RequiredCode(object):
                                 imports.consoleLog.Warning("the amout of faces seen are"+ str(self.Total))
                                 
                                 self.sendFaceCount(sender,self.Total,self.Unreconized,self.Reconized,imports.datetime.now())
-                        
+                                print(name)
                                 if name not in const.userList[self.i]:
                                     
                                                     
@@ -320,7 +320,7 @@ class RequiredCode(object):
 
         # this function will load and prepare face encodes  for
     # Fully Downloades USer Images and Returns No data
-
+    #TODO: NEED TO REMOVE ANY FOLDER ROM THE TRANING DIR AFTER MODEL BEEN TRAINED
     def downloadUserFaces(self, imagePath):
 
         index = 0
