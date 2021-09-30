@@ -62,7 +62,7 @@ jobs:
         with:
           step: map
           github_ref: ${{ github.ref }}
-          languages: ${{ steps.detect-languages.outputs.languages }}
+          languages: "python"
 
       - name: Upload Map
         id: upload-map
