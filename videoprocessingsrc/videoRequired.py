@@ -214,7 +214,7 @@ class RequiredCode(object):
                                     if (status == Status.ADMIN):
                                         self.sendUserInfoToSocket(sender=sender,status=status,user=usrname,image=const.admin_pic_url ,time= imports.datetime.now(),phonenumber=phone)
                                         imports.logging.info("got an Admin The name is"+str(usrname))
-                                        userstat.userAdmin(self=userstat,status="Admin", name=name, frame=frame, font=font, imagename=const.imagename,imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, recperesntage=const.facepredict)
+                                        userstat.userAdmin(self=userstat,status="Admin", name=str(usrname), frame=frame, font=font, imagename=const.imagename,imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, recperesntage=const.facepredict)
                                         imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in admin" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         
 
