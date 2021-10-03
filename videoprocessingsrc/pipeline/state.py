@@ -1,7 +1,7 @@
 """
 State Machine Base class 
 """
-import consoleLog
+from util import consoleLog 
 
 class State(object):
     """

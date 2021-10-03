@@ -45,7 +45,7 @@ import threading
 
 import math
 from pipeline import faceDataStruture as userData
-import consoleLog as consoleLog
+from util import consoleLog as consoleLog
 from pipeline import videoRequired as pipeline
 
 from requests import Session
@@ -60,7 +60,7 @@ from configparser import ConfigParser
 
 from colorama import Fore, Back, Style
 
-import database as mydb
+from util import database as mydb
 
 import threading,queue
 import zmq.asyncio

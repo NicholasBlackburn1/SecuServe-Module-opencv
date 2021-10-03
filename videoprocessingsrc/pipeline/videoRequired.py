@@ -7,6 +7,9 @@ TODO: work on getting the total of reconized and unreconized peole there are in 
 TODO: NEED TO REMOVE ANY FOLDER ROM THE TRANING DIR AFTER MODEL BEEN TRAINED
 TODO: Check to see if any Users were added to the database so then we can see if the model needs retrained or not
 
+
+TODO: Need to add model only being trained on adding or removeing of user from database 
+
 """
 
 
@@ -15,11 +18,11 @@ from os import stat
 
 from Jetson.GPIO.gpio import UNKNOWN
 import imports
-import const
-import pipeline.pipelineStates
-import pipeline.knnClasifiyer
-import pipeline.videoThread
-import pipeline.userStats
+from util import const
+import pipeline.pipelineStates as pipelineStates
+import pipeline.knnClasifiyer as knnClasifiyer
+import pipeline.videoThread as videoThread
+import pipeline.userStats as userStats
 import RPi.GPIO as GPIO
 
 class Status():
@@ -78,9 +81,11 @@ class RequiredCode(object):
             
     # This trains the face model for the  pipeline
     def trainPipeLine(self,sender):
+        
         pipeline_train_knn = imports.datetime.now()
          # updates stats message 
         self.sendProgramStatus(sender,"TRAIN_MODEL","starting  to train model",imports.datetime.now() - pipeline_train_knn)
+       
        
         imports.consoleLog.Warning("Training Model Going to take a while UwU..... ")
         knnClasifiyer.train(train_dir=const.imagePathusers,
@@ -92,6 +97,7 @@ class RequiredCode(object):
         return
     
     def reconitionPipeline(self,sender):
+        
         
         self.sendProgramStatus(sender,"SETUP_PIPELINE","Starting Face rec",imports.datetime.now())
          # cleans mess as we keep prosessing

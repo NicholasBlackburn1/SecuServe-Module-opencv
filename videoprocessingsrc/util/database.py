@@ -1,6 +1,6 @@
 
 import imports
-import const
+from util import const
 # Gets the Face Data from the Face data
 
 #TODO: NEED TO ONLY USE LIFE TIME DATABASE FOR FACES 

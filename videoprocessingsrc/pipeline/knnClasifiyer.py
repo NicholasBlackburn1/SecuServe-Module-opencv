@@ -9,8 +9,8 @@ import math
 import json
 from sklearn import neighbors
 from face_recognition.face_recognition_cli import image_files_in_folder
-import const
-import consoleLog
+from util import const
+from util import consoleLog
 
 """
 Train method, Train dir ,

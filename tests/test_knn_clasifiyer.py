@@ -4,7 +4,7 @@ this file is for testing the datasturue for handing faces
 To make tests think about black box reverse enginnering only what inputs and what out puts are required/ expected
 """
 import unittest
-from videoprocessingsrc import knnClasifiyer as knn
+from videoprocessingsrc.pipeline import knnClasifiyer as knn
 
 class TestKnnClass(unittest.TestCase):
     """

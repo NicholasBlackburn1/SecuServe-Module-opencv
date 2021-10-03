@@ -7,9 +7,10 @@ from enum import Enum
 
 from zmq.sugar.frame import Message
 from pipeline import videoRequired
-import consoleLog
+from util import consoleLog
+from util import const
 from pipeline import state
-
+import imports
 from datetime import datetime, time
 
 class States(Enum):
@@ -26,9 +27,13 @@ class SetupPipeLine(state.State):
     """
 
     def on_event(self, event,sender):
-        if event == state.States.SETUP_PIPELINE:
+        if event == States.SETUP_PIPELINE:
+            moddate = imports.datetime.fromtimestamp(imports.os.path.getctime(const.Modelpath))
             videoRequired.RequiredCode.setupPipeline(videoRequired.RequiredCode(),sender)
-            self.next_state.State(state.States.TRAIN_MODEL)
+            
+            imports.consoleLog.PipeLine_Data("Model last trained"+" "+ str(moddate['%H']))
+            self.next_state(States.TRAIN_MODEL)
+            
             return TrainPipeline()
 
         return self
@@ -40,9 +45,10 @@ class TrainPipeline(state.State):
     """
 
     def on_event(self, event,sender):
-        if event == state.States.TRAIN_MODEL:
+        if event == States.TRAIN_MODEL:
+           
             videoRequired.RequiredCode.trainPipeLine(videoRequired.RequiredCode(),sender)
-            self.next_state.State(state.States.RUN_RECONITION)
+            self.next_state(States.RUN_RECONITION)
             return RunReconitionPipeLine()
 
         return self
@@ -54,10 +60,10 @@ class RunReconitionPipeLine(state.State):
     """
 
     def on_event(self, event,sender):
-        if event == state.States.RUN_RECONITION:
+        if event == States.RUN_RECONITION:
             videoRequired.RequiredCode.reconitionPipeline(videoRequired.RequiredCode(),sender)
             
-            if(videoRequired.RequiredCode.reconitionPipeline(videoRequired.RequiredCode(),sender) == state.States.ERROR):
+            if(videoRequired.RequiredCode.reconitionPipeline(videoRequired.RequiredCode(),sender) == States.ERROR):
                 return Error()
             
         return self
@@ -68,7 +74,7 @@ class Idle(state.State):
     """
 
     def on_event(self, event,sender):
-        if event == state.States.IDLE:
+        if event == States.IDLE:
             videoRequired.imports.consoleLog.Warning("Idleing....")
             videoRequired.imports.time.sleep(.5)
             
@@ -86,7 +92,7 @@ class Error(state.State):
     
 
     def on_event(self, event,sender):
-        if event == state.States.ERROR:
+        if event == States.ERROR:
             videoRequired.imports.consoleLog.Error("ERROR....")
             sender.send_string("ERROR")
             sender.send_json({"error":str(self.msg),"time":str(datetime.now())})
@@ -106,7 +112,7 @@ class PipeLine(object):
         """ Initialize the components. """
 
         # Start with a default state.State.
-        self.state.State  = SetupPipeLine()
+        self.State  = SetupPipeLine()
      
 
     def on_event(self, event,sender):
@@ -117,8 +123,8 @@ class PipeLine(object):
         """
 
         # The next state.State will be the result of the on_event function.
-        self.state.State = self.state.State.on_event(event,sender)
+        self.State = self.State.on_event(event,sender)
         
     def getCurrentStat(self):
-        return self.state.State
+        return self.State
                 
