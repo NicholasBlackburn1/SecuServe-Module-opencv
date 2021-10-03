@@ -4,7 +4,7 @@ TODO: add code to launc from zmq
 """
 
 import imports
-import pipelineStates
+from pipeline import pipelineStates
 import const
 
 imports.zmq.asyncio.install()

@@ -16,10 +16,10 @@ from os import stat
 from Jetson.GPIO.gpio import UNKNOWN
 import imports
 import const
-import pipelineStates
-import knnClasifiyer
-import videoThread
-import userStats
+import pipeline.pipelineStates
+import pipeline.knnClasifiyer
+import pipeline.videoThread
+import pipeline.userStats
 import RPi.GPIO as GPIO
 
 class Status():
@@ -244,6 +244,7 @@ class RequiredCode(object):
                                     
 
                                     if(self.getAmmountOfFaces(frame) > 2):
+                                        self.sendUserInfoToSocket(sender=sender,status="Group",user=name,image=const.group_pic_url,time= imports.datetime.now(),phonenumber=4123891615)
                                         userStats.UserStats.userGroup(self=userstat,frame=frame, font=font, imagename=const.imagename, imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top)
                                         imports.consoleLog.PipeLine_Ok(const.StopingMess +"Group" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         #message.sendCapturedImageMessage("eeeep there is Gagle of Peope I dont know what to do",phone,'http://192.168.5.8:2000/group',self.smsconfig['textbelt-key'])
@@ -294,11 +295,7 @@ class RequiredCode(object):
                 imports.mydb.getUserUUID(imports.mydb.getFaces(), i) : userinfo.__repr__()}
 
             const.userList.append(local_data)   
-         
-            
-            
-            
-
+        
             i += 1
 
             # Checks to see if i == the database amount hehe
@@ -320,8 +317,7 @@ class RequiredCode(object):
         if(not imports.os.path.exists(filepath+filename)):
             imports.wget.download(url, str(filepath))
 
-        # this function will load and prepare face encodes  for
-    # Fully Downloades USer Images and Returns No data
+    # Fully Downloades USer Images
     def downloadUserFaces(self, imagePath):
 
         index = 0

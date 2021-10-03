@@ -11,6 +11,7 @@ from sklearn import neighbors
 from face_recognition.face_recognition_cli import image_files_in_folder
 import const
 import consoleLog
+
 """
 Train method, Train dir ,
 indx all the folders

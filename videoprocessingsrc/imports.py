@@ -44,9 +44,9 @@ from time import sleep
 import threading
 
 import math
-import faceDataStruture as userData
+from pipeline import faceDataStruture as userData
 import consoleLog as consoleLog
-import videoRequired as pipeline
+from pipeline import videoRequired as pipeline
 
 from requests import Session
 import sqlalchemy as db

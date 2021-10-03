@@ -3,7 +3,6 @@ dirty const setup
 """
 
 import imports
-import pipelineStates
 
 # this is all the global paths needed throuht the program
 PATH = str(imports.pathlib.Path().absolute())+"/data/"+"Config.ini"
@@ -53,7 +52,7 @@ admin_pic_url = 'http://192.168.5.8/admin'
 user_pic_url = 'http://192.168.5.8/user'
 unwanted_pic_url = 'http://192.168.5.8/unwanted'
 unknown_pic_url = 'http://192.168.5.8/unknown'
-
+group_pic_url = 'http://192.168.5.8/group'
 
 
 facepredict = 0
