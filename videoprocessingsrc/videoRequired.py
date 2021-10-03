@@ -217,7 +217,7 @@ class RequiredCode(object):
                                         self.sendUserInfoToSocket(sender=sender,status=status,user=usrname,image=const.admin_pic_url ,time= imports.datetime.now(),phonenumber=phone)
                                         imports.logging.info("got an Admin The name is"+str(usrname))
                                         userstat.userAdmin(self=userstat,status="Admin", name=str(usrname), frame=frame, font=font, imagename=const.imagename,imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, recperesntage=const.facepredict)
-                                        imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in admin" + str(imports.datetime.now()-face_processing_pipeline_timer))
+                                        imports.consoleLog.PipeLine_Ok(const.StopingMess+"admin" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         
 
                                     if (status == Status.USER):
@@ -228,7 +228,7 @@ class RequiredCode(object):
                                         
                                         imports.consoleLog.Warning("eeeep there is an User They Might be evil so um let them in"+"  `"+"There Name is:" + str(name))
                                         imports.consoleLog.PipeLine_Ok(
-                                            "Stping face prossesing timer in user" + str(imports.datetime.now()-face_processing_pipeline_timer))
+                                            const.StopingMess +"user" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         
 
                                     if (status == Status.UNWANTED):
@@ -238,14 +238,14 @@ class RequiredCode(object):
                                         userstat.userUnwanted(self=userstat,status="Unwanted", name=usrname, frame=frame, font=font, imagename=const.imagename,
                                                         imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, recperesntage=const.facepredict)
                                         
-                                        imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in unwanted" + str(
+                                        imports.consoleLog.PipeLine_Ok(const.StopingMess +"unwanted" + str(
                                         imports.datetime.now()-face_processing_pipeline_timer))
                                         
                                     
 
                                     if(self.getAmmountOfFaces(frame) > 2):
                                         userStats.UserStats.userGroup(self=userstat,frame=frame, font=font, imagename=const.imagename, imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top)
-                                        imports.consoleLog.PipeLine_Ok("Stping face prossesing timer in Group" + str(imports.datetime.now()-face_processing_pipeline_timer))
+                                        imports.consoleLog.PipeLine_Ok(const.StopingMess Group" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         #message.sendCapturedImageMessage("eeeep there is Gagle of Peope I dont know what to do",phone,'http://192.168.5.8:2000/group',self.smsconfig['textbelt-key'])
                                         
                                         
