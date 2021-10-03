@@ -109,8 +109,8 @@ def predict(Camera_frame, knn_clf=None, distance_threshold=0.4):
 
 # Handles the data thats returned from the prediction 
 def face_predict_data(knn_clf,faces_encodings,X_face_locations,are_matches, closest_distances,distance_threshold):
-    
-    face_distance_to_conf(closest_distances[0][1][0],distance_threshold)
+    for i in range(len(X_face_locations)):
+        face_distance_to_conf(closest_distances[0][i][0],distance_threshold)
     #Suppost to be like this but it wont work so reverting it back to og state
     return [(pred, loc) if rec else ("unknown", loc) for pred, loc, rec in zip(knn_clf.predict(faces_encodings), X_face_locations, are_matches)]
 
