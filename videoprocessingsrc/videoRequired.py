@@ -2,7 +2,11 @@
 This class is for the required opencv
 parts 
 State machine -> Discreet Finite States of of operations and clear transitions of states, seperation of states, trigger signals
+
 TODO: work on getting the total of reconized and unreconized peole there are in the group
+TODO: NEED TO REMOVE ANY FOLDER ROM THE TRANING DIR AFTER MODEL BEEN TRAINED
+TODO: Check to see if any Users were added to the database so then we can see if the model needs retrained or not
+
 """
 
 
@@ -168,10 +172,8 @@ class RequiredCode(object):
                         if(name != None):
                             
                               
-                                imports.consoleLog.Warning("the amout of faces seen are"+ str(self.Total))
-                                
-                                self.sendFaceCount(sender,self.Total,self.Unreconized,self.Reconized,imports.datetime.now())
-                                print(name)
+                                imports.consoleLog.Warning("the amout of faces seen are"+" "+str(self.Total))
+                        
                                 if name not in const.userList[self.i]:
                                     
                                                     
@@ -183,13 +185,13 @@ class RequiredCode(object):
                                         self.sendUserInfoToSocket(sender=sender,status="Unknown`",user=name,image=const.unknown_pic_url,time= imports.datetime.now(),phonenumber=4123891615)
                                         imports.consoleLog.PipeLine_Ok("stop face prossesing timer unknown" +str( imports.datetime.now()-face_processing_pipeline_timer))
                                         const.watchdog +=1
+                                        
+                                        self.sendFaceCount(sender,self.Total,self.Unreconized,self.Reconized,imports.datetime.now())
                             
                                     if(self.i > len(const.userList[self.i])):
                                         self.i+=1
                                     
-                                        
-                                    
-                                  
+
                                     
                                 if  name in const.userList[self.i]:
                                     
@@ -305,7 +307,7 @@ class RequiredCode(object):
             
    
         
-# saves downloaded Image Converted to black and white
+    # saves downloaded Image 
 
     def downloadFacesAndProssesThem(self, data, filepath):
         # pulls right info from data
@@ -320,7 +322,6 @@ class RequiredCode(object):
 
         # this function will load and prepare face encodes  for
     # Fully Downloades USer Images and Returns No data
-    #TODO: NEED TO REMOVE ANY FOLDER ROM THE TRANING DIR AFTER MODEL BEEN TRAINED
     def downloadUserFaces(self, imagePath):
 
         index = 0
@@ -332,7 +333,7 @@ class RequiredCode(object):
             
             print(const.userList[index][imports.mydb.getUserUUID(
                 imports.mydb.getFaces(), index)])
-
+    
             self.downloadFacesAndProssesThem(const.userList[index][imports.mydb.getUserUUID(
                 imports.mydb.getFaces(), index)], imagePath+str(imports.mydb.getUserUUID(imports.mydb.getFaces(), index)))
             imports.consoleLog.PipeLine_Data("downloaded"+" "+str(index+1) +" out of " +str(imports.mydb.getAmountOfEntrys()) + "\n")

@@ -12,6 +12,8 @@ controller.connect("tcp://"+"127.0.0.1:5001")
 poller = zmq.Poller()
 poller.register(controller, zmq.POLLIN)
 
+
+print(Fore.LIGHTGREEN_EX+f"Starting Zmq Pipeline Monitor...")
 while True:
     
     evts = dict(poller.poll(timeout=100))

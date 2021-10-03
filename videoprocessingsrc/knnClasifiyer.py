@@ -10,6 +10,7 @@ import json
 from sklearn import neighbors
 from face_recognition.face_recognition_cli import image_files_in_folder
 import const
+import consoleLog
 """
 Train method, Train dir ,
 indx all the folders
@@ -102,22 +103,22 @@ def predict(Camera_frame, knn_clf=None, distance_threshold=0.4):
     are_matches = [closest_distances[0][i][0] <= distance_threshold for i in range(len(X_face_locations))]
 
     # Predict classes and remove classifications that aren't within the threshold
-    face_distance_to_conf(closest_distances)
-    return face_predict_data(knn_clf,faces_encodings,X_face_locations,are_matches)
+    
+    return face_predict_data(knn_clf,faces_encodings,X_face_locations,are_matches,closest_distances,distance_threshold)
        
 
 # Handles the data thats returned from the prediction 
-def face_predict_data(knn_clf,faces_encodings,X_face_locations,are_matches):
+def face_predict_data(knn_clf,faces_encodings,X_face_locations,are_matches, closest_distances,distance_threshold):
     
+    face_distance_to_conf(closest_distances[0][1][0],distance_threshold)
     #Suppost to be like this but it wont work so reverting it back to og state
     return [(pred, loc) if rec else ("unknown", loc) for pred, loc, rec in zip(knn_clf.predict(faces_encodings), X_face_locations, are_matches)]
 
 
 
-    
+#* allows me to display the prediction accuracy of the faces in the pipeline
 def face_distance_to_conf(face_distance, face_match_threshold=0.56):
-    face = face_distance[0][0][1] 
-    print(face)
+    face = face_distance
     
     if face > face_match_threshold:
         range = (1.0 - face_match_threshold)
