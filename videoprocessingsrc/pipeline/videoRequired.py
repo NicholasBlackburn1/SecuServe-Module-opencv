@@ -16,7 +16,7 @@ TODO: Need to add model only being trained on adding or removeing of user from d
 from enum import Enum
 from os import stat
 
-from Jetson.GPIO.gpio import UNKNOWN
+#from Jetson.GPIO.gpio import UNKNOWN
 import imports
 from util import const
 import pipeline.pipelineStates as pipelineStates
@@ -380,17 +380,18 @@ class RequiredCode(object):
         
     # this sets up the gpio pinout and system light 
     def setUpIndicatorLight(self):
-        
+        '''
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(const.system_on_led, GPIO.OUT)  # system on pin set as output
         GPIO.setup(const.processing_led, GPIO.OUT)  # system on pin set as output
    
         GPIO.output(const.system_on_led, 1)
-        
+        '''
+        pass
         
     # simply controls status lef of program to show user its working / processing
     def setProcessingLed(self,processing):
-        
+        '''
         if processing:
             GPIO.output(const.processing_led, 1)
             GPIO.output(const.processing_led, 0)
@@ -398,6 +399,8 @@ class RequiredCode(object):
             GPIO.output(const.processing_led, 0)
         else:
             GPIO.output(const.processing_led, 0)
+        '''
+        pass
             
      
      
