@@ -183,12 +183,11 @@ class RequiredCode(object):
                                     
                                                     
                                     if(status == Status.UNKNOWN):
-                                        userstat.userUnknown(self = userstat,opencvconfig= const.opencvconfig, name=name, frame=frame, font=font, imagename=const.imagename, imagepath=const.imagePath,
+                                        userstat.userUnknown(self = userstat,opencvconfig= const.opencvconfig, name=name, frame=frame, font=font, imagename=imports.datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%f"), imagepath=const.imagePath,
                                                         left=left, right=right, bottom=bottom, top=top, framenum=process_this_frame,recperesntage=const.facepredict)
                                         imports.logging.info("unknowns Here UwU!")
                                         self.sendUserInfoToSocket(sender=sender,status="Unknown`",user=name,image=const.unknown_pic_url,time= imports.datetime.now(),phonenumber=4123891615)
                                         imports.consoleLog.PipeLine_Ok("stop face prossesing timer unknown" +str( imports.datetime.now()-face_processing_pipeline_timer))
-                                    
                                         
                                         self.sendFaceCount(sender,self.Total,self.Unreconized,self.Reconized,imports.datetime.now())
                             
@@ -272,10 +271,18 @@ class RequiredCode(object):
 
     def makefiledirs(self):
         imports.consoleLog.Warning("Creating Folder Dirs")
+        # sets up base file structure
         imports.Path(const.rootDirPath).mkdir(parents=True, exist_ok=True)
         imports.Path(const.imagePathusers).mkdir(parents=True, exist_ok=True)
         imports.Path(const.configPath).mkdir(parents=True, exist_ok=True)
         imports.Path(const.plateImagePath).mkdir(parents=True, exist_ok=True)
+
+        # the captured images sorted by status path
+        imports.Path(const.adminPath).mkdir(parents=True, exist_ok=True)
+        imports.Path(const.usrPath).mkdir(parents=True, exist_ok=True)
+        imports.Path(const.unknownPath).mkdir(parents=True, exist_ok=True)
+        imports.Path(const.unwantedPath).mkdir(parents=True, exist_ok=True)
+
         imports.consoleLog.Warning("Made Folder Dirs")
 
          
