@@ -40,7 +40,7 @@ userList = []
 
 imports.logging.basicConfig(level=imports.logging.INFO, format='%(message)s')
 logger = imports.logging.getLogger()
-logger.addHandler(imports.logging.FileHandler(str(loggingPath)+"Cv_PipeLine"+str(current_time)+".uwu", 'a'))
+#logger.addHandler(imports.logging.FileHandler(str(loggingPath)+"Cv_PipeLine"+str(current_time)+".uwu", 'a'))
 
 default_endpoint = 'https://textbelt.com/text'
 

@@ -28,10 +28,10 @@ class SetupPipeLine(state.State):
 
     def on_event(self, event,sender):
         if event == States.SETUP_PIPELINE:
-            moddate = imports.datetime.fromtimestamp(imports.os.path.getctime(const.Modelpath))
+            #moddate = imports.datetime.fromtimestamp(imports.os.path.getctime(const.Modelpath))
             videoRequired.RequiredCode.setupPipeline(videoRequired.RequiredCode(),sender)
             
-            imports.consoleLog.PipeLine_Data("Model last trained"+" "+ str(moddate['%H']))
+            #imports.consoleLog.PipeLine_Data("Model last trained"+" "+ str(moddate['%H']))
             self.next_state(States.TRAIN_MODEL)
             
             return TrainPipeline()

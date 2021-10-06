@@ -10,6 +10,8 @@ TODO: Check to see if any Users were added to the database so then we can see if
 
 TODO: Need to add model only being trained on adding or removeing of user from database 
 
+TODO: Need to check too see if running on a jetson nano or dev pc so i can run pipeline on dev pc without crassing 
+
 """
 
 
@@ -23,7 +25,6 @@ import pipeline.pipelineStates as pipelineStates
 import pipeline.knnClasifiyer as knnClasifiyer
 import pipeline.videoThread as videoThread
 import pipeline.userStats as userStats
-import RPi.GPIO as GPIO
 
 class Status():
     # enums for the user status 
@@ -276,10 +277,10 @@ class RequiredCode(object):
 
     def makefiledirs(self):
         imports.consoleLog.Warning("Creating Folder Dirs")
-        imports.Path(self.rootDirPath).mkdir(parents=True, exist_ok=True)
-        imports.Path(self.imagePathusers).mkdir(parents=True, exist_ok=True)
-        imports.Path(self.configPath).mkdir(parents=True, exist_ok=True)
-        imports.Path(self.plateImagePath).mkdir(parents=True, exist_ok=True)
+        imports.Path(const.rootDirPath).mkdir(parents=True, exist_ok=True)
+        imports.Path(const.imagePathusers).mkdir(parents=True, exist_ok=True)
+        imports.Path(const.configPath).mkdir(parents=True, exist_ok=True)
+        imports.Path(const.plateImagePath).mkdir(parents=True, exist_ok=True)
         imports.consoleLog.Warning("Made Folder Dirs")
 
          
