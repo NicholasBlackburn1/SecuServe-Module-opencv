@@ -137,7 +137,7 @@ class RequiredCode(object):
                 frame = cap.read()
                 img =  imports.cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
                 predictions =  knnClasifiyer.predict(
-                    img, knn_clf= knnClasifiyer.loadTrainedModel(knn_clf =None, model_path=const.Modelpath), distance_threshold=0.65
+                    img, knn_clf= knnClasifiyer.loadTrainedModel(knn_clf =None, model_path=const.Modelpath), distance_threshold=const.faceTolorace
                     )
                 # print(process_this_frame)
 
@@ -207,15 +207,9 @@ class RequiredCode(object):
                                     
                                     status = int(status)
                                     
-                                   
-                                    #print(imports.consoleLog.Warning(status))
-                                    #print(imports.consoleLog.PipeLine_Data(usrname))
-                                    
-
+                                
                                     if phone == None or 0000000000:
                                         phone = int(const.phoneconfig['default_num'])
-
-                                    #print("User UUID:"+ str(userinfo)+ " "+ str(name) + "   "+ str(status))
 
                                     if (status == Status.ADMIN):
                                         self.sendUserInfoToSocket(sender=sender,status=status,user=usrname,image=const.admin_pic_url ,time= imports.datetime.now(),phonenumber=phone)
@@ -232,7 +226,7 @@ class RequiredCode(object):
                                         
                                         imports.consoleLog.Warning("eeeep there is an User They Might be evil so um let them in"+"  `"+"There Name is:" + str(name))
                                         imports.consoleLog.PipeLine_Ok(
-                                            const.StopingMess +"user" + str(imports.datetime.now()-face_processing_pipeline_timer))
+                                        const.StopingMess +"user" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                 
 
                                     if (status == Status.UNWANTED):
@@ -250,9 +244,7 @@ class RequiredCode(object):
                                         self.sendUserInfoToSocket(sender=sender,status="Group",user=name,image=const.group_pic_url,time= imports.datetime.now(),phonenumber=4123891615)
                                         userStats.UserStats.userGroup(self=userstat,frame=frame, font=font, imagename=imports.datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%f"), imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top)
                                         imports.consoleLog.PipeLine_Ok(const.StopingMess +"Group" + str(imports.datetime.now()-face_processing_pipeline_timer))
-                                        #message.sendCapturedImageMessage("eeeep there is Gagle of Peope I dont know what to do",phone,'http://192.168.5.8:2000/group',self.smsconfig['textbelt-key'])
-                                        
-                                
+                                     
                                
                                     
 
