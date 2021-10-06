@@ -112,7 +112,7 @@ class RequiredCode(object):
 
         
         face_index = 0
-        process_this_frame = 25
+        process_this_frame = 5
         status = None
         pipeline_video_prossesing =  imports.datetime.now()
 
@@ -131,7 +131,7 @@ class RequiredCode(object):
                 self.sendProgramStatus(sender,"ERROR","WATCHDOG OVERRRAN",imports.datetime.now())
                 break
                 
-            if process_this_frame % 30 == 0:
+            if process_this_frame % 10 == 0:
                 #frame=imports.cv2.imread("/home/nick/Face-Door_Moudles/Video-processing/data/images/test.jpg")
                 #cap.read()
                 frame = cap.read()
@@ -179,8 +179,6 @@ class RequiredCode(object):
                         if(name != None):
                             
                               
-                                imports.consoleLog.Warning("the amout of faces seen are"+" "+str(self.Total))
-                        
                                 if name not in const.userList[self.i]:
                                     
                                                     
@@ -191,7 +189,7 @@ class RequiredCode(object):
                                         imports.logging.info("unknowns Here UwU!")
                                         self.sendUserInfoToSocket(sender=sender,status="Unknown`",user=name,image=const.unknown_pic_url,time= imports.datetime.now(),phonenumber=4123891615)
                                         imports.consoleLog.PipeLine_Ok("stop face prossesing timer unknown" +str( imports.datetime.now()-face_processing_pipeline_timer))
-                                        const.watchdog +=1
+                                        
                                         
                                         self.sendFaceCount(sender,self.Total,self.Unreconized,self.Reconized,imports.datetime.now())
                             
@@ -222,10 +220,11 @@ class RequiredCode(object):
 
                                     if (status == Status.ADMIN):
                                         self.sendUserInfoToSocket(sender=sender,status=status,user=usrname,image=const.admin_pic_url ,time= imports.datetime.now(),phonenumber=phone)
-                                        imports.logging.info("got an Admin The name is"+str(usrname))
+                                       # imports.logging.info("got an Admin The name is"+str(usrname))
                                         userstat.userAdmin(self=userstat,status="Admin", name=str(usrname), frame=frame, font=font, imagename=const.imagename,imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, recperesntage=const.facepredict)
                                         imports.consoleLog.PipeLine_Ok(const.StopingMess+"admin" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         
+                                        const.watchdog +=1
 
                                     if (status == Status.USER):
                                         self.sendUserInfoToSocket(sender=sender,status=status,user=usrname,image=const.user_pic_url,time=imports.datetime.now(),phonenumber=phone)
@@ -265,16 +264,16 @@ class RequiredCode(object):
                             imports.consoleLog.PipeLine_Ok("Time For non Face processed frames" + str(imports.datetime.now()-face_processing_pipeline_timer))
 
                             return
-                
-               # imports.cv2.imshow("output", frame)
-               # imports.cv2.waitKey(0)
+
                 
                 if const.watchdog == 10:
                     self.sendProgramStatus(sender,"ERROR","WATCHDOG OVERRRAN",imports.datetime.now())
                     return pipelineStates.States.ERROR
 
-           
-    
+        
+               
+               
+
     
     # returns ammount of seenfaces
     def getAmmountOfFaces(self,image):
