@@ -261,12 +261,19 @@ class RequiredCode(object):
                                     
 
                         else:
-                            
+                           
                             imports.consoleLog.PipeLine_Ok("Time For non Face processed frames" + str(imports.datetime.now()-face_processing_pipeline_timer))
+
                             return
+                
+               # imports.cv2.imshow("output", frame)
+               # imports.cv2.waitKey(0)
+                
                 if const.watchdog == 10:
                     self.sendProgramStatus(sender,"ERROR","WATCHDOG OVERRRAN",imports.datetime.now())
                     return pipelineStates.States.ERROR
+
+           
     
     
     # returns ammount of seenfaces
