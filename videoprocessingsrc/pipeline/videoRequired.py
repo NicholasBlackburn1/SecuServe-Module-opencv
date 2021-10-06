@@ -116,7 +116,7 @@ class RequiredCode(object):
         status = None
         pipeline_video_prossesing =  imports.datetime.now()
 
-        cap =  videoThread.ThreadingClass(gst_str)
+        cap =  videoThread.ThreadingClass("pc")
 
         pipe = pipelineStates.PipeLine()
         
@@ -224,7 +224,6 @@ class RequiredCode(object):
                                         userstat.userAdmin(self=userstat,status="Admin", name=str(usrname), frame=frame, font=font, imagename=const.imagename,imagepath=const.imagePath, left=left, right=right, bottom=bottom, top=top, recperesntage=const.facepredict)
                                         imports.consoleLog.PipeLine_Ok(const.StopingMess+"admin" + str(imports.datetime.now()-face_processing_pipeline_timer))
                                         
-                                        const.watchdog +=1
 
                                     if (status == Status.USER):
                                         self.sendUserInfoToSocket(sender=sender,status=status,user=usrname,image=const.user_pic_url,time=imports.datetime.now(),phonenumber=phone)

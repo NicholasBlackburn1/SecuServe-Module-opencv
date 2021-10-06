@@ -29,7 +29,7 @@ class UserStats(object):
         imports.cv2.putText(frame, "Face Accuracy" + str(recperesntage), (0, 450), font,
                 0.5, (255, 255, 255), 1)
 
-        imports.cv2.imshow("admin", frame)
+        
         self.saveImage(self,imagepath=imagepath+"Admin/",imagename=imagename,frame=frame)
 
 
