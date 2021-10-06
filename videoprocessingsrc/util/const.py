@@ -33,10 +33,10 @@ plateImagePath = fileconfig['rootDirPath'] + fileconfig['platePath']
 loggingPath = fileconfig['rootDirPath'] + fileconfig['loggingPath']
 
 
-adminPath = fileconfig['rootDirPath'] + fileconfig['imagePathusers']+fileconfig['adminimg']
-usrPath = fileconfig['rootDirPath'] + fileconfig['imagePathusers']+fileconfig['usrimg']
-unwantedPath = fileconfig['rootDirPath'] + fileconfig['imagePathusers']+fileconfig['unwantedimg']
-unknownPath = fileconfig['rootDirPath'] + fileconfig['imagePathusers']+fileconfig['unknownimg']
+adminPath = str(fileconfig['rootDirPath'] + fileconfig['imagePath']+fileconfig['adminimg'])
+usrPath = str(fileconfig['rootDirPath'] + fileconfig['imagePath']+fileconfig['usrimg'])
+unwantedPath = str(fileconfig['rootDirPath'] + fileconfig['imagePath']+fileconfig['unwantedimg'])
+unknownPath = str(fileconfig['rootDirPath'] + fileconfig['imagePath']+fileconfig['unknownimg'])
 Modelpath = str(imagePathusers+'Face.Model')
 
 

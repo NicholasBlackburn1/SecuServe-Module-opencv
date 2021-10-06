@@ -273,9 +273,10 @@ class RequiredCode(object):
         imports.consoleLog.Warning("Creating Folder Dirs")
         # sets up base file structure
         imports.Path(const.rootDirPath).mkdir(parents=True, exist_ok=True)
-        imports.Path(const.imagePathusers).mkdir(parents=True, exist_ok=True)
+        imports.Path(const.imagePath).mkdir(parents=True, exist_ok=True)
         imports.Path(const.configPath).mkdir(parents=True, exist_ok=True)
         imports.Path(const.plateImagePath).mkdir(parents=True, exist_ok=True)
+        imports.Path(const.imagePathusers).mkdir(parents=True, exist_ok=True)
 
         # the captured images sorted by status path
         imports.Path(const.adminPath).mkdir(parents=True, exist_ok=True)
