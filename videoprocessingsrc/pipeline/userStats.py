@@ -29,7 +29,7 @@ class UserStats(object):
         imports.cv2.putText(frame, "Face Accuracy" + str(recperesntage), (0, 450), font,
                 0.5, (255, 255, 255), 1)
 
-        
+        imports.time.sleep(.5)
         self.saveImage(self,imagepath=imagepath+"Admin/",imagename=imagename,frame=frame)
 
 
@@ -52,7 +52,7 @@ class UserStats(object):
         imports.cv2.putText(frame, "Face accuracy" + str(recperesntage), (0, 450), font,
                     0.5, (255, 255, 255), 1)
 
-      
+        imports.time.sleep(.5)
         self.saveImage(self,imagepath=imagepath+"User/",imagename=imagename,frame=frame)
       
 
@@ -88,7 +88,8 @@ class UserStats(object):
         
         imports.cv2.putText(frame, "Face accuracy" + str(recperesntage), (0, 430), font,
             0.5, (255, 255, 255), 1)
-
+            
+        imports.time.sleep(.5)
         self.saveImage(self,imagepath=imagepath+"unknown/",imagename=imagename,frame=frame)
         
 
