@@ -9,10 +9,7 @@ class ThreadingClass:
  
   # initiate threading class
   def __init__(self, name):
-    if(name == "pc"):
-      self.cap = imports.cv2.VideoCapture(0, imports.cv2.CAP_V4L)
-    else:
-       self.cap = imports.cv2.VideoCapture(name, imports.cv2.CAP_GSTREAMER)
+    self.cap = imports.cv2.VideoCapture(name, imports.cv2.CAP_GSTREAMER)
 
 
 	# define an empty queue and thread

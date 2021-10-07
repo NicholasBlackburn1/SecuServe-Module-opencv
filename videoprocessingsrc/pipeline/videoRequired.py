@@ -105,8 +105,7 @@ class RequiredCode(object):
         imports.gc.collect()
     
           # Camera Stream gst setup
-        gst_str = ("rtspsrc location={} latency={}  ! rtph264depay  ! nvv4l2decoder ! nvvidconv ! video/x-raw, format=(string)BGRx ! videoconvert !appsink".format(
-            str(const.opencvconfig['Stream_intro']+const.opencvconfig['Stream_ip']+":"+const.opencvconfig['Stream_port']), 400, 720, 480))
+        gst_str =str(const.opencvconfig['Stream_intro']+const.opencvconfig['Stream_ip']+":"+const.opencvconfig['Stream_port'])
 
         imports.consoleLog.Warning("Looking for Faces...")
 
@@ -116,7 +115,7 @@ class RequiredCode(object):
         status = None
         pipeline_video_prossesing =  imports.datetime.now()
 
-        cap =  videoThread.ThreadingClass("pc")
+        cap =  videoThread.ThreadingClass(gst_str)
 
         pipe = pipelineStates.PipeLine()
         
