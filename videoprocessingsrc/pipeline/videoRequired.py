@@ -18,6 +18,8 @@ TODO: Need to check too see if running on a jetson nano or dev pc so i can run p
 from enum import Enum
 from os import stat
 
+from cv2 import COLOR_BGR2RGB, cvtColor
+
 #from Jetson.GPIO.gpio import UNKNOWN
 import imports
 from util import const
@@ -131,9 +133,10 @@ class RequiredCode(object):
                 break
                 
             if process_this_frame % 10 == 0:
-                #frame=imports.cv2.imread("/home/nick/Face-Door_Moudles/Video-processing/data/images/test.jpg")
+                frame=imports.cv2.imread("/mnt/SecuServe/user/people/d8a9b387-af46-485d-98a0-920bbf60df45/f78a84ce-26f7-11ec-b714-97bf132f8e23.jpg")
                 #cap.read()
-                frame = cap.read()
+                #frame = cap.read()
+                #cvtColor(frame,COLOR_BGR2RGB,img)
                 img =  imports.cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
                 predictions =  knnClasifiyer.predict(
                     img, knn_clf= knnClasifiyer.loadTrainedModel(knn_clf =None, model_path=const.Modelpath), distance_threshold=const.faceTolorace
@@ -176,8 +179,7 @@ class RequiredCode(object):
                     
 
                         if(name != None):
-                            
-                              
+
                                 if name not in const.userList[self.i]:
                                     
                                                     
@@ -190,7 +192,7 @@ class RequiredCode(object):
                                         
                                         self.sendFaceCount(sender,self.Total,self.Unreconized,self.Reconized,imports.datetime.now())
                             
-                                    if(self.i > len(const.userList[self.i])):
+                                    if(self.i  < len(const.userList[self.i])):
                                         self.i+=1
                                     
 
@@ -204,6 +206,8 @@ class RequiredCode(object):
                                     phone = userinfo[4]
                                     
                                     status = int(status)
+
+                                    print(str(name)+ " "+str(usrname)+"  "+ str(status))
                                     
                                 
                                     if phone == None or 0000000000:

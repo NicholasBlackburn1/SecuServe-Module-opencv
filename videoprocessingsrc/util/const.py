@@ -64,4 +64,4 @@ facepredict = 0
 
 StopingMess="Stoping face prossesing timer in"
 
-faceTolorace = 0.56
+faceTolorace = 0.65
