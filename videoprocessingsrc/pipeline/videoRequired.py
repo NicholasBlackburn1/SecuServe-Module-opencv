@@ -133,9 +133,9 @@ class RequiredCode(object):
                 break
                 
             if process_this_frame % 10 == 0:
-                frame=imports.cv2.imread("/mnt/SecuServe/user/people/d8a9b387-af46-485d-98a0-920bbf60df45/f78a84ce-26f7-11ec-b714-97bf132f8e23.jpg")
+                #frame=imports.cv2.imread("/mnt/SecuServe/user/people/d8a9b387-af46-485d-98a0-920bbf60df45/f78a84ce-26f7-11ec-b714-97bf132f8e23.jpg")
                 #cap.read()
-                #frame = cap.read()
+                frame = cap.read()
                 #cvtColor(frame,COLOR_BGR2RGB,img)
                 img =  imports.cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
                 predictions =  knnClasifiyer.predict(
@@ -192,8 +192,10 @@ class RequiredCode(object):
                                         
                                         self.sendFaceCount(sender,self.Total,self.Unreconized,self.Reconized,imports.datetime.now())
                             
-                                    if(self.i  < len(const.userList[self.i])):
+                                    if(self.i  < len(const.userList[self.i] or self.i  > len(const.userList[self.i] ))):
                                         self.i+=1
+
+                                    
                                     
 
                                     

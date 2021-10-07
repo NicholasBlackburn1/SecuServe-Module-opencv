@@ -53,7 +53,7 @@ class UserStats(object):
                     0.5, (255, 255, 255), 1)
 
         imports.time.sleep(.5)
-        self.saveImage(self,imagepath=imagepath+"User/",imagename=imagename,frame=frame)
+        self.saveImage(self,imagepath=imagepath+"user/",imagename=imagename,frame=frame)
       
 
 
