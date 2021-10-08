@@ -9,7 +9,11 @@ class ThreadingClass:
  
   # initiate threading class
   def __init__(self, name):
-    self.cap = imports.cv2.VideoCapture(name, imports.cv2.CAP_GSTREAMER)
+
+    if(const.isdev):
+        self.cap = imports.cv2.VideoCapture(0)
+    else:
+      self.cap = imports.cv2.VideoCapture(name, imports.cv2.CAP_GSTREAMER)
 
 
 	# define an empty queue and thread

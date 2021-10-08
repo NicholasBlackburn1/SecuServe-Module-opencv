@@ -37,6 +37,7 @@ adminPath = str(fileconfig['rootDirPath'] + fileconfig['imagePath']+fileconfig['
 usrPath = str(fileconfig['rootDirPath'] + fileconfig['imagePath']+fileconfig['usrimg'])
 unwantedPath = str(fileconfig['rootDirPath'] + fileconfig['imagePath']+fileconfig['unwantedimg'])
 unknownPath = str(fileconfig['rootDirPath'] + fileconfig['imagePath']+fileconfig['unknownimg'])
+groupPath = str(fileconfig['rootDirPath'] + fileconfig['imagePath']+fileconfig['groupimg'])
 Modelpath = str(imagePathusers+'Face.Model')
 
 
@@ -64,4 +65,6 @@ facepredict = 0
 
 StopingMess="Stoping face prossesing timer in"
 
-faceTolorace = 0.65
+faceTolorace = 0.56
+
+isdev = True

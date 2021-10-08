@@ -95,7 +95,7 @@ def predict(Camera_frame, knn_clf=None, distance_threshold=0.4):
         return []
 
     # Find encodings for faces in the test image
-    faces_encodings =  face_recognition.face_encodings(Camera_frame, known_face_locations=X_face_locations)
+    faces_encodings =  face_recognition.face_encodings(Camera_frame, known_face_locations=X_face_locations,num_jitters=5)
 
     # Use the KNN model to find the best matches for the test face
     closest_distances = knn_clf.kneighbors(faces_encodings, n_neighbors=2)

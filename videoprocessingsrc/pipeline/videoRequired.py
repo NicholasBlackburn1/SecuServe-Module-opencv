@@ -19,6 +19,7 @@ from enum import Enum
 from os import stat
 
 from cv2 import COLOR_BGR2RGB, cvtColor
+from numpy.lib import utils
 
 #from Jetson.GPIO.gpio import UNKNOWN
 import imports
@@ -179,7 +180,7 @@ class RequiredCode(object):
                     
 
                         if(name != None):
-
+                                print("data" +str(const.userList[self.i]))
                                 if name not in const.userList[self.i]:
                                     
                                                     
@@ -192,13 +193,14 @@ class RequiredCode(object):
                                         
                                         self.sendFaceCount(sender,self.Total,self.Unreconized,self.Reconized,imports.datetime.now())
                             
-                                    if(self.i  < len(const.userList[self.i] or self.i  > len(const.userList[self.i] ))):
+                                    if(self.i  < len(const.userList[self.i])):
                                         self.i+=1
+                                        print("incra pep"+str( print(const.userList[self.i])))
 
-                                    
-                                    
+                                    if(self.i  == len(const.userList[self.i])):
+                                        imports.consoleLog.Error("CANNOT INCRAMENT MORE"+" "+" User list is  "+" " +str(len(const.userList[self.i])))
+                                        self.i = 0
 
-                                    
                                 if  name in const.userList[self.i]:
                                     
                                     userinfo = const.userList[self.i][name]
@@ -209,8 +211,7 @@ class RequiredCode(object):
                                     
                                     status = int(status)
 
-                                    print(str(name)+ " "+str(usrname)+"  "+ str(status))
-                                    
+                                 
                                 
                                     if phone == None or 0000000000:
                                         phone = int(const.phoneconfig['default_num'])

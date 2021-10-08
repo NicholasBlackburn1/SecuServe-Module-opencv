@@ -3,7 +3,7 @@ User stas this is where i have the seperate classes for the main opencv
 """
 
 import imports
-
+import util.const as const
 class UserStats(object):
 
     # saves owner images and sends Frame
@@ -30,7 +30,7 @@ class UserStats(object):
                 0.5, (255, 255, 255), 1)
 
         imports.time.sleep(.5)
-        self.saveImage(self,imagepath=imagepath+"Admin/",imagename=imagename,frame=frame)
+        self.saveImage(self,imagepath=imagepath+const.adminPath,imagename=imagename,frame=frame)
 
 
     # User Grade Status
@@ -53,7 +53,7 @@ class UserStats(object):
                     0.5, (255, 255, 255), 1)
 
         imports.time.sleep(.5)
-        self.saveImage(self,imagepath=imagepath+"user/",imagename=imagename,frame=frame)
+        self.saveImage(self,imagepath=imagepath+const.usrPath,imagename=imagename,frame=frame)
       
 
 
@@ -67,7 +67,7 @@ class UserStats(object):
         imports.cv2.putText(frame, "Face accuracy" + str(recperesntage), (0, 480), font,
                 0.5, (255, 255, 255), 1)
 
-        self.saveImage(imagepath=imagePath+"Unwanted/",imagename=imagename,frame=frame)
+        self.saveImage(imagepath=imagePath+const.unwantedPath,imagename=imagename,frame=frame)
         
             
             
@@ -90,7 +90,7 @@ class UserStats(object):
             0.5, (255, 255, 255), 1)
             
         imports.time.sleep(.5)
-        self.saveImage(self,imagepath=imagepath+"unknown/",imagename=imagename,frame=frame)
+        self.saveImage(self,imagepath=imagepath+const.unknownPath,imagename=imagename,frame=frame)
         
 
     # User Groups 
@@ -121,4 +121,7 @@ class UserStats(object):
                     0.5,
                     (255, 255, 255),
                     1,
+                    
                 )
+
+                self.saveImage(self,imagepath=imagepath+const.unknownPath,imagename=imagename,frame=frame)
