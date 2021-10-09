@@ -30,7 +30,12 @@ class UserStats(object):
                 0.5, (255, 255, 255), 1)
 
         imports.time.sleep(.5)
-        self.saveImage(self,imagepath=imagepath+const.adminPath,imagename=imagename,frame=frame)
+
+        imports.consoleLog.PipeLine_Data("Admin Path = "+str(const.adminPath))
+
+        self.saveImage(self,imagepath=const.adminPath,imagename=imagename,frame=frame)
+
+
 
 
     # User Grade Status
@@ -53,7 +58,9 @@ class UserStats(object):
                     0.5, (255, 255, 255), 1)
 
         imports.time.sleep(.5)
-        self.saveImage(self,imagepath=imagepath+const.usrPath,imagename=imagename,frame=frame)
+
+        imports.consoleLog.PipeLine_Data("User Path = "+str(const.usrPath))
+        self.saveImage(self,imagepath=const.usrPath,imagename=imagename,frame=frame)
       
 
 
@@ -67,7 +74,9 @@ class UserStats(object):
         imports.cv2.putText(frame, "Face accuracy" + str(recperesntage), (0, 480), font,
                 0.5, (255, 255, 255), 1)
 
-        self.saveImage(imagepath=imagePath+const.unwantedPath,imagename=imagename,frame=frame)
+
+        imports.consoleLog.PipeLine_Data("unwated Path = "+str(const.unwantedPath))
+        self.saveImage(imagepath=const.unwantedPath,imagename=imagename,frame=frame)
         
             
             
@@ -90,7 +99,9 @@ class UserStats(object):
             0.5, (255, 255, 255), 1)
             
         imports.time.sleep(.5)
-        self.saveImage(self,imagepath=imagepath+const.unknownPath,imagename=imagename,frame=frame)
+
+        imports.consoleLog.PipeLine_Data("Unknown Path = "+str(const.unknownPath))
+        self.saveImage(self,imagepath=const.unknownPath,imagename=imagename,frame=frame)
         
 
     # User Groups 
@@ -124,4 +135,4 @@ class UserStats(object):
                     
                 )
 
-                self.saveImage(self,imagepath=imagepath+const.unknownPath,imagename=imagename,frame=frame)
+                self.saveImage(self,imagepath=const.groupPath,imagename=imagename,frame=frame)

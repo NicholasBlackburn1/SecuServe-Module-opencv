@@ -10,11 +10,12 @@ class ThreadingClass:
   # initiate threading class
   def __init__(self, name):
 
-    if(const.isdev):
+    if(const.isdevpc):
         self.cap = imports.cv2.VideoCapture(0)
-    else:
+    if(const.isdevpc == False):
       self.cap = imports.cv2.VideoCapture(name, imports.cv2.CAP_GSTREAMER)
 
+    
 
 	# define an empty queue and thread
     self.q = imports.queue.Queue()

@@ -33,11 +33,16 @@ plateImagePath = fileconfig['rootDirPath'] + fileconfig['platePath']
 loggingPath = fileconfig['rootDirPath'] + fileconfig['loggingPath']
 
 
-adminPath = str(fileconfig['rootDirPath'] + fileconfig['imagePath']+fileconfig['adminimg'])
-usrPath = str(fileconfig['rootDirPath'] + fileconfig['imagePath']+fileconfig['usrimg'])
-unwantedPath = str(fileconfig['rootDirPath'] + fileconfig['imagePath']+fileconfig['unwantedimg'])
-unknownPath = str(fileconfig['rootDirPath'] + fileconfig['imagePath']+fileconfig['unknownimg'])
-groupPath = str(fileconfig['rootDirPath'] + fileconfig['imagePath']+fileconfig['groupimg'])
+adminPath = str(fileconfig['rootDirPath'] +
+                fileconfig['imagePath']+fileconfig['adminimg'])
+usrPath = str(fileconfig['rootDirPath'] +
+              fileconfig['imagePath']+fileconfig['usrimg'])
+unwantedPath = str(fileconfig['rootDirPath'] +
+                   fileconfig['imagePath']+fileconfig['unwantedimg'])
+unknownPath = str(fileconfig['rootDirPath'] +
+                  fileconfig['imagePath']+fileconfig['unknownimg'])
+groupPath = str(fileconfig['rootDirPath'] +
+                fileconfig['imagePath']+fileconfig['groupimg'])
 Modelpath = str(imagePathusers+'Face.Model')
 
 
@@ -50,7 +55,7 @@ logger = imports.logging.getLogger()
 
 default_endpoint = 'https://textbelt.com/text'
 
-system_on_led = 12 #BOARD pin 12
+system_on_led = 12  # BOARD pin 12
 processing_led = 18  # BOARD pin 18
 reconizing_face = 20
 
@@ -63,8 +68,8 @@ group_pic_url = 'http://192.168.5.8/group'
 
 facepredict = 0
 
-StopingMess="Stoping face prossesing timer in"
+StopingMess = "Stoping face prossesing timer in"
 
 faceTolorace = 0.56
 
-isdev = True
+isdevpc = False

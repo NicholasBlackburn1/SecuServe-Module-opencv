@@ -109,8 +109,12 @@ class RequiredCode(object):
     
           # Camera Stream gst setup
         gst_str =str(const.opencvconfig['Stream_intro']+const.opencvconfig['Stream_ip']+":"+const.opencvconfig['Stream_port'])
+        #frame = imports.cv2.imread("/mnt/SecuServe/user/people/c57c0281-9aa5-42b6-8a14-90a4c57efc22/05f6f6dc-26f8-11ec-b714-97bf132f8e23%20(1).jpg")
 
         imports.consoleLog.Warning("Looking for Faces...")
+
+
+        imports.consoleLog.Error("User list size is  "+" " +str(len(const.userList)))
 
         
         face_index = 0
@@ -136,6 +140,8 @@ class RequiredCode(object):
             if process_this_frame % 10 == 0:
                 #frame=imports.cv2.imread("/mnt/SecuServe/user/people/d8a9b387-af46-485d-98a0-920bbf60df45/f78a84ce-26f7-11ec-b714-97bf132f8e23.jpg")
                 #cap.read()
+                #frame = imports.cv2.imread("/mnt/SecuServe/user/people/a8036328-71b9-4981-8e8a-025cb261a20c/002cf2ce-26f8-11ec-b714-97bf132f8e23.jpg")
+
                 frame = cap.read()
                 #cvtColor(frame,COLOR_BGR2RGB,img)
                 img =  imports.cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
@@ -193,13 +199,13 @@ class RequiredCode(object):
                                         
                                         self.sendFaceCount(sender,self.Total,self.Unreconized,self.Reconized,imports.datetime.now())
                             
-                                    if(self.i  < len(const.userList[self.i])):
+                                    if(self.i  < len(const.userList)):
                                         self.i+=1
-                                        print("incra pep"+str( print(const.userList[self.i])))
+                                        print("incra pep"+str( print(const.userList)))
 
-                                    if(self.i  == len(const.userList[self.i])):
-                                        imports.consoleLog.Error("CANNOT INCRAMENT MORE"+" "+" User list is  "+" " +str(len(const.userList[self.i])))
-                                        self.i = 0
+                                    if(self.i  == len(const.userList)):
+                                        imports.consoleLog.Error("CANNOT INCRAMENT MORE"+" "+" User list is  "+" " +str(len(const.userList)))
+                                        
 
                                 if  name in const.userList[self.i]:
                                     
