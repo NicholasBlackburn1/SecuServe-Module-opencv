@@ -186,7 +186,7 @@ class RequiredCode(object):
                     
 
                         if(name != None):
-                                print("data" +str(const.userList[self.i]))
+                               
                                 if name not in const.userList[self.i]:
                                     
                                                     
@@ -201,10 +201,10 @@ class RequiredCode(object):
                             
                                     if(self.i  < len(const.userList)):
                                         self.i+=1
-                                        print("incra pep"+str( print(const.userList)))
-
+                                        
                                     if(self.i  == len(const.userList)):
                                         imports.consoleLog.Error("CANNOT INCRAMENT MORE"+" "+" User list is  "+" " +str(len(const.userList)))
+                                        self.i=0
                                         
 
                                 if  name in const.userList[self.i]:
