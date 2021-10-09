@@ -72,4 +72,4 @@ StopingMess = "Stoping face prossesing timer in"
 
 faceTolorace = 0.56
 
-isdevpc = True
+isdevpc = False

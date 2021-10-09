@@ -41,7 +41,7 @@ def loadTrainingData(train_dir, verbose=True):
                         print("Image {} not suitable for training: {}".format(img_path, "Didn't find a face" if len(face_bounding_boxes) < 1 else "Found more than one face"))
                 else:
                     # Add face encoding for current image to the training set
-                    X.append( face_recognition.face_encodings(image, known_face_locations=face_bounding_boxes)[0])
+                    X.append( face_recognition.face_encodings(image, known_face_locations=face_bounding_boxes,num_jitters=40)[0])
                     y.append(class_dir)
                    
 # Trains Knn class model
@@ -88,14 +88,14 @@ def predict(Camera_frame, knn_clf=None, distance_threshold=0.4):
     if knn_clf is None is None:
         raise Exception("Must supply knn classifier either thourgh knn_clf or model_path")
 
-    X_face_locations =  face_recognition.face_locations(Camera_frame, model="cnn")
+    X_face_locations =  face_recognition.face_locations(Camera_frame, model="cnn",number_of_times_to_upsample=1)
 
     # If no faces are found in the image, return an empty result.
     if len(X_face_locations) == 0:
         return []
 
     # Find encodings for faces in the test image
-    faces_encodings =  face_recognition.face_encodings(Camera_frame, known_face_locations=X_face_locations,num_jitters=5)
+    faces_encodings =  face_recognition.face_encodings(Camera_frame, known_face_locations=X_face_locations)
 
     # Use the KNN model to find the best matches for the test face
     closest_distances = knn_clf.kneighbors(faces_encodings, n_neighbors=2)
