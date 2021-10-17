@@ -198,7 +198,7 @@ class RequiredCode(object):
                 """
                     This Section is Dedicated to dealing with user Seperatation via the User Stats data tag
                 """
-                font = cv2.FONT_HERSHEY_DUPLEX
+                
                 sent = False
 
                 userstat = userStats.UserStats
@@ -235,7 +235,7 @@ class RequiredCode(object):
                                     status = Status.UNKNOWN
 
                                 if status == Status.UNKNOWN:
-                                    self.StatusUnknown(sender,status,name,phone,frame,font,left,right,bottom,top,face_processing_pipeline_timer)
+                                    self.StatusUnknown(sender,name=name,phone=phone,frame=frame,left=left,right=right,bottom=bottom,top=top,face_processing_pipeline_timer=face_processing_pipeline_timer,process_this_frame=process_this_frame)
 
                                 if self.i < len(const.userList):
                                     self.i += 1
@@ -257,13 +257,13 @@ class RequiredCode(object):
                                     phone = int(const.phoneconfig["default_num"])
 
                                 if status == Status.ADMIN:
-                                    self.StatusAdmin(sender,status,usrname,phone,frame,font,left,right,bottom,top,face_processing_pipeline_timer)
+                                    self.StatusAdmin(sender,status=status,usrname=usrname,phone=phone,frame=frame,left=left,right=right,bottom=bottom,top=top,face_processing_pipeline_timer=face_processing_pipeline_timer)
 
                                 if status == Status.USER:
-                                    self.StatusUser(sender,status,usrname,phone,frame,font,left,right,bottom,top,face_processing_pipeline_timer)
+                                    self.StatusUser(sender,status=status,usrname=usrname,phone=phone,frame=frame,left=left,right=right,bottom=bottom,top=top,face_processing_pipeline_timer=face_processing_pipeline_timer)
 
                                 if status == Status.UNWANTED:
-                                   self.StatusUnwanted(sender,status,usrname,phone,frame,font,left,right,bottom,top,face_processing_pipeline_timer)
+                                   self.StatusUnwanted(sender,status=status,usrname=usrname,phone=phone,frame=frame,left=left,right=right,bottom=bottom,top=top,face_processing_pipeline_timer=face_processing_pipeline_timer)
 
                                 if self.getAmmountOfFaces(frame) > 2:
                                     pass
@@ -429,13 +429,13 @@ class RequiredCode(object):
         consoleLog.PipeLine_Ok("sent User info to zmq socket")
 
     # * this is where the pipeline displays that the user is Unknown
-    def StatusUnknown(self,sender,name,phone,frame,font,left,right,bottom,top,face_processing_pipeline_timer,process_this_frame):
+    def StatusUnknown(self,sender,name,phone,frame,left,right,bottom,top,face_processing_pipeline_timer,process_this_frame):
         userstat.UserStats.userUnknown(
-            self=userstat,
+            self=userstat.UserStats,
             opencvconfig=const.opencvconfig,
             name=name,
             frame=frame,
-            font=font,
+            font=const.font,
             imagename=datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%f"),
             imagepath=const.imagePath,
             left=left,
@@ -452,11 +452,11 @@ class RequiredCode(object):
             user=name,
             image=const.unknown_pic_url,
             currenttime=datetime.now(),
-            phonenumber=4123891615,
+            phonenumber=phone,
         )
         consoleLog.PipeLine_Ok(
             "stop face prossesing timer unknown"
-            + str(datetime.now() - face_processing_pipeline_timer)
+            + str(datetime.now()- face_processing_pipeline_timer)
         )
 
         self.sendFaceCount(
@@ -464,7 +464,7 @@ class RequiredCode(object):
         )
 
     # * this is where the pipeline displays that the user reconized and classifiyed as admin
-    def StatusAdmin(self,sender,status,usrname,phone,frame,font,left,right,bottom,top,face_processing_pipeline_timer):
+    def StatusAdmin(self,sender,status,usrname,phone,frame,left,right,bottom,top,face_processing_pipeline_timer):
         self.sendUserInfoToSocket(
             sender=sender,
             status=status,
@@ -479,7 +479,7 @@ class RequiredCode(object):
             status="Admin",
             name=str(usrname),
             frame=frame,
-            font=font,
+            font=const.font,
             imagename=datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%f"),
             imagepath=const.imagePath,
             left=left,
@@ -495,7 +495,7 @@ class RequiredCode(object):
         )
 
     # * this is where the pipeline displays that the user reconized and classifiyed as User
-    def StatusUser(self,sender,status,usrname,phone,frame,font,left,right,bottom,top,face_processing_pipeline_timer):
+    def StatusUser(self,sender,status,usrname,phone,frame,left,right,bottom,top,face_processing_pipeline_timer):
         self.sendUserInfoToSocket(
             sender=sender,
             status=status,
@@ -510,7 +510,7 @@ class RequiredCode(object):
             status="User",
             name=usrname,
             frame=frame,
-            font=font,
+            font=const.font,
             imagename=datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%f"),
             imagepath=const.imagePath,
             left=left,
@@ -534,7 +534,7 @@ class RequiredCode(object):
 
     #* R # * this is where the pipeline displays that the user reconized and classifiyed as Unwanted
 
-    def StatusUnwanted(self,sender,status,usrname,phone,frame,font,left,right,bottom,top,face_processing_pipeline_timer):
+    def StatusUnwanted(self,sender,status,usrname,phone,frame,left,right,bottom,top,face_processing_pipeline_timer):
         self.sendUserInfoToSocket(
         sender=sender,
         status=status,
@@ -548,7 +548,7 @@ class RequiredCode(object):
             status="Unwanted",
             name=usrname,
             frame=frame,
-            font=font,
+            font=const.font,
             imagename=datetime.now().strftime(
                 "%Y_%m_%d-%I_%M_%S_%f"
             ),

@@ -2,9 +2,10 @@
 User stas this is where i have the seperate classes for the main opencv 
 """
 
-import imports
+import cv2
 import util.const as const
-
+import time 
+from util import consoleLog 
 
 class UserStats(object):
 
@@ -27,13 +28,13 @@ class UserStats(object):
 
         print(status)
         # Draw a box around the face
-        imports.cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
+        cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
 
-        imports.cv2.putText(frame, name, (left, top), font, 0.5, (255, 255, 255), 1)
-        imports.cv2.putText(
+        cv2.putText(frame, name, (left, top), font, 0.5, (255, 255, 255), 1)
+        cv2.putText(
             frame, "Known Person..", (0, 430), font, 0.5, (255, 255, 255), 1
         )
-        imports.cv2.putText(
+        cv2.putText(
             frame,
             "Face Accuracy" + str(recperesntage),
             (0, 450),
@@ -43,11 +44,11 @@ class UserStats(object):
             1,
         )
 
-        imports.time.sleep(0.5)
+        time.sleep(0.5)
 
-        imports.consoleLog.PipeLine_Data("Admin Path = " + str(const.adminPath))
+        consoleLog.PipeLine_Data("Admin Path = " + str(const.adminPath))
 
-        self.saveImage(UserStats,imagepath=const.adminPath, imagename=imagename, frame=frame
+        self.saveImage(self,imagepath=const.adminPath, imagename=imagename, frame=frame
         )
 
     # User Grade Status
@@ -68,14 +69,14 @@ class UserStats(object):
     ):
 
         # Draw a box around the face
-        imports.cv2.rectangle(frame, (left, top), (right, bottom), (255, 255, 0), 2)
+        cv2.rectangle(frame, (left, top), (right, bottom), (255, 255, 0), 2)
 
-        imports.cv2.putText(frame, name, (left, top), font, 0.5, (255, 255, 255), 1)
-        imports.cv2.putText(
+        cv2.putText(frame, name, (left, top), font, 0.5, (255, 255, 255), 1)
+        cv2.putText(
             frame, "Known Person..", (0, 430), font, 0.5, (255, 255, 255), 1
         )
 
-        imports.cv2.putText(
+        cv2.putText(
             frame,
             "Face accuracy" + str(recperesntage),
             (0, 450),
@@ -85,10 +86,10 @@ class UserStats(object):
             1,
         )
 
-        imports.time.sleep(0.5)
+        time.sleep(0.5)
 
-        imports.consoleLog.PipeLine_Data("User Path = " + str(const.usrPath))
-        self.saveImage(UserStats,imagepath=const.usrPath, imagename=imagename, frame=frame)
+        consoleLog.PipeLine_Data("User Path = " + str(const.usrPath))
+        self.saveImage(self,imagepath=const.usrPath, imagename=imagename, frame=frame)
 
     # Handles Unwanted Usr Stats
     def userUnwanted(
@@ -106,9 +107,9 @@ class UserStats(object):
         recperesntage,
     ):
 
-        imports.cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-        imports.cv2.putText(frame, name, (left, top), font, 0.5, (255, 255, 255), 1)
-        imports.cv2.putText(
+        cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+        cv2.putText(frame, name, (left, top), font, 0.5, (255, 255, 255), 1)
+        cv2.putText(
             frame,
             "Face accuracy" + str(recperesntage),
             (0, 480),
@@ -118,8 +119,8 @@ class UserStats(object):
             1,
         )
 
-        imports.consoleLog.PipeLine_Data("unwated Path = " + str(const.unwantedPath))
-        self.saveImage(UserStats,imagepath=const.unwantedPath, imagename=imagename, frame=frame)
+        consoleLog.PipeLine_Data("unwated Path = " + str(const.unwantedPath))
+        self.saveImage(self,imagepath=const.unwantedPath, imagename=imagename, frame=frame)
 
     # Handles unKnown User
     def userUnknown(
@@ -138,17 +139,15 @@ class UserStats(object):
         recperesntage,
     ):
 
-        imports.cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-        imports.cv2.putText(frame, name, (left, top), font, 0.5, (255, 255, 255), 1)
 
-        imports.cv2.putText(
-            frame, "Frame num" + str(framenum), (0, 480), font, 0.5, (255, 255, 255), 1
+        cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+        cv2.putText(frame, name, (left, top), font, 0.5, (255, 255, 255), 1)
+        cv2.putText(
+            frame, "Unknown Person..", (0, 430), font, 0.5, (255, 255, 255), 1
         )
-
-        # Distance info
-        imports.cv2.putText(
+        cv2.putText(
             frame,
-            opencvconfig["unreconizedPerson"],
+            "Face Accuracy" + str(recperesntage),
             (0, 450),
             font,
             0.5,
@@ -156,30 +155,22 @@ class UserStats(object):
             1,
         )
 
-        imports.cv2.putText(
-            frame,
-            "Face accuracy" + str(recperesntage),
-            (0, 430),
-            font,
-            0.5,
-            (255, 255, 255),
-            1,
+        time.sleep(0.5)
+
+        consoleLog.PipeLine_Data("Unknown Path = " + str(const.unknownPath))
+
+        self.saveImage(self,imagepath=const.unknownPath, imagename=imagename, frame=frame
         )
 
-        imports.time.sleep(0.5)
-
-        imports.consoleLog.PipeLine_Data("Unknown Path = " + str(const.unknownPath))
-        self.saveImage(UserStats,imagepath=const.unknownPath, imagename=imagename, frame=frame
-        )
 
     # User Groups
     def userGroup(self, frame, font, imagepath, imagename, left, right, bottom, top):
 
-        imports.cv2.rectangle(frame, (left, top), (right, bottom), (255, 0, 255), 2)
-        imports.cv2.putText(frame, "Group", (left, top), font, 0.5, (255, 255, 255), 1)
+        cv2.rectangle(frame, (left, top), (right, bottom), (255, 0, 255), 2)
+        cv2.putText(frame, "Group", (left, top), font, 0.5, (255, 255, 255), 1)
 
         # Distance info
-        imports.cv2.putText(
+        cv2.putText(
             frame,
             "There's a group..",
             (474, 430),
@@ -188,7 +179,7 @@ class UserStats(object):
             (255, 255, 255),
             1,
         )
-        imports.cv2.putText(
+        cv2.putText(
             frame,
             "be carfull now!",
             (474, 450),
@@ -198,9 +189,9 @@ class UserStats(object):
             1,
         )
 
-        self.saveImage(UserStats,imagepath=const.groupPath, imagename=imagename, frame=frame
+        self.saveImage(self,imagepath=const.groupPath, imagename=imagename, frame=frame
         )
         
       # saves owner images and sends Frame
-    def saveImage(self, imagepath, imagename, frame):
-        imports.cv2.imwrite(imagepath + imagename + ".jpg", frame)
+    def saveImage(self,imagepath, imagename, frame):
+        cv2.imwrite(imagepath + imagename + ".jpg", frame)

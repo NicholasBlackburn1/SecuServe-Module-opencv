@@ -3,7 +3,7 @@ dirty const setup
 """
 
 import imports
-
+import cv2
 # this is all the global paths needed throuht the program
 PATH = str(imports.pathlib.Path().absolute()) + "/data/" + "Config.ini"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
@@ -78,3 +78,5 @@ StopingMess = "Stoping face prossesing timer in"
 faceTolorace = 0.56
 
 isdevpc = True
+
+font = cv2.FONT_HERSHEY_DUPLEX
