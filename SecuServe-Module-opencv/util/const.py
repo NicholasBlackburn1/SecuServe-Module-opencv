@@ -4,6 +4,7 @@ dirty const setup
 
 import imports
 import cv2
+
 # this is all the global paths needed throuht the program
 PATH = str(imports.pathlib.Path().absolute()) + "/data/" + "Config.ini"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}

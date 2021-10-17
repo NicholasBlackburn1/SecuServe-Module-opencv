@@ -26,7 +26,7 @@ import imports
 import time
 import gc
 import sys
-import os 
+import os
 import face_recognition
 import wget
 
@@ -43,6 +43,7 @@ import pipeline.videoThread as videoThread
 import pipeline.userStats as userStats
 import util.consoleLog as consoleLog
 import pipeline.userStats as userstat
+
 
 class Status:
     # enums for the user status
@@ -71,7 +72,7 @@ class RequiredCode(object):
             "Starting to run pipleline",
             datetime.now() - pipeline_start_setup,
         )
-   
+
         gc.enable()
         sys.stdout.write = const.logger.info
 
@@ -172,8 +173,6 @@ class RequiredCode(object):
         while True:
             process_this_frame = process_this_frame + 1
 
-           
-
             if const.watchdog == 10:
                 print("WATCHDOG OVERRAIN")
                 self.sendProgramStatus(
@@ -198,7 +197,7 @@ class RequiredCode(object):
                 """
                     This Section is Dedicated to dealing with user Seperatation via the User Stats data tag
                 """
-                
+
                 sent = False
 
                 userstat = userStats.UserStats
@@ -215,7 +214,7 @@ class RequiredCode(object):
 
                     # allows total var to incrament All Seen Faces
                     self.Total += self.getAmmountOfFaces(frame)
-              
+
                     # Display t he results
                     for name, (top, right, bottom, left) in predictions:
 
@@ -235,7 +234,18 @@ class RequiredCode(object):
                                     status = Status.UNKNOWN
 
                                 if status == Status.UNKNOWN:
-                                    self.StatusUnknown(sender,name=name,phone=phone,frame=frame,left=left,right=right,bottom=bottom,top=top,face_processing_pipeline_timer=face_processing_pipeline_timer,process_this_frame=process_this_frame)
+                                    self.StatusUnknown(
+                                        sender,
+                                        name=name,
+                                        phone=phone,
+                                        frame=frame,
+                                        left=left,
+                                        right=right,
+                                        bottom=bottom,
+                                        top=top,
+                                        face_processing_pipeline_timer=face_processing_pipeline_timer,
+                                        process_this_frame=process_this_frame,
+                                    )
 
                                 if self.i < len(const.userList):
                                     self.i += 1
@@ -257,13 +267,46 @@ class RequiredCode(object):
                                     phone = int(const.phoneconfig["default_num"])
 
                                 if status == Status.ADMIN:
-                                    self.StatusAdmin(sender,status=status,usrname=usrname,phone=phone,frame=frame,left=left,right=right,bottom=bottom,top=top,face_processing_pipeline_timer=face_processing_pipeline_timer)
+                                    self.StatusAdmin(
+                                        sender,
+                                        status=status,
+                                        usrname=usrname,
+                                        phone=phone,
+                                        frame=frame,
+                                        left=left,
+                                        right=right,
+                                        bottom=bottom,
+                                        top=top,
+                                        face_processing_pipeline_timer=face_processing_pipeline_timer,
+                                    )
 
                                 if status == Status.USER:
-                                    self.StatusUser(sender,status=status,usrname=usrname,phone=phone,frame=frame,left=left,right=right,bottom=bottom,top=top,face_processing_pipeline_timer=face_processing_pipeline_timer)
+                                    self.StatusUser(
+                                        sender,
+                                        status=status,
+                                        usrname=usrname,
+                                        phone=phone,
+                                        frame=frame,
+                                        left=left,
+                                        right=right,
+                                        bottom=bottom,
+                                        top=top,
+                                        face_processing_pipeline_timer=face_processing_pipeline_timer,
+                                    )
 
                                 if status == Status.UNWANTED:
-                                   self.StatusUnwanted(sender,status=status,usrname=usrname,phone=phone,frame=frame,left=left,right=right,bottom=bottom,top=top,face_processing_pipeline_timer=face_processing_pipeline_timer)
+                                    self.StatusUnwanted(
+                                        sender,
+                                        status=status,
+                                        usrname=usrname,
+                                        phone=phone,
+                                        frame=frame,
+                                        left=left,
+                                        right=right,
+                                        bottom=bottom,
+                                        top=top,
+                                        face_processing_pipeline_timer=face_processing_pipeline_timer,
+                                    )
 
                                 if self.getAmmountOfFaces(frame) > 2:
                                     pass
@@ -391,7 +434,11 @@ class RequiredCode(object):
         consoleLog.Warning("sending Program status to zmq socket")
         sender.send_string("PIPELINE")
         sender.send_json(
-            {"status": str(status), "pipelinePos": str(pipelinePos), "time": str(currenttime)}
+            {
+                "status": str(status),
+                "pipelinePos": str(pipelinePos),
+                "time": str(currenttime),
+            }
         )
         time.sleep(0.5)
         consoleLog.PipeLine_Ok("Sent Program status to zmq socket")
@@ -412,7 +459,9 @@ class RequiredCode(object):
         consoleLog.PipeLine_Ok("sent Face Count to zmq socket")
 
     # Sends Seen Users Info to Socket
-    def sendUserInfoToSocket(self, sender, status, user, image, currenttime, phonenumber):
+    def sendUserInfoToSocket(
+        self, sender, status, user, image, currenttime, phonenumber
+    ):
         consoleLog.Warning("sending User indo to zmq")
         sender.send_string("USERS")
         sender.send_json(
@@ -429,7 +478,19 @@ class RequiredCode(object):
         consoleLog.PipeLine_Ok("sent User info to zmq socket")
 
     # * this is where the pipeline displays that the user is Unknown
-    def StatusUnknown(self,sender,name,phone,frame,left,right,bottom,top,face_processing_pipeline_timer,process_this_frame):
+    def StatusUnknown(
+        self,
+        sender,
+        name,
+        phone,
+        frame,
+        left,
+        right,
+        bottom,
+        top,
+        face_processing_pipeline_timer,
+        process_this_frame,
+    ):
         userstat.UserStats.userUnknown(
             self=userstat.UserStats,
             opencvconfig=const.opencvconfig,
@@ -456,7 +517,7 @@ class RequiredCode(object):
         )
         consoleLog.PipeLine_Ok(
             "stop face prossesing timer unknown"
-            + str(datetime.now()- face_processing_pipeline_timer)
+            + str(datetime.now() - face_processing_pipeline_timer)
         )
 
         self.sendFaceCount(
@@ -464,7 +525,19 @@ class RequiredCode(object):
         )
 
     # * this is where the pipeline displays that the user reconized and classifiyed as admin
-    def StatusAdmin(self,sender,status,usrname,phone,frame,left,right,bottom,top,face_processing_pipeline_timer):
+    def StatusAdmin(
+        self,
+        sender,
+        status,
+        usrname,
+        phone,
+        frame,
+        left,
+        right,
+        bottom,
+        top,
+        face_processing_pipeline_timer,
+    ):
         self.sendUserInfoToSocket(
             sender=sender,
             status=status,
@@ -495,7 +568,19 @@ class RequiredCode(object):
         )
 
     # * this is where the pipeline displays that the user reconized and classifiyed as User
-    def StatusUser(self,sender,status,usrname,phone,frame,left,right,bottom,top,face_processing_pipeline_timer):
+    def StatusUser(
+        self,
+        sender,
+        status,
+        usrname,
+        phone,
+        frame,
+        left,
+        right,
+        bottom,
+        top,
+        face_processing_pipeline_timer,
+    ):
         self.sendUserInfoToSocket(
             sender=sender,
             status=status,
@@ -531,27 +616,36 @@ class RequiredCode(object):
             + str(datetime.now() - face_processing_pipeline_timer)
         )
 
+    # * R # * this is where the pipeline displays that the user reconized and classifiyed as Unwanted
 
-    #* R # * this is where the pipeline displays that the user reconized and classifiyed as Unwanted
-
-    def StatusUnwanted(self,sender,status,usrname,phone,frame,left,right,bottom,top,face_processing_pipeline_timer):
+    def StatusUnwanted(
+        self,
+        sender,
+        status,
+        usrname,
+        phone,
+        frame,
+        left,
+        right,
+        bottom,
+        top,
+        face_processing_pipeline_timer,
+    ):
         self.sendUserInfoToSocket(
-        sender=sender,
-        status=status,
-        user=usrname,
-        image=const.unwanted_pic_url,
-        currenttime=datetime.now(),
-        phonenumber=phone,
-    )
+            sender=sender,
+            status=status,
+            user=usrname,
+            image=const.unwanted_pic_url,
+            currenttime=datetime.now(),
+            phonenumber=phone,
+        )
         userstat.UserStats.userUnwanted(
             self=userstat.UserStats,
             status="Unwanted",
             name=usrname,
             frame=frame,
             font=const.font,
-            imagename=datetime.now().strftime(
-                "%Y_%m_%d-%I_%M_%S_%f"
-            ),
+            imagename=datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%f"),
             imagepath=const.imagePath,
             left=left,
             right=right,
@@ -563,10 +657,5 @@ class RequiredCode(object):
         consoleLog.PipeLine_Ok(
             const.StopingMess
             + "unwanted"
-            + str(
-                datetime.now()
-                - face_processing_pipeline_timer
-            )
+            + str(datetime.now() - face_processing_pipeline_timer)
         )
-
-  
