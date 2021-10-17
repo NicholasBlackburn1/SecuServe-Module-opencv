@@ -71,18 +71,15 @@ from pathlib import Path
 
 
 class TestConfig(unittest.TestCase):
-    
+
     mock = Mock()
-     
+
     """
     this is for testing the reading the config for the pipeline
     """
+
     def test_config_reading(self):
-        
-        conf =ConfigParser()
-        config = conf.read(str(Path().absolute())+"/data/"+"Config.ini")
+
+        conf = ConfigParser()
+        config = conf.read(str(Path().absolute()) + "/data/" + "Config.ini")
         self.assertIsNotNone(config)
-    
-    
-    
-      
