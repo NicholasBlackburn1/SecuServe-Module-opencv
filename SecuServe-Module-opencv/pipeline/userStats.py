@@ -8,9 +8,6 @@ import util.const as const
 
 class UserStats(object):
 
-    # saves owner images and sends Frame
-    def saveImage(self, imagepath, imagename, frame):
-        imports.cv2.imwrite(imagepath + imagename + ".jpg", frame)
 
     # this is for Handling User Admin Stats
     def userAdmin(
@@ -50,8 +47,7 @@ class UserStats(object):
 
         imports.consoleLog.PipeLine_Data("Admin Path = " + str(const.adminPath))
 
-        self.saveImage(
-            self, imagepath=const.adminPath, imagename=imagename, frame=frame
+        self.saveImage(UserStats,imagepath=const.adminPath, imagename=imagename, frame=frame
         )
 
     # User Grade Status
@@ -92,7 +88,7 @@ class UserStats(object):
         imports.time.sleep(0.5)
 
         imports.consoleLog.PipeLine_Data("User Path = " + str(const.usrPath))
-        self.saveImage(self, imagepath=const.usrPath, imagename=imagename, frame=frame)
+        self.saveImage(UserStats,imagepath=const.usrPath, imagename=imagename, frame=frame)
 
     # Handles Unwanted Usr Stats
     def userUnwanted(
@@ -123,7 +119,7 @@ class UserStats(object):
         )
 
         imports.consoleLog.PipeLine_Data("unwated Path = " + str(const.unwantedPath))
-        self.saveImage(imagepath=const.unwantedPath, imagename=imagename, frame=frame)
+        self.saveImage(UserStats,imagepath=const.unwantedPath, imagename=imagename, frame=frame)
 
     # Handles unKnown User
     def userUnknown(
@@ -173,8 +169,7 @@ class UserStats(object):
         imports.time.sleep(0.5)
 
         imports.consoleLog.PipeLine_Data("Unknown Path = " + str(const.unknownPath))
-        self.saveImage(
-            self, imagepath=const.unknownPath, imagename=imagename, frame=frame
+        self.saveImage(UserStats,imagepath=const.unknownPath, imagename=imagename, frame=frame
         )
 
     # User Groups
@@ -203,6 +198,9 @@ class UserStats(object):
             1,
         )
 
-        self.saveImage(
-            self, imagepath=const.groupPath, imagename=imagename, frame=frame
+        self.saveImage(UserStats,imagepath=const.groupPath, imagename=imagename, frame=frame
         )
+        
+      # saves owner images and sends Frame
+    def saveImage(self, imagepath, imagename, frame):
+        imports.cv2.imwrite(imagepath + imagename + ".jpg", frame)

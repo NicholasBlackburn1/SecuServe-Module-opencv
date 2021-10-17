@@ -28,6 +28,7 @@ import gc
 import sys
 import os 
 import face_recognition
+import wget
 
 
 from util import const
@@ -70,9 +71,7 @@ class RequiredCode(object):
             "Starting to run pipleline",
             datetime.now() - pipeline_start_setup,
         )
-        # this sends a stats message back to the main controller and to the messaging and webserver module
-        self.setUpIndicatorLight()
-
+   
         gc.enable()
         sys.stdout.write = const.logger.info
 
@@ -173,7 +172,7 @@ class RequiredCode(object):
         while True:
             process_this_frame = process_this_frame + 1
 
-            self.setProcessingLed(True)
+           
 
             if const.watchdog == 10:
                 print("WATCHDOG OVERRAIN")
@@ -208,7 +207,6 @@ class RequiredCode(object):
                 if self.getAmmountOfFaces(frame) <= 0:
 
                     time.sleep(0.5)
-                    self.setProcessingLed(False)
                     pipe.on_event(pipelineStates.States.IDLE, sender)
 
                 # processes faces when seen
@@ -217,7 +215,7 @@ class RequiredCode(object):
 
                     # allows total var to incrament All Seen Faces
                     self.Total += self.getAmmountOfFaces(frame)
-                    self.setProcessingLed(True)
+              
                     # Display t he results
                     for name, (top, right, bottom, left) in predictions:
 
@@ -231,11 +229,13 @@ class RequiredCode(object):
 
                             if name not in const.userList[self.i]:
 
+                                phone = int(const.phoneconfig["default_num"])
+
                                 if name == "unknown":
                                     status = Status.UNKNOWN
 
                                 if status == Status.UNKNOWN:
-                                    self.StatusUnknown()
+                                    self.StatusUnknown(sender,status,name,phone,frame,font,left,right,bottom,top,face_processing_pipeline_timer)
 
                                 if self.i < len(const.userList):
                                     self.i += 1
@@ -257,16 +257,16 @@ class RequiredCode(object):
                                     phone = int(const.phoneconfig["default_num"])
 
                                 if status == Status.ADMIN:
-                                    self.StatusAdmin()
+                                    self.StatusAdmin(sender,status,usrname,phone,frame,font,left,right,bottom,top,face_processing_pipeline_timer)
 
                                 if status == Status.USER:
-                                    self.StatusUser()
+                                    self.StatusUser(sender,status,usrname,phone,frame,font,left,right,bottom,top,face_processing_pipeline_timer)
 
                                 if status == Status.UNWANTED:
-                                   self.StatusUnwanted()
+                                   self.StatusUnwanted(sender,status,usrname,phone,frame,font,left,right,bottom,top,face_processing_pipeline_timer)
 
                                 if self.getAmmountOfFaces(frame) > 2:
-                                    self.UserGroup()
+                                    pass
 
                         else:
 
@@ -312,7 +312,7 @@ class RequiredCode(object):
         consoleLog.Warning("Made Folder Dirs")
 
     def covertDictUserData(self, i):
-        user = const.userList[i][userData.UserData()]
+        user = const.userList[i][UserData()]
         print(user)
 
     # Encodes all the Nessiscary User info into Json String so it can be easly moved arround
@@ -387,17 +387,17 @@ class RequiredCode(object):
                 # Add names of the ecodings to thw end of list
 
     # Sends Program Status to Socket
-    def sendProgramStatus(self, sender, status, pipelinePos, time):
+    def sendProgramStatus(self, sender, status, pipelinePos, currenttime):
         consoleLog.Warning("sending Program status to zmq socket")
         sender.send_string("PIPELINE")
         sender.send_json(
-            {"status": str(status), "pipelinePos": str(pipelinePos), "time": str(time)}
+            {"status": str(status), "pipelinePos": str(pipelinePos), "time": str(currenttime)}
         )
         time.sleep(0.5)
         consoleLog.PipeLine_Ok("Sent Program status to zmq socket")
 
     # Sends Face count to the web server to create database entryies
-    def sendFaceCount(self, sender, total, unknown, reconized, time):
+    def sendFaceCount(self, sender, total, unknown, reconized, currenttime):
         consoleLog.Warning("sending Face count to zmq")
         sender.send_string("FACECOUNT")
         sender.send_json(
@@ -405,14 +405,14 @@ class RequiredCode(object):
                 "total": int(total),
                 "unknown": int(unknown),
                 "reconized": str(reconized),
-                "time": str(time),
+                "time": str(currenttime),
             }
         )
         time.sleep(0.5)
         consoleLog.PipeLine_Ok("sent Face Count to zmq socket")
 
     # Sends Seen Users Info to Socket
-    def sendUserInfoToSocket(self, sender, status, user, image, time, phonenumber):
+    def sendUserInfoToSocket(self, sender, status, user, image, currenttime, phonenumber):
         consoleLog.Warning("sending User indo to zmq")
         sender.send_string("USERS")
         sender.send_json(
@@ -422,15 +422,15 @@ class RequiredCode(object):
                 "image": str(image),
                 "phone": str(phonenumber),
                 "Accuracy": str(const.facepredict),
-                "time": str(time),
+                "time": str(currenttime),
             }
         )
         time.sleep(0.5)
         consoleLog.PipeLine_Ok("sent User info to zmq socket")
 
     # * this is where the pipeline displays that the user is Unknown
-    def StatusUnknown():
-        userstat.userUnknown(
+    def StatusUnknown(self,sender,name,phone,frame,font,left,right,bottom,top,face_processing_pipeline_timer,process_this_frame):
+        userstat.UserStats.userUnknown(
             self=userstat,
             opencvconfig=const.opencvconfig,
             name=name,
@@ -451,7 +451,7 @@ class RequiredCode(object):
             status="Unknown`",
             user=name,
             image=const.unknown_pic_url,
-            time=datetime.now(),
+            currenttime=datetime.now(),
             phonenumber=4123891615,
         )
         consoleLog.PipeLine_Ok(
@@ -470,12 +470,12 @@ class RequiredCode(object):
             status=status,
             user=usrname,
             image=const.admin_pic_url,
-            time=datetime.now(),
+            currenttime=datetime.now(),
             phonenumber=phone,
         )
         # logging.info("got an Admin The name is"+str(usrname))
-        userstat.userAdmin(
-            self=userstat,
+        userstat.UserStats.userAdmin(
+            self=userstat.UserStats,
             status="Admin",
             name=str(usrname),
             frame=frame,
@@ -501,12 +501,12 @@ class RequiredCode(object):
             status=status,
             user=usrname,
             image=const.user_pic_url,
-            time=datetime.now(),
+            currenttime=datetime.now(),
             phonenumber=phone,
         )
-        logging.info("got an User Human The name is" + str(usrname))
-        userstat.userUser(
-            self=userstat,
+        consoleLog.info("got an User Human The name is" + str(usrname))
+        userstat.UserStats.userUser(
+            self=userstat.UserStats,
             status="User",
             name=usrname,
             frame=frame,
@@ -540,11 +540,11 @@ class RequiredCode(object):
         status=status,
         user=usrname,
         image=const.unwanted_pic_url,
-        time=datetime.now(),
+        currenttime=datetime.now(),
         phonenumber=phone,
     )
-        userstat.userUnwanted(
-            self=userstat,
+        userstat.UserStats.userUnwanted(
+            self=userstat.UserStats,
             status="Unwanted",
             name=usrname,
             frame=frame,
@@ -569,33 +569,4 @@ class RequiredCode(object):
             )
         )
 
-    def UserGroup(self,sender,status,usrname,phone,frame,font,left,right,bottom,top,face_processing_pipeline_timer):
-        self.sendUserInfoToSocket(
-        sender=sender,
-        status=status,
-        user=usrname,
-        image=const.group_pic_url,
-        time=datetime.now(),
-        phonenumber=phone,
-    )
-    userStats.UserStats.userGroup(
-        self=userstat,
-        frame=frame,
-        font=font,
-        imagename=datetime.now().strftime(
-            "%Y_%m_%d-%I_%M_%S_%f"
-        ),
-        imagepath=const.imagePath,
-        left=left,
-        right=right,
-        bottom=bottom,
-        top=top,
-    )
-    consoleLog.PipeLine_Ok(
-        const.StopingMess
-        + "Group"
-        + str(
-            datetime.now()
-            - face_processing_pipeline_timer
-        )
-    )
+  
