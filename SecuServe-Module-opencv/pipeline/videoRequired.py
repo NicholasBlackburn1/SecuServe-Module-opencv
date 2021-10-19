@@ -162,7 +162,7 @@ class RequiredCode(object):
 
        
         process_this_frame = 5
-        status = None
+     
         pipeline_video_prossesing = datetime.now()
 
         cap = videoThread.ThreadingClass(gst_str)
@@ -555,7 +555,7 @@ class RequiredCode(object):
                 # allows total var to incrament All Seen Faces
                 self.Total += self.getAmmountOfFaces(frame)
 
-
+            
                 self.checkFaceStatus(predictions=predictions,sender=sender,frame=frame,face_processing_pipeline_timer=face_processing_pipeline_timer,process_this_frame=process_this_frame)
 
 
@@ -567,7 +567,8 @@ class RequiredCode(object):
 
     #* this will loop through and check face statuss
     def checkFaceStatus(self,predictions,sender,frame,face_processing_pipeline_timer,process_this_frame):
-
+        
+        status = None
         # Display t he results
         for name, (top, right, bottom, left) in predictions:
 

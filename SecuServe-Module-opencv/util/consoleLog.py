@@ -2,45 +2,44 @@
 Simple Debuging Colorizer for the console uwu
 """
 import imports
+from datetime import datetime
+
+
 
 
 def Debug(text):
-    print(imports.Fore.LIGHTWHITE_EX + str(text))
-    print(imports.Style.RESET_ALL)
-
+    dmsgLayout("DEBUG",text)
     return
 
 
 def Warning(text):
-    print(imports.Fore.YELLOW + str(text))
-    print(imports.Style.RESET_ALL)
-
+    dmsgLayout("WARNING",text)
     return
 
 
 def Error(text):
-    print(imports.Fore.RED + str(text))
-    print(imports.Style.RESET_ALL)
-
+    dmsgLayout("ERROR",text)
     return
 
 
 def PipeLine_Ok(text):
-    print(imports.Fore.GREEN + str(text))
-    print(imports.Style.RESET_ALL)
-
+    dmsgLayout("OK",text)
     return
 
 
 def PipeLine_init(text):
-    print(imports.Fore.LIGHTBLUE_EX + str(text))
-    print(imports.Style.RESET_ALL)
-
+    dmsgLayout("INIT",text)
     return
 
 
 def PipeLine_Data(text):
-    print(imports.Fore.LIGHTMAGENTA_EX + str(text))
-    print(imports.Style.RESET_ALL)
+    dmsgLayout("DATA",text)
 
     return
+
+
+def dmsgLayout(type,message):
+    print(imports.Fore.GREEN + "["+str(datetime.now())+"]"+" "+ imports.Fore.YELLOW + str(type)+":"+" "+imports.Fore.WHITE+str(message))
+    print(imports.Style.RESET_ALL)
+
+    
