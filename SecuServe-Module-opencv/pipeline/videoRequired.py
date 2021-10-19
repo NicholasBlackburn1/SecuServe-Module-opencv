@@ -83,12 +83,12 @@ class RequiredCode(object):
         # prints Config of program, the opencv build info and if opencv is optimized
         consoleLog.Debug("Example Config" + str(const.PATH))
         consoleLog.PipeLine_init(cv2.getBuildInformation())
-        consoleLog.Warning("is opencv opdemised" + str(cv2.useOptimized()))
+        consoleLog.Debug("is opencv opdemised" + str(cv2.useOptimized()))
 
         # Database connection handing
-        consoleLog.Warning("Connecting to the Database Faces")
+        consoleLog.Debug("Connecting to the Database Faces")
         consoleLog.PipeLine_Data(mydb.getFaces())
-        consoleLog.Warning("connected to database Faces")
+        consoleLog.Debug("connected to database Faces")
 
         # Updates Data in the Usable data list uwu
         self.UserDataList()
@@ -169,6 +169,7 @@ class RequiredCode(object):
 
         pipe = pipelineStates.PipeLine()
 
+        status = const.status
         while True:
             process_this_frame = process_this_frame + 1
 
@@ -179,7 +180,7 @@ class RequiredCode(object):
                 )
                 break
 
-            self.faceIdentify(process_this_frame=process_this_frame,cap=cap,sender=sender,pipe=pipe)
+            self.faceIdentify(process_this_frame=process_this_frame,cap=cap,sender=sender,pipe=pipe,status=status)
 
 
     # returns ammount of seenfaces
@@ -289,7 +290,7 @@ class RequiredCode(object):
 
     # Sends Program Status to Socket
     def sendProgramStatus(self, sender, status, pipelinePos, currenttime):
-        consoleLog.Warning("sending Program status to zmq socket")
+        consoleLog.Debug("sending Program status to zmq socket")
         sender.send_string("PIPELINE")
         sender.send_json(
             {
@@ -303,7 +304,7 @@ class RequiredCode(object):
 
     # Sends Face count to the web server to create database entryies
     def sendFaceCount(self, sender, total, unknown, reconized, currenttime):
-        consoleLog.Warning("sending Face count to zmq")
+        consoleLog.Debug("sending Face count to zmq")
         sender.send_string("FACECOUNT")
         sender.send_json(
             {
@@ -320,7 +321,7 @@ class RequiredCode(object):
     def sendUserInfoToSocket(
         self, sender, status, user, image, currenttime, phonenumber
     ):
-        consoleLog.Warning("sending User indo to zmq")
+        consoleLog.Debug("sending User indo to zmq")
         sender.send_string("USERS")
         sender.send_json(
             {
@@ -522,12 +523,12 @@ class RequiredCode(object):
     
     #* this is the main part of face rec pipeline 
 
-    def faceIdentify(self, process_this_frame, cap,sender,pipe):
+    def faceIdentify(self, process_this_frame, cap,sender,pipe,status):
 
         if process_this_frame % 10 == 0:
             # cap.read()
             frame = cap.read()
-
+            
             img = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
             predictions = knnClasifiyer.predict(
                 img,
@@ -556,7 +557,7 @@ class RequiredCode(object):
                 self.Total += self.getAmmountOfFaces(frame)
 
             
-                self.checkFaceStatus(predictions=predictions,sender=sender,frame=frame,face_processing_pipeline_timer=face_processing_pipeline_timer,process_this_frame=process_this_frame)
+                self.checkFaceStatus(predictions=predictions,sender=sender,frame=frame,face_processing_pipeline_timer=face_processing_pipeline_timer,process_this_frame=process_this_frame,status=status)
 
 
             if const.watchdog == 10:
@@ -566,9 +567,9 @@ class RequiredCode(object):
                 return pipelineStates.States.ERROR
 
     #* this will loop through and check face statuss
-    def checkFaceStatus(self,predictions,sender,frame,face_processing_pipeline_timer,process_this_frame):
+    def checkFaceStatus(self,predictions,sender,frame,face_processing_pipeline_timer,process_this_frame,status):
         
-        status = None
+       
         # Display t he results
         for name, (top, right, bottom, left) in predictions:
 

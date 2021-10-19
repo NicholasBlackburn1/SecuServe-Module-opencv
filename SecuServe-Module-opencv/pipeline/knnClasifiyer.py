@@ -53,7 +53,7 @@ def loadTrainingData(train_dir, verbose=True):
                 # Add face encoding for current image to the training set
                 X.append(
                     face_recognition.face_encodings(
-                        image, known_face_locations=face_bounding_boxes, num_jitters=40
+                        image, known_face_locations=face_bounding_boxes, num_jitters=50
                     )[0]
                 )
                 y.append(class_dir)

@@ -81,3 +81,4 @@ faceTolorace = 0.56
 isdevpc = True
 
 font = cv2.FONT_HERSHEY_DUPLEX
+status = None
