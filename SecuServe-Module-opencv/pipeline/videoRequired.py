@@ -160,7 +160,7 @@ class RequiredCode(object):
 
         consoleLog.Error("User list size is  " + " " + str(len(const.userList)))
 
-        face_index = 0
+       
         process_this_frame = 5
         status = None
         pipeline_video_prossesing = datetime.now()
@@ -169,7 +169,6 @@ class RequiredCode(object):
 
         pipe = pipelineStates.PipeLine()
 
-        # TODO: GET RECONITION TO IDLE when it sees no faces so it does not waste time waiting for faces
         while True:
             process_this_frame = process_this_frame + 1
 
@@ -180,153 +179,12 @@ class RequiredCode(object):
                 )
                 break
 
-            if process_this_frame % 10 == 0:
-                # cap.read()
-                frame = cap.read()
+            self.faceIdentify(process_this_frame=process_this_frame,cap=cap,sender=sender,pipe=pipe)
 
-                img = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
-                predictions = knnClasifiyer.predict(
-                    img,
-                    knn_clf=knnClasifiyer.loadTrainedModel(
-                        knn_clf=None, model_path=const.Modelpath
-                    ),
-                    distance_threshold=const.faceTolorace,
-                )
-                # print(process_this_frame)
-
-                """
-                    This Section is Dedicated to dealing with user Seperatation via the User Stats data tag
-                """
-
-                sent = False
-
-                userstat = userStats.UserStats
-
-                # runs like an idle stage so program can wait for face to be recived
-                if self.getAmmountOfFaces(frame) <= 0:
-
-                    time.sleep(0.5)
-                    pipe.on_event(pipelineStates.States.IDLE, sender)
-
-                # processes faces when seen
-                if self.getAmmountOfFaces(frame) > 0:
-                    face_processing_pipeline_timer = datetime.now()
-
-                    # allows total var to incrament All Seen Faces
-                    self.Total += self.getAmmountOfFaces(frame)
-
-                    # Display t he results
-                    for name, (top, right, bottom, left) in predictions:
-
-                        # Scale back up face locations since the frame we detected in was scaled to 1/4 size
-                        top *= 2
-                        right *= 2
-                        bottom *= 2
-                        left *= 2
-
-                        if name != None:
-
-                            if name not in const.userList[self.i]:
-
-                                phone = int(const.phoneconfig["default_num"])
-
-                                if name == "unknown":
-                                    status = Status.UNKNOWN
-
-                                if status == Status.UNKNOWN:
-                                    self.StatusUnknown(
-                                        sender,
-                                        name=name,
-                                        phone=phone,
-                                        frame=frame,
-                                        left=left,
-                                        right=right,
-                                        bottom=bottom,
-                                        top=top,
-                                        face_processing_pipeline_timer=face_processing_pipeline_timer,
-                                        process_this_frame=process_this_frame,
-                                    )
-
-                                if self.i < len(const.userList):
-                                    self.i += 1
-
-                                if self.i == len(const.userList):
-                                    self.i = 0
-
-                            if name in const.userList[self.i]:
-
-                                userinfo = const.userList[self.i][name]
-
-                                status = userinfo[1]
-                                usrname = userinfo[0]
-                                phone = userinfo[4]
-
-                                status = int(status)
-
-                                if phone == None or 0000000000 or 0:
-                                    phone = int(const.phoneconfig["default_num"])
-
-                                if status == Status.ADMIN:
-                                    self.StatusAdmin(
-                                        sender,
-                                        status=status,
-                                        usrname=usrname,
-                                        phone=phone,
-                                        frame=frame,
-                                        left=left,
-                                        right=right,
-                                        bottom=bottom,
-                                        top=top,
-                                        face_processing_pipeline_timer=face_processing_pipeline_timer,
-                                    )
-
-                                if status == Status.USER:
-                                    self.StatusUser(
-                                        sender,
-                                        status=status,
-                                        usrname=usrname,
-                                        phone=phone,
-                                        frame=frame,
-                                        left=left,
-                                        right=right,
-                                        bottom=bottom,
-                                        top=top,
-                                        face_processing_pipeline_timer=face_processing_pipeline_timer,
-                                    )
-
-                                if status == Status.UNWANTED:
-                                    self.StatusUnwanted(
-                                        sender,
-                                        status=status,
-                                        usrname=usrname,
-                                        phone=phone,
-                                        frame=frame,
-                                        left=left,
-                                        right=right,
-                                        bottom=bottom,
-                                        top=top,
-                                        face_processing_pipeline_timer=face_processing_pipeline_timer,
-                                    )
-
-                                if self.getAmmountOfFaces(frame) > 2:
-                                    pass
-
-                        else:
-
-                            consoleLog.PipeLine_Ok(
-                                "Time For non Face processed frames"
-                                + str(datetime.now() - face_processing_pipeline_timer)
-                            )
-
-                            return
-
-                if const.watchdog == 10:
-                    self.sendProgramStatus(
-                        sender, "ERROR", "WATCHDOG OVERRRAN", datetime.now()
-                    )
-                    return pipelineStates.States.ERROR
 
     # returns ammount of seenfaces
+
+
 
     def getAmmountOfFaces(self, image):
         return len(
@@ -659,3 +517,161 @@ class RequiredCode(object):
             + "unwanted"
             + str(datetime.now() - face_processing_pipeline_timer)
         )
+
+
+    
+    #* this is the main part of face rec pipeline 
+
+    def faceIdentify(self, process_this_frame, cap,sender,pipe):
+
+        if process_this_frame % 10 == 0:
+            # cap.read()
+            frame = cap.read()
+
+            img = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
+            predictions = knnClasifiyer.predict(
+                img,
+                knn_clf=knnClasifiyer.loadTrainedModel(
+                    knn_clf=None, model_path=const.Modelpath
+                ),
+                distance_threshold=const.faceTolorace,
+            )
+            # print(process_this_frame)
+
+            """
+                This Section is Dedicated to dealing with user Seperatation via the User Stats data tag
+            """
+            
+            # runs like an idle stage so program can wait for face to be recived
+            if self.getAmmountOfFaces(frame) <= 0:
+
+                time.sleep(0.5)
+                pipe.on_event(pipelineStates.States.IDLE, sender)
+
+            # processes faces when seen
+            if self.getAmmountOfFaces(frame) > 0:
+                face_processing_pipeline_timer = datetime.now()
+
+                # allows total var to incrament All Seen Faces
+                self.Total += self.getAmmountOfFaces(frame)
+
+
+                self.checkFaceStatus(predictions=predictions,sender=sender,frame=frame,face_processing_pipeline_timer=face_processing_pipeline_timer,process_this_frame=process_this_frame)
+
+
+            if const.watchdog == 10:
+                self.sendProgramStatus(
+                    sender, "ERROR", "WATCHDOG OVERRRAN", datetime.now()
+                )
+                return pipelineStates.States.ERROR
+
+    #* this will loop through and check face statuss
+    def checkFaceStatus(self,predictions,sender,frame,face_processing_pipeline_timer,process_this_frame):
+
+        # Display t he results
+        for name, (top, right, bottom, left) in predictions:
+
+            # Scale back up face locations since the frame we detected in was scaled to 1/4 size
+            top *= 2
+            right *= 2
+            bottom *= 2
+            left *= 2
+
+            if name != None:
+
+                if name not in const.userList[self.i]:
+
+                    phone = int(const.phoneconfig["default_num"])
+
+                    if name == "unknown":
+                        status = Status.UNKNOWN
+
+                    if status == Status.UNKNOWN:
+                        self.StatusUnknown(
+                            sender,
+                            name=name,
+                            phone=phone,
+                            frame=frame,
+                            left=left,
+                            right=right,
+                            bottom=bottom,
+                            top=top,
+                            face_processing_pipeline_timer=face_processing_pipeline_timer,
+                            process_this_frame=process_this_frame,
+                        )
+
+                    if self.i < len(const.userList):
+                        self.i += 1
+
+                    if self.i == len(const.userList):
+                        self.i = 0
+
+                if name in const.userList[self.i]:
+
+                    userinfo = const.userList[self.i][name]
+
+                    status = userinfo[1]
+                    usrname = userinfo[0]
+                    phone = userinfo[4]
+
+                    status = int(status)
+
+                    if phone == None or 0000000000 or 0:
+                        phone = int(const.phoneconfig["default_num"])
+
+                    if status == Status.ADMIN:
+                        self.StatusAdmin(
+                            sender,
+                            status=status,
+                            usrname=usrname,
+                            phone=phone,
+                            frame=frame,
+                            left=left,
+                            right=right,
+                            bottom=bottom,
+                            top=top,
+                            face_processing_pipeline_timer=face_processing_pipeline_timer,
+                        )
+
+                    if status == Status.USER:
+                        self.StatusUser(
+                            sender,
+                            status=status,
+                            usrname=usrname,
+                            phone=phone,
+                            frame=frame,
+                            left=left,
+                            right=right,
+                            bottom=bottom,
+                            top=top,
+                            face_processing_pipeline_timer=face_processing_pipeline_timer,
+                        )
+
+                    if status == Status.UNWANTED:
+                        self.StatusUnwanted(
+                            sender,
+                            status=status,
+                            usrname=usrname,
+                            phone=phone,
+                            frame=frame,
+                            left=left,
+                            right=right,
+                            bottom=bottom,
+                            top=top,
+                            face_processing_pipeline_timer=face_processing_pipeline_timer,
+                        )
+
+                    if self.getAmmountOfFaces(frame) > 2:
+                        pass
+
+            else:
+
+                consoleLog.PipeLine_Ok(
+                    "Time For non Face processed frames"
+                    + str(datetime.now() - face_processing_pipeline_timer)
+                )
+
+                return
+
+
+

@@ -1,5 +1,7 @@
 """
 User stas this is where i have the seperate classes for the main opencv 
+
+TODO: time to create unit tests for these methods in the class
 """
 
 import cv2
