@@ -4,6 +4,11 @@ dirty const setup
 
 import imports
 import cv2
+from pathlib import Path
+TEST_TRAIN_DIR = str(Path().absolute()) + "/data/testTraining/"
+TEST_FACE_IMAGE = str(Path().absolute()) + "/data/images/me.jpg"
+
+READIMAGE = cv2.imread(TEST_FACE_IMAGE, cv2.IMREAD_COLOR)
 
 # this is all the global paths needed throuht the program
 PATH = str(imports.pathlib.Path().absolute()) + "/data/" + "Config.ini"

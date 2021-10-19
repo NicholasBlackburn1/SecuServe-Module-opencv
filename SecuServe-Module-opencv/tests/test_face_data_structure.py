@@ -4,7 +4,7 @@ this file is for testing the datasturue for handing faces
 """
 import unittest
 import pipeline.faceDataStruture as face
-
+from sklearn import neighbors
 
 class TestFaceData(unittest.TestCase):
 
@@ -16,7 +16,7 @@ class TestFaceData(unittest.TestCase):
 
         data = face.UserData(
             name="nick",
-            status="user",
+            status=0,
             image="image",
             downloadurl="https://example.com",
             phonenumber=4123891615,
@@ -33,13 +33,13 @@ class TestFaceData(unittest.TestCase):
 
         data = face.UserData(
             name="nick",
-            status="user",
+            status=0,
             image="image",
             downloadurl="https://example.com",
             phonenumber=4123891615,
         )
         self.assertEqual(
-            str("user"),
+            str(0),
             str(face.UserData.getUserStatus(data)),
             "should Return userStatus ",
         )
@@ -52,7 +52,7 @@ class TestFaceData(unittest.TestCase):
 
         data = face.UserData(
             name="nick",
-            status="user",
+            status=0,
             image="image",
             downloadurl="https://example.com",
             phonenumber=4123891615,
@@ -71,7 +71,7 @@ class TestFaceData(unittest.TestCase):
 
         data = face.UserData(
             name="nick",
-            status="user",
+            status=0,
             image="image",
             downloadurl="https://example.com",
             phonenumber=4123891615,
@@ -90,7 +90,7 @@ class TestFaceData(unittest.TestCase):
 
         data = face.UserData(
             name="nick",
-            status="user",
+            status=0,
             image="image",
             downloadurl="https://example.com",
             phonenumber=4123891615,

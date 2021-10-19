@@ -33,4 +33,4 @@ class TestKnnClass(unittest.TestCase):
             ),
             distance_threshold=0.65,
         )
-        self.assertEqual(predict, ("me", (145, 312, 287, 170)))
+        self.assertEqual(predict, [("me", (145, 312, 287, 170))])

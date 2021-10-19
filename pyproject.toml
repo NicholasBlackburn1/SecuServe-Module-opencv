@@ -19,6 +19,7 @@ zmq = "^0.0.0"
 requests = "^2.26.0"
 sklearn = "^0.0"
 black = "^21.9b0"
+pytest = "^6.2.5"
 
 
 [tool.poetry.dev-dependencies]
