@@ -160,9 +160,8 @@ class RequiredCode(object):
 
         consoleLog.Error("User list size is  " + " " + str(len(const.userList)))
 
-       
         process_this_frame = 5
-     
+
         pipeline_video_prossesing = datetime.now()
 
         cap = videoThread.ThreadingClass(gst_str)
@@ -180,12 +179,15 @@ class RequiredCode(object):
                 )
                 break
 
-            self.faceIdentify(process_this_frame=process_this_frame,cap=cap,sender=sender,pipe=pipe,status=status)
-
+            self.faceIdentify(
+                process_this_frame=process_this_frame,
+                cap=cap,
+                sender=sender,
+                pipe=pipe,
+                status=status,
+            )
 
     # returns ammount of seenfaces
-
-
 
     def getAmmountOfFaces(self, image):
         return len(
@@ -519,16 +521,14 @@ class RequiredCode(object):
             + str(datetime.now() - face_processing_pipeline_timer)
         )
 
+    # * this is the main part of face rec pipeline
 
-    
-    #* this is the main part of face rec pipeline 
-
-    def faceIdentify(self, process_this_frame, cap,sender,pipe,status):
+    def faceIdentify(self, process_this_frame, cap, sender, pipe, status):
 
         if process_this_frame % 10 == 0:
             # cap.read()
             frame = cap.read()
-            
+
             img = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
             predictions = knnClasifiyer.predict(
                 img,
@@ -542,7 +542,7 @@ class RequiredCode(object):
             """
                 This Section is Dedicated to dealing with user Seperatation via the User Stats data tag
             """
-            
+
             # runs like an idle stage so program can wait for face to be recived
             if self.getAmmountOfFaces(frame) <= 0:
 
@@ -556,9 +556,14 @@ class RequiredCode(object):
                 # allows total var to incrament All Seen Faces
                 self.Total += self.getAmmountOfFaces(frame)
 
-            
-                self.checkFaceStatus(predictions=predictions,sender=sender,frame=frame,face_processing_pipeline_timer=face_processing_pipeline_timer,process_this_frame=process_this_frame,status=status)
-
+                self.checkFaceStatus(
+                    predictions=predictions,
+                    sender=sender,
+                    frame=frame,
+                    face_processing_pipeline_timer=face_processing_pipeline_timer,
+                    process_this_frame=process_this_frame,
+                    status=status,
+                )
 
             if const.watchdog == 10:
                 self.sendProgramStatus(
@@ -566,10 +571,17 @@ class RequiredCode(object):
                 )
                 return pipelineStates.States.ERROR
 
-    #* this will loop through and check face statuss
-    def checkFaceStatus(self,predictions,sender,frame,face_processing_pipeline_timer,process_this_frame,status):
-        
-       
+    # * this will loop through and check face statuss
+    def checkFaceStatus(
+        self,
+        predictions,
+        sender,
+        frame,
+        face_processing_pipeline_timer,
+        process_this_frame,
+        status,
+    ):
+
         # Display t he results
         for name, (top, right, bottom, left) in predictions:
 
@@ -674,6 +686,3 @@ class RequiredCode(object):
                 )
 
                 return
-
-
-
