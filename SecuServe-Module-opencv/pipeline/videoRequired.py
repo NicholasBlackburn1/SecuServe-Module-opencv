@@ -33,7 +33,7 @@ import wget
 
 from util import const
 from pathlib import Path
-from datetime import datetime
+from datetime import date, datetime
 from pipeline.faceDataStruture import UserData
 from util import database as mydb
 
@@ -594,13 +594,16 @@ class RequiredCode(object):
             if name != None:
 
                 if name not in const.userList[self.i]:
-
+                   
                     phone = int(const.phoneconfig["default_num"])
 
                     if name == "unknown":
                         status = Status.UNKNOWN
+                        
 
                     if status == Status.UNKNOWN:
+                        self.Unreconized += self.getAmmountOfFaces(frame)
+                       
                         self.StatusUnknown(
                             sender,
                             name=name,
@@ -621,7 +624,9 @@ class RequiredCode(object):
                         self.i = 0
 
                 if name in const.userList[self.i]:
-
+                    
+                    self.Reconized += self.getAmmountOfFaces(frame)
+                       
                     userinfo = const.userList[self.i][name]
 
                     status = userinfo[1]
@@ -677,6 +682,8 @@ class RequiredCode(object):
 
                     if self.getAmmountOfFaces(frame) > 2:
                         pass
+                    
+                    self.sendFaceCount(sender,self.Total,self.Unreconized,self.Reconized, datetime.now())
 
             else:
 
@@ -684,5 +691,5 @@ class RequiredCode(object):
                     "Time For non Face processed frames"
                     + str(datetime.now() - face_processing_pipeline_timer)
                 )
-
+             
                 return
