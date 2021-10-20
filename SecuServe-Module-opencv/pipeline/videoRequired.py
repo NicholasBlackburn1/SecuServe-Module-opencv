@@ -65,6 +65,8 @@ class RequiredCode(object):
     # this allows me to set up pipe line easyerly  but for the cv module
     def setupPipeline(self, sender):
         const.watchdog = 0
+        
+        consoleLog.PipeLine_init("Starting up Opencv PipeLine.....")
         pipeline_start_setup = datetime.now()
         self.sendProgramStatus(
             sender,
@@ -82,7 +84,7 @@ class RequiredCode(object):
 
         # prints Config of program, the opencv build info and if opencv is optimized
         consoleLog.Debug("Example Config" + str(const.PATH))
-        consoleLog.PipeLine_init(cv2.getBuildInformation())
+        #consoleLog.PipeLine_init(cv2.getBuildInformation())
         consoleLog.Debug("is opencv opdemised" + str(cv2.useOptimized()))
 
         # Database connection handing
