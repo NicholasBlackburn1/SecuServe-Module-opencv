@@ -6,6 +6,20 @@
 ### What is this for 
 this is for easy testing and  dev of my SecurSeve Security System In Modules form and allows me To follow S.O.L.I.D Software princeables
 
+
+### To build and run please use the following commands
+ <br>
+
+**go into the projects directory**
+
+    poetry install
+
+**to run the module**
+
+    poetry run python3 SecuServe-Module-opencv/__main__.py
+
+
+
 # What this Module does 
 
 ## Setup PipeLine
