@@ -6,6 +6,7 @@ import configparser
 
 class Config(object):
 
+    #! this creates custom config file
     def createDefaultConfig():
         config = configparser.ConfigParser()
 
@@ -30,6 +31,8 @@ class Config(object):
         #* Default phone number key 
         config['PHONE'] = {'default_num':'ENTER NUMBER'}
 
+        with open('../SecuServeFiles/Config/config.ini', 'w') as configfile:
+            config.write(configfile)
         
 
 
