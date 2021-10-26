@@ -5,7 +5,7 @@ TODO: add code to launc from zmq
 
 
 from pipeline import pipelineStates
-from util import const
+
 from util import consoleLog
 import zmq
 

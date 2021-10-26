@@ -43,6 +43,7 @@ import pipeline.videoThread as videoThread
 import pipeline.userStats as userStats
 import util.consoleLog as consoleLog
 import pipeline.userStats as userstat
+import util.configcreator as configCreator
 
 
 class Status:
@@ -65,7 +66,7 @@ class RequiredCode(object):
     # this allows me to set up pipe line easyerly  but for the cv module
     def setupPipeline(self, sender):
         const.watchdog = 0
-        
+      
         consoleLog.PipeLine_init("Starting up Opencv PipeLine.....")
         pipeline_start_setup = datetime.now()
         self.sendProgramStatus(
@@ -76,16 +77,20 @@ class RequiredCode(object):
         )
 
         gc.enable()
-        sys.stdout.write = const.logger.info
+      
+
+        consoleLog.Debug("Example Config" + str(const.PATH))
+
+        if(const.PATH is None):
+            configCreator.Config.createDefaultConfig(configCreator.Config)
 
         if not os.path.exists(const.rootDirPath):
             consoleLog.Warning("creating Dirs")
             self.makefiledirs()
 
         # prints Config of program, the opencv build info and if opencv is optimized
-        consoleLog.Debug("Example Config" + str(const.PATH))
         #consoleLog.PipeLine_init(cv2.getBuildInformation())
-        consoleLog.Debug("is opencv opdemised" + str(cv2.useOptimized()))
+        consoleLog.Debug("is opencv optimized" + str(cv2.useOptimized()))
 
         # Database connection handing
         consoleLog.Debug("Connecting to the Database Faces")

@@ -48,6 +48,7 @@ def dmsgLayout(type, color, message):
         + ":"
         + " "
         + imports.Fore.WHITE
-        + str(message)
+        + str(message)+"\n"
     )
-    print(imports.Style.RESET_ALL)
+
+  
