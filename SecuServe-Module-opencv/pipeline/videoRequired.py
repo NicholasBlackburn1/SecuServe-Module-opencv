@@ -52,6 +52,7 @@ class Status:
     USER = 1
     UNWANTED = 2
     UNKNOWN = 3
+    CUTIE = 4
 
 
 class RequiredCode(object):
@@ -81,7 +82,7 @@ class RequiredCode(object):
 
         consoleLog.Debug("Example Config" + str(const.PATH))
 
-        if(const.PATH is None):
+        if(const.PATH is not None):
             configCreator.Config.createDefaultConfig(configCreator.Config)
 
         if not os.path.exists(const.rootDirPath):
@@ -226,7 +227,7 @@ class RequiredCode(object):
         user = const.userList[i][UserData()]
         print(user)
 
-    # Encodes all the Nessiscary User info into Json String so it can be easly moved arround
+    #!Encodes all the Nessiscary User info into Json String so it can be easly moved arround
 
     def UserDataList(self):
         i = 0
@@ -265,7 +266,7 @@ class RequiredCode(object):
         if not os.path.exists(filepath + filename):
             wget.download(url, str(filepath))
 
-    # Fully Downloades USer Images
+    #*Fully Downloades USer Images
     def downloadUserFaces(self, imagePath):
 
         index = 0
@@ -378,6 +379,52 @@ class RequiredCode(object):
         self.sendUserInfoToSocket(
             sender=sender,
             status="Unknown`",
+            user=name,
+            image=const.unknown_pic_url,
+            currenttime=datetime.now(),
+            phonenumber=phone,
+        )
+        consoleLog.PipeLine_Ok(
+            "stop face prossesing timer unknown"
+            + str(datetime.now() - face_processing_pipeline_timer)
+        )
+
+        self.sendFaceCount(
+            sender, self.Total, self.Unreconized, self.Reconized, datetime.now()
+        )
+
+    def StatusCutie(
+        self,
+        sender,
+        name,
+        phone,
+        frame,
+        left,
+        right,
+        bottom,
+        top,
+        face_processing_pipeline_timer
+    
+    ):
+        userstat.UserStats.userGroup(
+            self=userstat.UserStats,
+            opencvconfig=const.opencvconfig,
+            name=name,
+            frame=frame,
+            font=const.font,
+            imagename=datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%f"),
+            imagepath=const.imagePath,
+            left=left,
+            right=right,
+            bottom=bottom,
+            top=top,
+            
+            recperesntage=const.facepredict,
+        )
+        ("unknowns Here UwU!")
+        self.sendUserInfoToSocket(
+            sender=sender,
+            status="Cutie`",
             user=name,
             image=const.unknown_pic_url,
             currenttime=datetime.now(),
@@ -685,6 +732,20 @@ class RequiredCode(object):
                             bottom=bottom,
                             top=top,
                             face_processing_pipeline_timer=face_processing_pipeline_timer,
+                        )
+
+                    if(status == Status.CUTIE):
+                        self.StatusCutie(sender,
+                            status=status,
+                            usrname=usrname,
+                            phone=phone,
+                            frame=frame,
+                            left=left,
+                            right=right,
+                            bottom=bottom,
+                            top=top,
+                            face_processing_pipeline_timer=face_processing_pipeline_timer,
+                            
                         )
 
                     if self.getAmmountOfFaces(frame) > 2:

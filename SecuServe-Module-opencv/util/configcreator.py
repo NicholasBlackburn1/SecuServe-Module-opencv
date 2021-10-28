@@ -6,33 +6,45 @@ import configparser
 
 class Config(object):
 
+    config = configparser.ConfigParser()
+    
+    #* this is the InI file Key So i can create all the Default for files
+    config['FILE'] = {'rootDirPath' : '../SecuServeFiles/',
+    'configPath':'Config/','imagePath':'caughtImages/',
+    'platePath':'caughtPlates/','imagePathusers':'user/people/',
+    'loggingPath':'logging/','adminimg':'Admin/','usrimg':'user/',
+    'unknownimg':'unknown/','unwantedimg':'unwanted/','groupimg':'group/'}
+
+    #* this is the Opencv Config Stream
+    config['OPENCV'] = {'unreconizedPerson':'Unkown Human?',
+    'Stream_intro':'rtsp://', 'Stream_ip':'Example_IP', 
+    'Stream_port': '554','Stream_local': 'output.h264'}
+
+    #* This is the Logging key of the config file
+    config['LOGGING'] = {'filename':'OpencvServer', 'launcher':'Launcher'}
+
+    #* Zmq key for config 
+    config['ZMQ'] = {'ip':'127.0.0.1', 'port-recv':'5000','port-send': '5001'}
+
+    #* Default phone number key 
+    config['PHONE'] = {'default_num':'ENTER NUMBER'}
+
+
     #! this creates custom config file
     def createDefaultConfig(self):
-        config = configparser.ConfigParser()
-
         #* this is the InI file Key So i can create all the Default for files
-        config['FILE'] = {'rootDirPath' : '../SecuServeFiles/',
-        'configPath':'Config/','imagePath':'caughtImages/',
-        'platePath':'caughtPlates/','imagePathusers':'user/people/',
-        'loggingPath':'logging/','adminimg':'Admin/','usrimg':'user/',
-        'unknownimg':'unknown/','unwantedimg':'unwanted/','groupimg':'group/'}
+        self.config['FILE']
 
         #* this is the Opencv Config Stream
-        config['OPENCV'] = {'unreconizedPerson':'Unkown Human?',
-        'Stream_intro':'rtsp://', 'Stream_ip':'Example_IP', 
-        'Stream_port': '554','Stream_local': 'output.h264'}
-
-        #* This is the Logging key of the config file
-        config['LOGGING'] = {'filename':'OpencvServer', 'launcher':'Launcher'}
+        self.config['OPENCV'] 
+        self.config['LOGGING'] 
 
         #* Zmq key for config 
-        config['ZMQ'] = {'ip':'127.0.0.1', 'port-recv':'5000','port-send': '5001'}
-
-        #* Default phone number key 
-        config['PHONE'] = {'default_num':'ENTER NUMBER'}
+        self.config['ZMQ']
+        self.config['PHONE'] 
 
         with open('../SecuServeFiles/Config/Config.ini', 'w') as configfile:
-            config.write(configfile)
+            self.config.write(configfile)
         
 
 

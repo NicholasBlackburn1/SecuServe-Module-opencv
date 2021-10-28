@@ -68,7 +68,8 @@ from configparser import ConfigParser
 import unittest
 from unittest.mock import Mock
 from pathlib import Path
-
+from util.configcreator import Config as creator
+import util.consoleLog as consoleLog
 
 class TestConfig(unittest.TestCase):
 
@@ -83,4 +84,3 @@ class TestConfig(unittest.TestCase):
         conf = ConfigParser()
         config = conf.read(str(Path().absolute()) + "/data/" + "Config.ini")
         self.assertIsNotNone(config)
-

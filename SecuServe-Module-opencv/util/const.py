@@ -2,7 +2,6 @@
 dirty const setup 
 """
 
-from os import write
 import imports
 import cv2
 from pathlib import Path
@@ -62,7 +61,7 @@ userList = []
 
 
 imports.logging.basicConfig(level=imports.logging.INFO, format="%(message)s")
-
+logger = imports.logging.getLogger()
 # logger.addHandler(imports.logging.FileHandler(str(loggingPath)+"Cv_PipeLine"+str(current_time)+".uwu", 'a'))
 
 default_endpoint = "https://textbelt.com/text"

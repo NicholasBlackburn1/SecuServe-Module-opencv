@@ -170,7 +170,7 @@ class UserStats(object):
         # Distance info
         cv2.putText(
             frame,
-            "There's a group..",
+            "There's a Cutie..",
             (474, 430),
             font,
             0.5,

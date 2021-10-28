@@ -175,6 +175,19 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "mock"
+version = "4.0.3"
+description = "Rolling backport of unittest.mock for all Pythons"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+build = ["twine", "wheel", "blurb"]
+docs = ["sphinx"]
+test = ["pytest (<5.4)", "pytest-cov"]
+
+[[package]]
 name = "mypy-extensions"
 version = "0.4.3"
 description = "Experimental type system extensions for programs checked with the mypy typechecker."
@@ -484,7 +497,7 @@ pyzmq = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "85d38c344aef1955c3b49b119689d343203ea5cb18b564101f9fc217c7b59083"
+content-hash = "cea4c02615627e653e869a00f45ac94910b5e4703a5d098661ee4d5659302b94"
 
 [metadata.files]
 atomicwrites = [
@@ -644,6 +657,10 @@ iniconfig = [
 joblib = [
     {file = "joblib-1.1.0-py2.py3-none-any.whl", hash = "sha256:f21f109b3c7ff9d95f8387f752d0d9c34a02aa2f7060c2135f465da0e5160ff6"},
     {file = "joblib-1.1.0.tar.gz", hash = "sha256:4158fcecd13733f8be669be0683b96ebdbbd38d23559f54dca7205aea1bf1e35"},
+]
+mock = [
+    {file = "mock-4.0.3-py3-none-any.whl", hash = "sha256:122fcb64ee37cfad5b3f48d7a7d51875d7031aaf3d8be7c42e2bee25044eee62"},
+    {file = "mock-4.0.3.tar.gz", hash = "sha256:7d3fbbde18228f4ff2f1f119a45cdffa458b4c0dee32eb4d2bb2f82554bac7bc"},
 ]
 mypy-extensions = [
     {file = "mypy_extensions-0.4.3-py2.py3-none-any.whl", hash = "sha256:090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"},

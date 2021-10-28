@@ -2,7 +2,12 @@
 Simple Debuging Colorizer for the console uwu
 """
 import imports
+import util.const as const
 from datetime import datetime
+
+def info(text):
+    dmsgLayout("INFO", imports.Fore.WHITE, text)
+    return
 
 
 def Debug(text):
@@ -50,5 +55,3 @@ def dmsgLayout(type, color, message):
         + imports.Fore.WHITE
         + str(message)+"\n"
     )
-
-  
