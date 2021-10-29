@@ -1,8 +1,10 @@
-from configparser import NoOptionError
-import imports
+from configparser import ConfigParser
+
 from util import const
 from pathlib import Path
 from util import consoleLog
+import database as db
+from sqlalchemy import sessionmaker
 
 # Gets the Face Data from the Face data
 
@@ -12,21 +14,21 @@ local = "/Documents/SECUSERVE/SecuServeFiles/"
 
 def getFaces():
     # Read config.ini file
-    config_object = imports.ConfigParser()
+    config_object = ConfigParser()
     config_object.read(const.PATH)
 
     # Get the password
     database = config_object["DATABASE"]
 
-    engine = imports.db.create_engine(
+    engine = db.create_engine(
         "sqlite:///" + str(Path.home()) + str(local) + "db.sqlite3"
     )
     connection = engine.connect()
-    metadata = imports.db.MetaData()
-    faces = imports.db.Table(
+    metadata = db.MetaData()
+    faces = db.Table(
         database["table"], metadata, autoload=True, autoload_with=engine
     )
-    query = imports.db.select([faces])
+    query = db.select([faces])
     result_proxy = connection.execute(query)
     result_set = result_proxy.fetchall()
     return result_set
@@ -39,20 +41,20 @@ Return the amout of Entrys in the  dataBase
 
 def getAmountOfEntrys():
     # Read config.ini file
-    config_object = imports.ConfigParser()
+    config_object = ConfigParser()
     config_object.read(const.PATH)
 
     # Get the password
     database = config_object["DATABASE"]
 
-    engine = imports.db.create_engine(
+    engine = db.create_engine(
         "sqlite:////home/nicky/Documents/SECUSERVE/SecuServeFiles/db.sqlite3"
     )
-    Session = imports.sessionmaker(bind=engine)
+    Session = sessionmaker(bind=engine)
     session = Session()
 
-    metadata = imports.db.MetaData()
-    faces = imports.db.Table(
+    metadata = db.MetaData()
+    faces = db.Table(
         database["table"], metadata, autoload=True, autoload_with=engine
     )
     databasecount = int(float(session.query(faces).count()))

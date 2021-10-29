@@ -17,12 +17,11 @@ TODO: Need to check too see if running on a jetson nano or dev pc so i can run p
 
 from enum import Enum
 from os import stat
-
 import cv2
 from numpy.lib import utils
 
 # from Jetson.GPIO.gpio import UNKNOWN
-import imports
+
 import time
 import gc
 import sys
@@ -37,12 +36,13 @@ from datetime import date, datetime
 from pipeline.faceDataStruture import UserData
 from util import database as mydb
 from os.path import exists
+from SecuServeLibaray.SecuServeLibaray import consoleLog
 
 import pipeline.pipelineStates as pipelineStates
 import pipeline.knnClasifiyer as knnClasifiyer
 import pipeline.videoThread as videoThread
 import pipeline.userStats as userStats
-import util.consoleLog as consoleLog
+
 import pipeline.userStats as userstat
 import util.configcreator as configCreator
 
@@ -53,7 +53,7 @@ class Status:
     USER = 1
     UNWANTED = 2
     UNKNOWN = 3
-    CUTIE = 4
+    NotSuppostToBeHere = 4
 
 
 class RequiredCode(object):
@@ -96,7 +96,6 @@ class RequiredCode(object):
             consoleLog.PipeLine_Ok("Created Release Config....")
 
         # prints Config of program, the opencv build info and if opencv is optimized
-        # consoleLog.PipeLine_init(cv2.getBuildInformation())
         consoleLog.Debug("is opencv optimized" + " " + str(cv2.useOptimized()))
 
         # Database connection handing
@@ -105,7 +104,9 @@ class RequiredCode(object):
         consoleLog.Debug("connected to database Faces")
 
         # Updates Data in the Usable data list uwu
+        consoleLog.Debug("Updating User list Data...")
         self.UserDataList()
+        consoleLog.PipeLine_Ok("Updated User data.....")
 
         consoleLog.Warning("Setting up cv")
 
@@ -730,20 +731,6 @@ class RequiredCode(object):
 
                     if status == Status.UNWANTED:
                         self.StatusUnwanted(
-                            sender,
-                            status=status,
-                            usrname=usrname,
-                            phone=phone,
-                            frame=frame,
-                            left=left,
-                            right=right,
-                            bottom=bottom,
-                            top=top,
-                            face_processing_pipeline_timer=face_processing_pipeline_timer,
-                        )
-
-                    if status == Status.CUTIE:
-                        self.StatusCutie(
                             sender,
                             status=status,
                             usrname=usrname,

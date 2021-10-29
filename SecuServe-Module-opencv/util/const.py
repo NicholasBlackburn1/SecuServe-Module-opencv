@@ -2,9 +2,15 @@
 dirty const setup 
 """
 
-import imports
+
 import cv2
 from pathlib import Path
+import pathlib
+from datetime import datetime
+from configparser import ConfigParser
+import logging
+import os
+
 
 TEST_TRAIN_DIR = str(Path().absolute()) + "/data/testTraining/"
 TEST_FACE_IMAGE = str(Path().absolute()) + "/data/images/me.jpg"
@@ -12,7 +18,7 @@ TEST_FACE_IMAGE = str(Path().absolute()) + "/data/images/me.jpg"
 READIMAGE = cv2.imread(TEST_FACE_IMAGE, cv2.IMREAD_COLOR)
 
 # this is all the global paths needed throuht the program
-PATH = str(imports.pathlib.Path().absolute()) + "/data/" + "Config.ini"
+PATH = str(pathlib.Path().absolute()) + "/data/" + "Config.ini"
 CONFIG = str("../SecuServeFiles/Config/" + "Config.ini")
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
@@ -20,11 +26,11 @@ ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 unknown_faces = 0
 watchdog = 0
 
-imports.os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
+os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
 
 
 # Read config.ini file
-config_object = imports.ConfigParser()
+config_object = ConfigParser()
 
 
 isdevpc = True
@@ -43,7 +49,7 @@ logconfig = config_object["LOGGING"]
 zmqconfig = config_object["ZMQ"]
 opencvconfig = config_object["OPENCV"]
 
-current_time = imports.datetime.now()
+current_time = datetime.now()
 
 rootDirPath = fileconfig["rootDirPath"]
 configPath = fileconfig["rootDirPath"] + fileconfig["configPath"]
@@ -74,9 +80,9 @@ Modelpath = str(imagePathusers + "Face.Model")
 userList = []
 
 
-imports.logging.basicConfig(level=imports.logging.INFO, format="%(message)s")
-logger = imports.logging.getLogger()
-# logger.addHandler(imports.logging.FileHandler(str(loggingPath)+"Cv_PipeLine"+str(current_time)+".uwu", 'a'))
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+logger = logging.getLogger()
+# logger.addHandler(logging.FileHandler(str(loggingPath)+"Cv_PipeLine"+str(current_time)+".uwu", 'a'))
 
 default_endpoint = "https://textbelt.com/text"
 

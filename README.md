@@ -7,6 +7,8 @@
 this is for easy testing and  dev of my SecurSeve Security System In Modules form and allows me To follow S.O.L.I.D Software princeables
 
 
+
+
 ### To build and run please use the following commands
  <br>
 
@@ -81,3 +83,10 @@ this is for easy testing and  dev of my SecurSeve Security System In Modules for
  Retrives Status of each seen person if the seen person is  admin,user,unwanted,unknown send zmq messge to Texting Module 
  
  ```
+
+
+## TODO: 
+
+1. get this module runing in docker 
+2. get it communiating over a docker network 
+3. get it to load config files based on if its in dev mode or retail mode 
