@@ -4,6 +4,7 @@ from util import const
 from pathlib import Path
 from util import consoleLog
 import sqlalchemy as db
+from sqlalchemy import orm
 
 
 # Gets the Face Data from the Face data
@@ -50,7 +51,7 @@ def getAmountOfEntrys():
     engine = db.create_engine(
         "sqlite:////home/nicky/Documents/SECUSERVE/SecuServeFiles/db.sqlite3"
     )
-    Session = sessionmaker(bind=engine)
+    Session = orm.sessionmaker(bind=engine)
     session = Session()
 
     metadata = db.MetaData()
