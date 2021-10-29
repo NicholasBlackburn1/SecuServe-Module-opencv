@@ -36,6 +36,7 @@ from pathlib import Path
 from datetime import date, datetime
 from pipeline.faceDataStruture import UserData
 from util import database as mydb
+from os.path import exists
 
 import pipeline.pipelineStates as pipelineStates
 import pipeline.knnClasifiyer as knnClasifiyer
@@ -67,7 +68,7 @@ class RequiredCode(object):
     # this allows me to set up pipe line easyerly  but for the cv module
     def setupPipeline(self, sender):
         const.watchdog = 0
-      
+
         consoleLog.PipeLine_init("Starting up Opencv PipeLine.....")
         pipeline_start_setup = datetime.now()
         self.sendProgramStatus(
@@ -78,20 +79,25 @@ class RequiredCode(object):
         )
 
         gc.enable()
-      
 
-        consoleLog.Debug("Example Config" + str(const.PATH))
+        consoleLog.Debug("Dev Config" + " " + str(const.PATH))
+        consoleLog.Debug("Release Config" + " " + str(const.CONFIG))
 
-        if(const.PATH is not None):
-            configCreator.Config.createDefaultConfig(configCreator.Config)
-
+        # * Creates the file nesissary for the stuff
         if not os.path.exists(const.rootDirPath):
             consoleLog.Warning("creating Dirs")
             self.makefiledirs()
+            consoleLog.PipeLine_Ok("Created Folder Structure....")
+
+        # * creates the Relese Config
+        if not exists(const.CONFIG):
+            consoleLog.Warning("Creating Release config file...")
+            configCreator.Config.createDefaultConfig(configCreator.Config)
+            consoleLog.PipeLine_Ok("Created Release Config....")
 
         # prints Config of program, the opencv build info and if opencv is optimized
-        #consoleLog.PipeLine_init(cv2.getBuildInformation())
-        consoleLog.Debug("is opencv optimized" + str(cv2.useOptimized()))
+        # consoleLog.PipeLine_init(cv2.getBuildInformation())
+        consoleLog.Debug("is opencv optimized" + " " + str(cv2.useOptimized()))
 
         # Database connection handing
         consoleLog.Debug("Connecting to the Database Faces")
@@ -105,6 +111,10 @@ class RequiredCode(object):
 
         # Downlaods all the Faces
         self.downloadUserFaces(const.imagePathusers)
+
+        consoleLog.info("Downloading images one more time~")
+        self.downloadUserFaces(const.imagePathusers)
+
         consoleLog.PipeLine_Ok(
             "STAGE COMPLETE" + str(datetime.now() - pipeline_start_setup)
         )
@@ -148,6 +158,7 @@ class RequiredCode(object):
         )
         return
 
+    # * this is were rhe bulk of the vision pipline is ran and created
     def reconitionPipeline(self, sender):
 
         self.sendProgramStatus(
@@ -266,7 +277,7 @@ class RequiredCode(object):
         if not os.path.exists(filepath + filename):
             wget.download(url, str(filepath))
 
-    #*Fully Downloades USer Images
+    # *Fully Downloades USer Images
     def downloadUserFaces(self, imagePath):
 
         index = 0
@@ -403,8 +414,7 @@ class RequiredCode(object):
         right,
         bottom,
         top,
-        face_processing_pipeline_timer
-    
+        face_processing_pipeline_timer,
     ):
         userstat.UserStats.userGroup(
             self=userstat.UserStats,
@@ -418,7 +428,6 @@ class RequiredCode(object):
             right=right,
             bottom=bottom,
             top=top,
-            
             recperesntage=const.facepredict,
         )
         ("unknowns Here UwU!")
@@ -648,16 +657,15 @@ class RequiredCode(object):
             if name != None:
 
                 if name not in const.userList[self.i]:
-                   
+
                     phone = int(const.phoneconfig["default_num"])
 
                     if name == "unknown":
                         status = Status.UNKNOWN
-                        
 
                     if status == Status.UNKNOWN:
                         self.Unreconized += self.getAmmountOfFaces(frame)
-                       
+
                         self.StatusUnknown(
                             sender,
                             name=name,
@@ -678,9 +686,9 @@ class RequiredCode(object):
                         self.i = 0
 
                 if name in const.userList[self.i]:
-                    
+
                     self.Reconized += self.getAmmountOfFaces(frame)
-                       
+
                     userinfo = const.userList[self.i][name]
 
                     status = userinfo[1]
@@ -734,8 +742,9 @@ class RequiredCode(object):
                             face_processing_pipeline_timer=face_processing_pipeline_timer,
                         )
 
-                    if(status == Status.CUTIE):
-                        self.StatusCutie(sender,
+                    if status == Status.CUTIE:
+                        self.StatusCutie(
+                            sender,
                             status=status,
                             usrname=usrname,
                             phone=phone,
@@ -745,13 +754,18 @@ class RequiredCode(object):
                             bottom=bottom,
                             top=top,
                             face_processing_pipeline_timer=face_processing_pipeline_timer,
-                            
                         )
 
                     if self.getAmmountOfFaces(frame) > 2:
                         pass
-                    
-                    self.sendFaceCount(sender,self.Total,self.Unreconized,self.Reconized, datetime.now())
+
+                    self.sendFaceCount(
+                        sender,
+                        self.Total,
+                        self.Unreconized,
+                        self.Reconized,
+                        datetime.now(),
+                    )
 
             else:
 
@@ -759,5 +773,5 @@ class RequiredCode(object):
                     "Time For non Face processed frames"
                     + str(datetime.now() - face_processing_pipeline_timer)
                 )
-             
+
                 return

@@ -15,14 +15,18 @@ context = zmq.asyncio.Context()
 
 # inits Sender and reciver Sockets for the Module
 sender = context.socket(zmq.PUB)
+receiver = context.socket(zmq.SUB)
+
+receiver.setsockopt(zmq.SUBSCRIBE, b"")
 
 
 def main():
     consoleLog.Warning("Initing zmq")
 
-    sender.bind("tcp://" + "*:5001")
+    sender.bind("tcp://" + "127.0.0.1:5001")
 
     consoleLog.PipeLine_Ok("running zmq")
+
     watchdog = 0
 
     consoleLog.Warning("running VideoProcessing Pipeline...")
@@ -32,15 +36,6 @@ def main():
     pipe.on_event(pipelineStates.States.SETUP_PIPELINE, sender)
     pipe.on_event(pipelineStates.States.TRAIN_MODEL, sender)
     pipe.on_event(pipelineStates.States.RUN_RECONITION, sender)
-
-    """    
-        if(topic == "MANAGER" and status['mode'] == "stopcv"):
-            sender.send_string("SHUTDOWN")
-            sender.send_json({"mode":"shutdown","restart":False,"time":str(datetime.now())})
-            consoleLog.Warning("Shutting down Opencv Pipeline ...")
-            consoleLog.Error("by wor")
-            break
-    """
 
 
 if __name__ == "__main__":

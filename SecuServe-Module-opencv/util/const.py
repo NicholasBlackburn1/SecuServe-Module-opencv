@@ -5,6 +5,7 @@ dirty const setup
 import imports
 import cv2
 from pathlib import Path
+
 TEST_TRAIN_DIR = str(Path().absolute()) + "/data/testTraining/"
 TEST_FACE_IMAGE = str(Path().absolute()) + "/data/images/me.jpg"
 
@@ -12,22 +13,35 @@ READIMAGE = cv2.imread(TEST_FACE_IMAGE, cv2.IMREAD_COLOR)
 
 # this is all the global paths needed throuht the program
 PATH = str(imports.pathlib.Path().absolute()) + "/data/" + "Config.ini"
+CONFIG = str("../SecuServeFiles/Config/" + "Config.ini")
+
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 
 unknown_faces = 0
 watchdog = 0
 
 imports.os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
-print(PATH)
+
+
 # Read config.ini file
 config_object = imports.ConfigParser()
-config_object.read(PATH)
+
+
+isdevpc = True
+
+
+if isdevpc:
+    config_object.read(PATH)
+else:
+    config_object.read(CONFIG)
+
+fileconfig = config_object["FILE"]
+phoneconfig = config_object["PHONE"]
+
 
 logconfig = config_object["LOGGING"]
 zmqconfig = config_object["ZMQ"]
 opencvconfig = config_object["OPENCV"]
-fileconfig = config_object["FILE"]
-phoneconfig = config_object["PHONE"]
 
 current_time = imports.datetime.now()
 
@@ -83,7 +97,6 @@ StopingMess = "Stoping face prossesing timer in"
 
 faceTolorace = 0.56
 
-isdevpc = True
 
 font = cv2.FONT_HERSHEY_DUPLEX
 status = None

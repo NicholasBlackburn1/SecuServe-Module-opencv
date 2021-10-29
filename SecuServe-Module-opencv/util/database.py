@@ -3,10 +3,13 @@ import imports
 from util import const
 from pathlib import Path
 from util import consoleLog
+
 # Gets the Face Data from the Face data
 
 # TODO: NEED TO ONLY USE LIFE TIME DATABASE FOR FACES
 local = "/Documents/SECUSERVE/SecuServeFiles/"
+
+
 def getFaces():
     # Read config.ini file
     config_object = imports.ConfigParser()
@@ -16,7 +19,7 @@ def getFaces():
     database = config_object["DATABASE"]
 
     engine = imports.db.create_engine(
-        'sqlite:///'+str(Path.home())+str(local)+'db.sqlite3'
+        "sqlite:///" + str(Path.home()) + str(local) + "db.sqlite3"
     )
     connection = engine.connect()
     metadata = imports.db.MetaData()

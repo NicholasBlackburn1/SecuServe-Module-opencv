@@ -7,7 +7,5 @@ import pipeline.videoRequired as face
 import mock
 
 
-
 class TestUserStatus(unittest.TestCase):
-   pass
-
+    pass

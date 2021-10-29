@@ -6,6 +6,7 @@ import unittest
 import pipeline.faceDataStruture as face
 from sklearn import neighbors
 
+
 class TestFaceData(unittest.TestCase):
 
     """

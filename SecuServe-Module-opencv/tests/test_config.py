@@ -71,6 +71,7 @@ from pathlib import Path
 from util.configcreator import Config as creator
 import util.consoleLog as consoleLog
 
+
 class TestConfig(unittest.TestCase):
 
     mock = Mock()

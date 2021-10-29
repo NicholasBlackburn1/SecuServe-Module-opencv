@@ -5,8 +5,9 @@ import imports
 import util.const as const
 from datetime import datetime
 
+
 def info(text):
-    dmsgLayout("INFO", imports.Fore.WHITE, text)
+    dmsgLayout("INFO", imports.Fore.BLUE, text)
     return
 
 
@@ -53,5 +54,6 @@ def dmsgLayout(type, color, message):
         + ":"
         + " "
         + imports.Fore.WHITE
-        + str(message)+"\n"
+        + str(message)
+        + "\n"
     )
