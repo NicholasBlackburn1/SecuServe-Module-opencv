@@ -9,9 +9,8 @@ from pipeline import pipelineStates
 from util import consoleLog
 import zmq
 
-zmq.asyncio.install()
 
-context = zmq.asyncio.Context()
+context = zmq.Context()
 
 # inits Sender and reciver Sockets for the Module
 sender = context.socket(zmq.PUB)

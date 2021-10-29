@@ -3,8 +3,8 @@ from configparser import ConfigParser
 from util import const
 from pathlib import Path
 from util import consoleLog
-import database as db
-from sqlalchemy import sessionmaker
+import sqlalchemy as db
+
 
 # Gets the Face Data from the Face data
 

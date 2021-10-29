@@ -1,9 +1,11 @@
 """
 this class is for hopefully geting opencv camera to thread correctly
 """
-import imports
-import util.const as const
 
+import util.const as const
+import cv2
+import queue
+import threading
 
 class ThreadingClass:
 
@@ -11,13 +13,13 @@ class ThreadingClass:
     def __init__(self, name):
 
         if const.isdevpc:
-            self.cap = imports.cv2.VideoCapture(0)
+            self.cap = cv2.VideoCapture(0)
         if const.isdevpc == False:
-            self.cap = imports.cv2.VideoCapture(name, imports.cv2.CAP_GSTREAMER)
+            self.cap = cv2.VideoCapture(name, cv2.CAP_GSTREAMER)
 
         # define an empty queue and thread
-        self.q = imports.queue.Queue()
-        t = imports.threading.Thread(target=self._reader)
+        self.q = queue.Queue()
+        t = threading.Thread(target=self._reader)
         t.daemon = True
         t.start()
 
@@ -31,7 +33,7 @@ class ThreadingClass:
             if not self.q.empty():
                 try:
                     self.q.get_nowait()
-                except imports.queue.Empty:
+                except queue.Empty:
                     pass
             self.q.put(frame)  # --- store them in a queue (instead of the buffer)
 

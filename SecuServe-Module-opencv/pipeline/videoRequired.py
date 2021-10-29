@@ -36,7 +36,7 @@ from datetime import date, datetime
 from pipeline.faceDataStruture import UserData
 from util import database as mydb
 from os.path import exists
-from SecuServeLibaray.SecuServeLibaray import consoleLog
+from util import consoleLog
 
 import pipeline.pipelineStates as pipelineStates
 import pipeline.knnClasifiyer as knnClasifiyer
