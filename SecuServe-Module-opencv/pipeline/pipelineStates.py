@@ -30,12 +30,12 @@ class SetupPipeLine(state.State):
 
     def on_event(self, event, sender):
         if event == States.SETUP_PIPELINE:
-            # moddate = imports.datetime.fromtimestamp(imports.os.path.getctime(const.Modelpath))
+            # moddate = datetime.fromtimestamp(os.path.getctime(const.Modelpath))
             videoRequired.RequiredCode.setupPipeline(
                 videoRequired.RequiredCode(), sender
             )
 
-            # imports.consoleLog.PipeLine_Data("Model last trained"+" "+ str(moddate['%H']))
+            # consoleLog.PipeLine_Data("Model last trained"+" "+ str(moddate['%H']))
             self.next_state(States.TRAIN_MODEL)
 
             return TrainPipeline()
@@ -89,8 +89,8 @@ class Idle(state.State):
 
     def on_event(self, event, sender):
         if event == States.IDLE:
-            videoRequired.imports.consoleLog.Warning("Idleing....")
-            videoRequired.imports.time.sleep(0.5)
+            videoRequired.consoleLog.Warning("Idleing....")
+            videoRequired.time.sleep(0.5)
 
         return self
 
@@ -107,7 +107,7 @@ class Error(state.State):
 
     def on_event(self, event, sender):
         if event == States.ERROR:
-            videoRequired.imports.consoleLog.Error("ERROR....")
+            videoRequired.consoleLog.Error("ERROR....")
             sender.send_string("ERROR")
             sender.send_json({"error": str(self.msg), "time": str(datetime.now())})
             return

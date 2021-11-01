@@ -10,6 +10,7 @@ from datetime import datetime
 from configparser import ConfigParser
 import logging
 import os
+from util import  consoleLog
 
 
 TEST_TRAIN_DIR = str(Path().absolute()) + "/data/testTraining/"
@@ -33,13 +34,15 @@ os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
 config_object = ConfigParser()
 
 
-isdevpc = True
+isdevpc = False
 
 
 if isdevpc:
     config_object.read(PATH)
+    consoleLog.PipeLine_Ok("Successfully set config to Release...")
 else:
     config_object.read(CONFIG)
+    consoleLog.PipeLine_Ok("Successfully set config to DEBUG...")
 
 fileconfig = config_object["FILE"]
 phoneconfig = config_object["PHONE"]
