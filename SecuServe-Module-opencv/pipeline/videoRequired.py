@@ -33,7 +33,7 @@ import wget
 from util import const
 from pathlib import Path
 from datetime import date, datetime
-from pipeline.faceDataStruture import UserData
+from util.faceDataStruture import UserData
 from util import database as mydb
 from os.path import exists
 from util import consoleLog
@@ -160,7 +160,7 @@ class RequiredCode(object):
         return
 
     # * this is were rhe bulk of the vision pipline is ran and created
-    def reconitionPipeline(self, sender):
+    def reconitionPipeline(self, sender,receiver):
 
         self.sendProgramStatus(
             sender, "SETUP_PIPELINE", "Starting Face rec", datetime.now()

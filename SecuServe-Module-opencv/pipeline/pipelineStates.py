@@ -28,7 +28,7 @@ class SetupPipeLine(state.State):
     The state.State which Sets Up Whole opencv pipeline
     """
 
-    def on_event(self, event, sender):
+    def on_event(self, event, sender,receiver):
         if event == States.SETUP_PIPELINE:
             # moddate = datetime.fromtimestamp(os.path.getctime(const.Modelpath))
             videoRequired.RequiredCode.setupPipeline(
@@ -65,15 +65,15 @@ class RunReconitionPipeLine(state.State):
     The state.State which Reconizes Faces
     """
 
-    def on_event(self, event, sender):
+    def on_event(self, event, sender,receiver):
         if event == States.RUN_RECONITION:
             videoRequired.RequiredCode.reconitionPipeline(
-                videoRequired.RequiredCode(), sender
+                videoRequired.RequiredCode(), sender,receiver
             )
 
             if (
                 videoRequired.RequiredCode.reconitionPipeline(
-                    videoRequired.RequiredCode(), sender
+                    videoRequired.RequiredCode(), sender,receiver
                 )
                 == States.ERROR
             ):
@@ -127,7 +127,7 @@ class PipeLine(object):
         # Start with a default state.State.
         self.State = SetupPipeLine()
 
-    def on_event(self, event, sender):
+    def on_event(self, event, sender,receiver):
         """
         This is the bread and butter of the state.State machine. Incoming events are
         delegated to the given state.States which then handle the event. The result is
@@ -135,7 +135,7 @@ class PipeLine(object):
         """
 
         # The next state.State will be the result of the on_event function.
-        self.State = self.State.on_event(event, sender)
+        self.State = self.State.on_event(event, sender,receiver)
 
     def getCurrentStat(self):
         return self.State

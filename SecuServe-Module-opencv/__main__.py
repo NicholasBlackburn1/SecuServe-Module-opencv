@@ -23,6 +23,7 @@ def main():
     consoleLog.Warning("Initing zmq")
 
     sender.bind("tcp://" + "127.0.0.1:5001")
+    receiver.connect("tcp://" + "127.0.0.1:5000")
 
     consoleLog.PipeLine_Ok("running zmq")
 
@@ -32,9 +33,9 @@ def main():
 
     # sets pipeline starting state so Fsm has all needed to run
     pipe = pipelineStates.PipeLine()
-    pipe.on_event(pipelineStates.States.SETUP_PIPELINE, sender)
-    pipe.on_event(pipelineStates.States.TRAIN_MODEL, sender)
-    pipe.on_event(pipelineStates.States.RUN_RECONITION, sender)
+    pipe.on_event(pipelineStates.States.SETUP_PIPELINE, sender,receiver)
+    pipe.on_event(pipelineStates.States.TRAIN_MODEL, sender,receiver)
+    pipe.on_event(pipelineStates.States.RUN_RECONITION, sender,receiver)
 
 
 if __name__ == "__main__":
