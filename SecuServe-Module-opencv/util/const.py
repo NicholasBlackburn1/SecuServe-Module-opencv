@@ -34,7 +34,7 @@ os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
 config_object = ConfigParser()
 
 
-isdevpc = False
+isdevpc = True
 
 
 if isdevpc:
