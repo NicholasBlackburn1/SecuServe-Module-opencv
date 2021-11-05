@@ -191,6 +191,7 @@ class RequiredCode(object):
         pipe = pipelineStates.PipeLine()
 
         status = const.status
+
         while True:
             process_this_frame = process_this_frame + 1
 
@@ -219,7 +220,9 @@ class RequiredCode(object):
                 sender=sender,
                 pipe=pipe,
                 status=status,
-                liveness= self.liveness
+                liveness= self.liveness,
+                poller= poller,
+                receiver=recv
             )
 
     # returns ammount of seenfaces
@@ -602,7 +605,7 @@ class RequiredCode(object):
 
     # * this is the main part of face rec pipeline
 
-    def faceIdentify(self, process_this_frame, cap, sender, pipe, status, liveness):
+    def faceIdentify(self, process_this_frame, cap, sender, pipe, status, liveness,poller,receiver):
 
         if process_this_frame % 10 == 0:
             # cap.read()
@@ -626,7 +629,7 @@ class RequiredCode(object):
             if self.getAmmountOfFaces(frame) <= 0:
 
                 time.sleep(0.5)
-                pipe.on_event(pipelineStates.States.IDLE, sender)
+                pipe.on_event(event=pipelineStates.States.IDLE, sender=sender,receiver=receiver, poller=poller)
 
             # processes faces when seen
             if self.getAmmountOfFaces(frame) > 0:
@@ -672,7 +675,7 @@ class RequiredCode(object):
             bottom *= 2
             left *= 2
 
-            if name != None and liveness:
+            if name != None:
 
                 if name not in const.userList[self.i]:
 
