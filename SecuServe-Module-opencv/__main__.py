@@ -4,6 +4,7 @@ TODO: add code to launc from zmq
 """
 
 
+from zmq.sugar import poll
 from pipeline import pipelineStates
 
 from util import consoleLog
@@ -19,6 +20,10 @@ receiver = context.socket(zmq.SUB)
 receiver.setsockopt(zmq.SUBSCRIBE, b"")
 
 
+poller = zmq.Poller()
+poller.register(receiver, zmq.POLLIN)
+
+
 def main():
     consoleLog.Warning("Initing zmq")
 
@@ -31,11 +36,13 @@ def main():
 
     consoleLog.Warning("running VideoProcessing Pipeline...")
 
+
+
     # sets pipeline starting state so Fsm has all needed to run
     pipe = pipelineStates.PipeLine()
-    pipe.on_event(pipelineStates.States.SETUP_PIPELINE, sender,None)
-    pipe.on_event(pipelineStates.States.TRAIN_MODEL, sender,None)
-    pipe.on_event(pipelineStates.States.RUN_RECONITION, sender,receiver)
+    pipe.on_event(pipelineStates.States.SETUP_PIPELINE, sender,receiver,poller)
+    pipe.on_event(pipelineStates.States.TRAIN_MODEL, sender,receiver,poller)
+    pipe.on_event(pipelineStates.States.RUN_RECONITION, sender,receiver,poller)
 
 
 if __name__ == "__main__":

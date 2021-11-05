@@ -65,6 +65,8 @@ class RequiredCode(object):
     Reconized = 0
     Unreconized = 0
 
+    liveness = None
+
     # this allows me to set up pipe line easyerly  but for the cv module
     def setupPipeline(self, sender):
         const.watchdog = 0
@@ -160,7 +162,7 @@ class RequiredCode(object):
         return
 
     # * this is were rhe bulk of the vision pipline is ran and created
-    def reconitionPipeline(self, sender,recv):
+    def reconitionPipeline(self, sender,recv,poller):
 
         self.sendProgramStatus(
             sender, "SETUP_PIPELINE", "Starting Face rec", datetime.now()
@@ -199,12 +201,25 @@ class RequiredCode(object):
                 )
                 break
 
+            evts = dict(poller.poll(timeout=100))
+            if recv in evts:
+
+                topic = recv.recv_string()
+                msg = recv.recv_json()
+                
+                if(topic == 'LIVENESS'):
+                    self.liveness = msg['alive'] 
+                
+                consoleLog.info("Message from Recv"+ " "+ str(topic)+":"+ " "+ str(msg))
+
+
             self.faceIdentify(
                 process_this_frame=process_this_frame,
                 cap=cap,
                 sender=sender,
                 pipe=pipe,
                 status=status,
+                liveness= self.liveness
             )
 
     # returns ammount of seenfaces
@@ -587,7 +602,7 @@ class RequiredCode(object):
 
     # * this is the main part of face rec pipeline
 
-    def faceIdentify(self, process_this_frame, cap, sender, pipe, status):
+    def faceIdentify(self, process_this_frame, cap, sender, pipe, status, liveness):
 
         if process_this_frame % 10 == 0:
             # cap.read()
@@ -627,6 +642,7 @@ class RequiredCode(object):
                     face_processing_pipeline_timer=face_processing_pipeline_timer,
                     process_this_frame=process_this_frame,
                     status=status,
+                    liveness=liveness
                 )
 
             if const.watchdog == 10:
@@ -644,6 +660,7 @@ class RequiredCode(object):
         face_processing_pipeline_timer,
         process_this_frame,
         status,
+        liveness
     ):
 
         # Display t he results
@@ -655,7 +672,7 @@ class RequiredCode(object):
             bottom *= 2
             left *= 2
 
-            if name != None:
+            if name != None and liveness:
 
                 if name not in const.userList[self.i]:
 
