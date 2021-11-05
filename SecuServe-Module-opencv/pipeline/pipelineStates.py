@@ -48,7 +48,7 @@ class TrainPipeline(state.State):
     The state.State which Trains the Reconized face Models
     """
 
-    def on_event(self, event, sender):
+    def on_event(self, event, sender,receiver):
         if event == States.TRAIN_MODEL:
 
             videoRequired.RequiredCode.trainPipeLine(
@@ -65,15 +65,15 @@ class RunReconitionPipeLine(state.State):
     The state.State which Reconizes Faces
     """
 
-    def on_event(self, event, sender,receiver):
+    def on_event(self, event, sender,recv):
         if event == States.RUN_RECONITION:
             videoRequired.RequiredCode.reconitionPipeline(
-                videoRequired.RequiredCode(), sender,receiver
+                videoRequired.RequiredCode(), sender, recv
             )
 
             if (
                 videoRequired.RequiredCode.reconitionPipeline(
-                    videoRequired.RequiredCode(), sender,receiver
+                    videoRequired.RequiredCode(), sender,recv
                 )
                 == States.ERROR
             ):
@@ -87,7 +87,7 @@ class Idle(state.State):
     The state.State which The program waits for a face to be spotted
     """
 
-    def on_event(self, event, sender):
+    def on_event(self, event, sender,receiver):
         if event == States.IDLE:
             videoRequired.consoleLog.Warning("Idleing....")
             videoRequired.time.sleep(0.5)

@@ -160,7 +160,7 @@ class RequiredCode(object):
         return
 
     # * this is were rhe bulk of the vision pipline is ran and created
-    def reconitionPipeline(self, sender,receiver):
+    def reconitionPipeline(self, sender,recv):
 
         self.sendProgramStatus(
             sender, "SETUP_PIPELINE", "Starting Face rec", datetime.now()

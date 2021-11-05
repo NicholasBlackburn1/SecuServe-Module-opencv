@@ -33,8 +33,8 @@ def main():
 
     # sets pipeline starting state so Fsm has all needed to run
     pipe = pipelineStates.PipeLine()
-    pipe.on_event(pipelineStates.States.SETUP_PIPELINE, sender,receiver)
-    pipe.on_event(pipelineStates.States.TRAIN_MODEL, sender,receiver)
+    pipe.on_event(pipelineStates.States.SETUP_PIPELINE, sender,None)
+    pipe.on_event(pipelineStates.States.TRAIN_MODEL, sender,None)
     pipe.on_event(pipelineStates.States.RUN_RECONITION, sender,receiver)
 
 
