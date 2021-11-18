@@ -610,6 +610,8 @@ class RequiredCode(object):
             )
             #* this allows me to convert frames caputred to the network allowing me to send them to other modules 
             #TODO: get image socket to acutally send images over the network 
+            ret_code, jpg_buffer = cv2.imencode(
+                ".jpg", frame, [int(cv2.IMWRITE_JPEG_QUALITY), 98])
 
             """
                 This Section is Dedicated to dealing with user Seperatation via the User Stats data tag
@@ -627,6 +629,9 @@ class RequiredCode(object):
 
                 # allows total var to incrament All Seen Faces
                 self.Total += self.getAmmountOfFaces(frame)
+
+                #*Sends images over zmq
+                imagesocket.send_jpg('IMAGE', jpg_buffer)
 
 
                 #* acutally sends the images across the netowrk
