@@ -163,7 +163,7 @@ class RequiredCode(object):
         return
 
     # * this is were rhe bulk of the vision pipline is ran and created
-    def reconitionPipeline(self, sender,recv,poller):
+    def reconitionPipeline(self, sender,recv,poller,imagesocket):
 
         self.sendProgramStatus(
             sender, "SETUP_PIPELINE", "Starting Face rec", datetime.now()
@@ -209,7 +209,8 @@ class RequiredCode(object):
                 pipe=pipe,
                 status=status,
                 poller= poller,
-                receiver=recv
+                receiver=recv,
+                imagesocket=imagesocket
                 
             )
 
@@ -593,7 +594,7 @@ class RequiredCode(object):
 
     # * this is the main part of face rec pipeline
 
-    def faceIdentify(self, process_this_frame, cap, sender, pipe, status,poller,receiver):
+    def faceIdentify(self, process_this_frame, cap, sender, pipe, status,poller,receiver,imagesocket):
 
         if process_this_frame % 10 == 0:
             # cap.read()
@@ -608,6 +609,8 @@ class RequiredCode(object):
                 distance_threshold=const.faceTolorace,
             )
             #* this allows me to convert frames caputred to the network allowing me to send them to other modules 
+            #TODO: get image socket to acutally send images over the network 
+
             """
                 This Section is Dedicated to dealing with user Seperatation via the User Stats data tag
             """
@@ -616,7 +619,7 @@ class RequiredCode(object):
             if self.getAmmountOfFaces(frame) <= 0:
 
                 time.sleep(0.5)
-                pipe.on_event(event=pipelineStates.States.IDLE, sender=sender,receiver=receiver, poller=poller)
+                pipe.on_event(event=pipelineStates.States.IDLE, sender=sender,receiver=receiver, poller=poller,imagesocket=imagesocket)
 
             # processes faces when seen
             if self.getAmmountOfFaces(frame) > 0:

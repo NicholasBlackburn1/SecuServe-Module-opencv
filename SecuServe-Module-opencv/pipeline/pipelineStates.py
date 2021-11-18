@@ -28,7 +28,7 @@ class SetupPipeLine(state.State):
     The state.State which Sets Up Whole opencv pipeline
     """
 
-    def on_event(self, event, sender,receiver,poller):
+    def on_event(self, event, sender,receiver,poller,imagesocket):
         if event == States.SETUP_PIPELINE:
             # moddate = datetime.fromtimestamp(os.path.getctime(const.Modelpath))
             videoRequired.RequiredCode.setupPipeline(
@@ -48,7 +48,7 @@ class TrainPipeline(state.State):
     The state.State which Trains the Reconized face Models
     """
 
-    def on_event(self, event, sender,receiver,poller):
+    def on_event(self, event, sender,receiver,poller,imagesocket):
         if event == States.TRAIN_MODEL:
 
             videoRequired.RequiredCode.trainPipeLine(
@@ -65,12 +65,12 @@ class RunReconitionPipeLine(state.State):
     The state.State which Reconizes Faces
     """
 
-    def on_event(self, event, sender,recv,poller):
+    def on_event(self, event, sender,recv,poller,imagesocket):
         if event == States.RUN_RECONITION:
             videoRequired.RequiredCode.reconitionPipeline(
-                videoRequired.RequiredCode(), sender, recv,poller)
+                videoRequired.RequiredCode(), sender, recv,poller,imagesocket)
 
-            if (videoRequired.RequiredCode.reconitionPipeline(videoRequired.RequiredCode(), sender,recv,poller) == States.ERROR):
+            if (videoRequired.RequiredCode.reconitionPipeline(videoRequired.RequiredCode(), sender,recv,poller,imagesocket) == States.ERROR):
                 return Error()
          
 
@@ -82,7 +82,7 @@ class Idle(state.State):
     The state.State which The program waits for a face to be spotted
     """
 
-    def on_event(self, event, sender,receiver,poller):
+    def on_event(self, event, sender,receiver,poller,imagesocket):
         if event == States.IDLE:
             videoRequired.consoleLog.Warning("Idleing....")
             videoRequired.time.sleep(0.5)
@@ -122,7 +122,7 @@ class PipeLine(object):
         # Start with a default state.State.
         self.State = SetupPipeLine()
 
-    def on_event(self, event, sender,receiver,poller):
+    def on_event(self, event, sender,receiver,poller,imagesocket):
         """
         This is the bread and butter of the state.State machine. Incoming events are
         delegated to the given state.States which then handle the event. The result is
@@ -130,7 +130,7 @@ class PipeLine(object):
         """
 
         # The next state.State will be the result of the on_event function.
-        self.State = self.State.on_event(event, sender,receiver,poller)
+        self.State = self.State.on_event(event, sender,receiver,poller,imagesocket)
 
     def getCurrentStat(self):
         return self.State
