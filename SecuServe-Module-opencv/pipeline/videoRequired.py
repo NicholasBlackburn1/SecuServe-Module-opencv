@@ -17,6 +17,7 @@ TODO: Need to check too see if running on a jetson nano or dev pc so i can run p
 
 from enum import Enum
 from os import stat
+from pickle import TRUE
 import cv2
 from numpy.lib import utils
 
@@ -65,7 +66,7 @@ class RequiredCode(object):
     Reconized = 0
     Unreconized = 0
 
-    liveness = None
+    liveness = True
 
     # this allows me to set up pipe line easyerly  but for the cv module
     def setupPipeline(self, sender):
@@ -201,28 +202,15 @@ class RequiredCode(object):
                     sender, "ERROR", "WATCHDOG OVERRRAN", datetime.now()
                 )
                 break
-
-            evts = dict(poller.poll(timeout=100))
-            if recv in evts:
-
-                topic = recv.recv_string()
-                msg = recv.recv_json()
-                
-                if(topic == 'LIVENESS'):
-                    self.liveness = msg['alive'] 
-                
-                consoleLog.info("Message from Recv"+ " "+ str(topic)+":"+ " "+ str(msg))
-
-
             self.faceIdentify(
                 process_this_frame=process_this_frame,
                 cap=cap,
                 sender=sender,
                 pipe=pipe,
                 status=status,
-                liveness= self.liveness,
                 poller= poller,
                 receiver=recv
+                
             )
 
     # returns ammount of seenfaces
@@ -605,7 +593,7 @@ class RequiredCode(object):
 
     # * this is the main part of face rec pipeline
 
-    def faceIdentify(self, process_this_frame, cap, sender, pipe, status, liveness,poller,receiver):
+    def faceIdentify(self, process_this_frame, cap, sender, pipe, status,poller,receiver):
 
         if process_this_frame % 10 == 0:
             # cap.read()
@@ -619,8 +607,7 @@ class RequiredCode(object):
                 ),
                 distance_threshold=const.faceTolorace,
             )
-            # print(process_this_frame)
-
+            #* this allows me to convert frames caputred to the network allowing me to send them to other modules 
             """
                 This Section is Dedicated to dealing with user Seperatation via the User Stats data tag
             """
@@ -638,15 +625,22 @@ class RequiredCode(object):
                 # allows total var to incrament All Seen Faces
                 self.Total += self.getAmmountOfFaces(frame)
 
-                self.checkFaceStatus(
-                    predictions=predictions,
-                    sender=sender,
-                    frame=frame,
-                    face_processing_pipeline_timer=face_processing_pipeline_timer,
-                    process_this_frame=process_this_frame,
-                    status=status,
-                    liveness=liveness
-                )
+
+                #* acutally sends the images across the netowrk
+                #imagesocket.send_jpg('IMAGE_PIPE',jpg_buffer)
+
+                #* this allows me to only un check face status when the face liveness is true allows pipline to continue
+                if(self.liveness):
+
+                    self.checkFaceStatus(
+                        predictions=predictions,
+                        sender=sender,
+                        frame=frame,
+                        face_processing_pipeline_timer=face_processing_pipeline_timer,
+                        process_this_frame=process_this_frame,
+                        status=status,
+                        liveness=self.liveness
+                    )
 
             if const.watchdog == 10:
                 self.sendProgramStatus(

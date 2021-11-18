@@ -9,13 +9,14 @@ from pipeline import pipelineStates
 
 from util import consoleLog
 import zmq
-
+import imagezmq
 
 context = zmq.Context()
 
 # inits Sender and reciver Sockets for the Module
 sender = context.socket(zmq.PUB)
 receiver = context.socket(zmq.SUB)
+imagesocket = None
 
 receiver.setsockopt(zmq.SUBSCRIBE, b"")
 
@@ -25,15 +26,15 @@ poller.register(receiver, zmq.POLLIN)
 
 
 def main():
+    watchdog = 0
+
     consoleLog.Warning("Initing zmq")
 
     sender.bind("tcp://" + "127.0.0.1:5001")
     receiver.connect("tcp://" + "127.0.0.1:5000")
+    imagesocket = imagezmq.ImageSender(connect_to="tcp://127.0.0.1:5555", REQ_REP=False)
 
     consoleLog.PipeLine_Ok("running zmq")
-
-    watchdog = 0
-
     consoleLog.Warning("running VideoProcessing Pipeline...")
 
 
