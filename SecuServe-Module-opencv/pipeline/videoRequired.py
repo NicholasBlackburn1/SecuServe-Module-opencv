@@ -66,7 +66,7 @@ class RequiredCode(object):
     Reconized = 0
     Unreconized = 0
 
-    liveness = True
+    liveness = False
 
     # this allows me to set up pipe line easyerly  but for the cv module
     def setupPipeline(self, sender):
