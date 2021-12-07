@@ -14,8 +14,8 @@ import imagezmq
 context = zmq.Context()
 
 # inits Sender and reciver Sockets for the Module
-sender = context.socket(zmq.PUB)
-receiver = context.socket(zmq.SUB)
+sender = context.socket(zmq.XPUB)
+receiver = context.socket(zmq.XSUB)
 imagesocket = None
 
 receiver.setsockopt(zmq.SUBSCRIBE, b"")

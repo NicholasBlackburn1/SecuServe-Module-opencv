@@ -633,11 +633,6 @@ class RequiredCode(object):
                 #*Sends images over zmq
                 imagesocket.send_jpg('IMAGE', jpg_buffer)
 
-
-                #* acutally sends the images across the netowrk
-                #imagesocket.send_jpg('IMAGE_PIPE',jpg_buffer)
-                consoleLog.Warning("Sending Info to Liveleness detection....")
-                consoleLog.Debug("Waiting for Responce from Liveness Module....")
                 #* this allows me to only un check face status when the face liveness is true allows pipline to continue
                 if(self.liveness):
 
