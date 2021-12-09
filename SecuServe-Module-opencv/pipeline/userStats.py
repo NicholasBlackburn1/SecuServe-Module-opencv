@@ -45,7 +45,8 @@ class UserStats(object):
         )
 
         time.sleep(0.5)
-
+        cv2.imshow("admin",frame)
+        cv2.waitKey(1)
         consoleLog.PipeLine_Data("Admin Path = " + str(const.adminPath))
 
         self.saveImage(
@@ -86,7 +87,8 @@ class UserStats(object):
         )
 
         time.sleep(0.5)
-
+        cv2.imshow("user",frame)
+        cv2.waitKey(1)
         consoleLog.PipeLine_Data("User Path = " + str(const.usrPath))
         self.saveImage(self, imagepath=const.usrPath, imagename=imagename, frame=frame)
 
@@ -117,7 +119,8 @@ class UserStats(object):
             (255, 255, 255),
             1,
         )
-
+        cv2.imshow("unwanted",frame)
+        cv2.waitKey(1)
         consoleLog.PipeLine_Data("unwated Path = " + str(const.unwantedPath))
         self.saveImage(
             self, imagepath=const.unwantedPath, imagename=imagename, frame=frame
@@ -156,7 +159,8 @@ class UserStats(object):
         time.sleep(0.5)
 
         consoleLog.PipeLine_Data("Unknown Path = " + str(const.unknownPath))
-
+        cv2.imshow("Unknown",frame)
+        cv2.waitKey(1)
         self.saveImage(
             self, imagepath=const.unknownPath, imagename=imagename, frame=frame
         )
@@ -186,7 +190,8 @@ class UserStats(object):
             (255, 255, 255),
             1,
         )
-
+        cv2.imshow("Unknown",frame)
+        cv2.waitKey(1)
         self.saveImage(
             self, imagepath=const.groupPath, imagename=imagename, frame=frame
         )

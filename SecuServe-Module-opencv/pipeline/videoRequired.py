@@ -69,7 +69,7 @@ class RequiredCode(object):
 
     liveness = False
 
-    statusmsg = ""
+    statusmsg = []
     topic = ""
 
     # this allows me to set up pipe line easyerly  but for the cv module
@@ -624,7 +624,7 @@ class RequiredCode(object):
             if receiver in evts:
                 consoleLog.Debug("Data from"+ " "+str(receiver.recv_string())+ " "+str(receiver.recv_json()))
                 self.topic = str(receiver.recv_string())
-                self.statusmsg = str(receiver.recv_json())
+                self.statusmsg = receiver.recv_json()
 
             # runs like an idle stage so program can wait for face to be recived
             if self.getAmmountOfFaces(frame) <= 0:
@@ -643,14 +643,16 @@ class RequiredCode(object):
                 imagesocket.send_jpg('IMAGE', jpg_buffer)
                 
                 if self.topic == "LIVENESS_STATS":
-
-                    consoleLog.PipeLine_Ok("got data form port"+ " "+"is alive"+str(self.statusmsg))
-                    self.liveness = bool(self.statusmsg['alive'])
+                    self.liveness = self.statusmsg['alive']
+                    
+                
                    
 
                 #* this allows me to only un check face status when the face liveness is true allows pipline to continue
-                if(self.liveness):
+                if(not self.liveness):
 
+                    consoleLog.Debug("Got Message from LiveNess detection -> " + " "+ "Liveness is  alive"+str(self.liveness))
+                    
                     self.checkFaceStatus(
                         predictions=predictions,
                         sender=sender,
