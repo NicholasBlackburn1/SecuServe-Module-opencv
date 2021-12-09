@@ -12,7 +12,7 @@ from util import consoleLog
 import zmq
 import imagezmq
 
-context = zmq.Context()
+context = zmq.Context(io_threads=4)
 
 # inits Sender and reciver Sockets for the Module
 sender = context.socket(zmq.PUB)
