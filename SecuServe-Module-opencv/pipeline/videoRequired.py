@@ -19,6 +19,7 @@ from enum import Enum
 from os import stat
 from pickle import TRUE
 import cv2
+from numpy.core.records import recarray
 from numpy.lib import utils
 
 # from Jetson.GPIO.gpio import UNKNOWN
@@ -67,6 +68,9 @@ class RequiredCode(object):
     Unreconized = 0
 
     liveness = False
+
+    statusmsg = ""
+    topic = ""
 
     # this allows me to set up pipe line easyerly  but for the cv module
     def setupPipeline(self, sender):
@@ -616,6 +620,11 @@ class RequiredCode(object):
             """
                 This Section is Dedicated to dealing with user Seperatation via the User Stats data tag
             """
+            evts = dict(poller.poll(timeout=100))
+            if receiver in evts:
+                consoleLog.Debug("Data from"+ " "+str(receiver.recv_string())+ " "+str(receiver.recv_json()))
+                self.topic = str(receiver.recv_string())
+                self.statusmsg = str(receiver.recv_json())
 
             # runs like an idle stage so program can wait for face to be recived
             if self.getAmmountOfFaces(frame) <= 0:
@@ -632,6 +641,12 @@ class RequiredCode(object):
 
                 #*Sends images over zmq
                 imagesocket.send_jpg('IMAGE', jpg_buffer)
+                
+                if self.topic == "LIVENESS_STATS":
+
+                    consoleLog.PipeLine_Ok("got data form port"+ " "+"is alive"+str(self.statusmsg))
+                    self.liveness = bool(self.statusmsg['alive'])
+                   
 
                 #* this allows me to only un check face status when the face liveness is true allows pipline to continue
                 if(self.liveness):

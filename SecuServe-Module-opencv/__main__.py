@@ -12,15 +12,12 @@ from util import consoleLog
 import zmq
 import imagezmq
 
-context = zmq.Context(io_threads=2)
+context = zmq.Context()
 
 # inits Sender and reciver Sockets for the Module
-sender = context.socket(zmq.SUB)
-receiver = context.socket(zmq.PUB)
+sender = context.socket(zmq.PUB)
+receiver = context.socket(zmq.SUB)
 imagesocket = None
-
-receiver.setsockopt(zmq.SUBSCRIBE, b"")
-
 
 poller = zmq.Poller()
 poller.register(receiver, zmq.POLLIN)
@@ -31,9 +28,11 @@ def main():
 
     consoleLog.Warning("Initing zmq")
 
+    receiver.setsockopt(zmq.SUBSCRIBE,b"")
+
     sender.bind(const.zmq_send)
     receiver.connect(const.zmq_recv)
-    
+
     imagesocket = imagezmq.ImageSender(connect_to="tcp://127.0.0.1:5555", REQ_REP=False)
 
     consoleLog.PipeLine_Ok("running zmq")
