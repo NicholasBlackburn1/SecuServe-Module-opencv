@@ -2,7 +2,7 @@ import zmq
 from colorama import Fore, Back, Style
 
 context = zmq.Context()
-controller = context.socket(zmq.XSUB)
+controller = context.socket(zmq.SUB)
 controller.setsockopt(zmq.SUBSCRIBE, b"")
 controller.connect("tcp://" + "127.0.0.1:5001")
 

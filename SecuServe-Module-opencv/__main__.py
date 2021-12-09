@@ -4,18 +4,19 @@ TODO: add code to launc from zmq
 """
 
 
-from zmq.sugar import poll
+from zmq.sugar import constants, poll
 from pipeline import pipelineStates
+from util import const
 
 from util import consoleLog
 import zmq
 import imagezmq
 
-context = zmq.Context()
+context = zmq.Context(io_threads=2)
 
 # inits Sender and reciver Sockets for the Module
-sender = context.socket(zmq.XPUB)
-receiver = context.socket(zmq.XSUB)
+sender = context.socket(zmq.SUB)
+receiver = context.socket(zmq.PUB)
 imagesocket = None
 
 receiver.setsockopt(zmq.SUBSCRIBE, b"")
@@ -30,8 +31,9 @@ def main():
 
     consoleLog.Warning("Initing zmq")
 
-    sender.bind("tcp://" + "127.0.0.1:5001")
-    receiver.connect("tcp://" + "127.0.0.1:5000")
+    sender.bind(const.zmq_send)
+    receiver.connect(const.zmq_recv)
+    
     imagesocket = imagezmq.ImageSender(connect_to="tcp://127.0.0.1:5555", REQ_REP=False)
 
     consoleLog.PipeLine_Ok("running zmq")

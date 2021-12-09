@@ -109,3 +109,8 @@ faceTolorace = 0.56
 
 font = cv2.FONT_HERSHEY_DUPLEX
 status = None
+
+
+
+zmq_recv = "tcp://" + "127.0.0.1:5000"
+zmq_send = "tcp://" + "127.0.0.1:5001"
