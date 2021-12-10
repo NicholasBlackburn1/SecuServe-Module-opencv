@@ -622,7 +622,6 @@ class RequiredCode(object):
             """
             evts = dict(poller.poll(timeout=100))
             if receiver in evts:
-                consoleLog.Debug("Data from"+ " "+str(receiver.recv_string())+ " "+str(receiver.recv_json()))
                 self.topic = str(receiver.recv_string())
                 self.statusmsg = receiver.recv_json()
 
@@ -647,11 +646,11 @@ class RequiredCode(object):
                     
                 
                    
-
+                consoleLog.Warning("Waiting for Liveness Detection to finish so i can process the face")
                 #* this allows me to only un check face status when the face liveness is true allows pipline to continue
                 if(not self.liveness):
 
-                    consoleLog.Debug("Got Message from LiveNess detection -> " + " "+ "Liveness is  alive"+str(self.liveness))
+                    consoleLog.PipeLine_Ok("LiveNess is Active so Its time to process data")
                     
                     self.checkFaceStatus(
                         predictions=predictions,
