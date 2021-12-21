@@ -10,6 +10,7 @@ from util import const
 
 from util import consoleLog
 import zmq
+
 import imagezmq
 
 context = zmq.Context(io_threads=4)

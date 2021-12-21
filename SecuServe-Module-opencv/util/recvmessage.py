@@ -33,8 +33,6 @@ while True:
             print(Fore.RED + f"Topic: {topic} => {status}")
             print(Fore.RESET)
 
-
-        
         if topic == "LIVENESS":
             print(Fore.CYAN + f"Topic: {topic} => {status}")
             print(Fore.RESET)

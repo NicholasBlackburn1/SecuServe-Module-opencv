@@ -67,7 +67,7 @@ class RequiredCode(object):
     Reconized = 0
     Unreconized = 0
 
-    liveness = False
+    liveness = True
 
     statusmsg = []
     topic = ""
@@ -646,7 +646,7 @@ class RequiredCode(object):
                     
                 
                    
-                consoleLog.Warning("Waiting for Liveness Detection to finish so i can process the face")
+                
                 #* this allows me to only un check face status when the face liveness is true allows pipline to continue
                 if(not self.liveness):
 
