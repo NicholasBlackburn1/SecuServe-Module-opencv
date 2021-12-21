@@ -642,7 +642,11 @@ class RequiredCode(object):
                 imagesocket.send_jpg('IMAGE', jpg_buffer)
                 
                 if self.topic == "LIVENESS_STATS":
-                    self.liveness = self.statusmsg['alive']
+                    
+                    if self.statusmsg['alive'] == True:
+                        self.liveness = True
+                    else:
+                        self.liveness = False
                     
                 
                    
