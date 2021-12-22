@@ -4,7 +4,7 @@ from colorama import Fore, Back, Style
 context = zmq.Context()
 controller = context.socket(zmq.SUB)
 controller.setsockopt(zmq.SUBSCRIBE, b"")
-controller.connect("tcp://" + "127.0.0.1:5001")
+controller.connect("tcp://" + "127.0.0.1:5002")
 
 
 poller = zmq.Poller()

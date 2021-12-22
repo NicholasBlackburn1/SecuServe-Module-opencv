@@ -644,9 +644,9 @@ class RequiredCode(object):
                 if self.topic == "LIVENESS_STATS":
                     
                     if self.statusmsg['alive'] == True:
-                        self.liveness = True
-                    else:
                         self.liveness = False
+                    else:
+                        self.liveness = True
                     
                 
                    
