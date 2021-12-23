@@ -645,10 +645,12 @@ class RequiredCode(object):
                         
                     if self.statusmsg['alive'] == False:
                         
-                        consoleLog.info("Data recved from liveness...")
-                        consoleLog.PipeLine_Data("Time eyes blikned"+ " "+ str(self.statusmsg['time']))
-                        consoleLog.PipeLine_Data("IS Alive "+ " "+ str(self.statusmsg['alive']))
-                        consoleLog.PipeLine_Data("Has a body "+ " "+ str(self.statusmsg['hasBody']))
+                        consoleLog.Pipeline_Data_Block("Data recved from liveness...",
+                        "Time eyes blikned"+ " "+ str(self.statusmsg['time']),
+                        "IS Alive "+ " "+ str(self.statusmsg['alive']),
+                        "Has a body "+ " "+ str(self.statusmsg['hasBody']),
+                        "End of data dump from liveness"+"/n")
+                       
                         self.liveness = False
                         
                     else:
