@@ -647,9 +647,9 @@ class RequiredCode(object):
                         
                         consoleLog.Pipeline_Data_Block("Data recved from liveness...",
                         "Time eyes blikned"+ " "+ str(self.statusmsg['time']),
-                        "IS Alive "+ " "+ str(self.statusmsg['alive']),
+                        "IS Alive "+ " "+ "True",
                         "Has a body "+ " "+ str(self.statusmsg['hasBody']),
-                        "End of data dump from liveness"+"/n")
+                        "End of data dump from liveness"+"\n")
                        
                         self.liveness = False
                         
