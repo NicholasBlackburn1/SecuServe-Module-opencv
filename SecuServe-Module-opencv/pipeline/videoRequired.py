@@ -641,12 +641,15 @@ class RequiredCode(object):
                 #*Sends images over zmq
                 imagesocket.send_jpg('IMAGE', jpg_buffer)
                 
-                if self.topic == "LIVENESS_STATS":
-                    
-                    if self.statusmsg['alive'] == True:
+                if self.topic == "LIVENESS":
+                        
+                    if self.statusmsg['alive'] == False:
+                        
                         self.liveness = False
+                        
                     else:
                         self.liveness = True
+                        
                     
                 
                    
@@ -665,6 +668,12 @@ class RequiredCode(object):
                         status=status,
                         liveness=self.liveness
                     )
+
+    # this should check to see if the module is alive if not it will set the info to true so it does not run 
+            if const.liveness_watchdog == 2:
+                consoleLog.Error("liveness module not respsonding setting liveness module boolean to false...")
+                self.topic = ""
+                self.liveness = False
 
             if const.watchdog == 10:
                 self.sendProgramStatus(
