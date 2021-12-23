@@ -30,6 +30,7 @@ import sys
 import os
 import face_recognition
 import wget
+from zmq import asyncio
 
 
 from util import const
@@ -622,8 +623,8 @@ class RequiredCode(object):
             """
             evts = dict(poller.poll(timeout=100))
             if receiver in evts:
-                self.topic = str(receiver.recv_string())
-                self.statusmsg = receiver.recv_json()
+                self.topic = str( receiver.recv_string())
+                self.statusmsg =  receiver.recv_json()
 
             # runs like an idle stage so program can wait for face to be recived
             if self.getAmmountOfFaces(frame) <= 0:

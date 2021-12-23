@@ -13,11 +13,14 @@ import zmq
 
 import imagezmq
 
+from zmq import asyncio
+
 context = zmq.Context(io_threads=4)
+asyncContext = zmq.Context(io_threads=4)
 
 # inits Sender and reciver Sockets for the Module
 sender = context.socket(zmq.PUB)
-receiver = context.socket(zmq.SUB)
+receiver = asyncContext.socket(zmq.SUB)
 imagesocket = None
 
 poller = zmq.Poller()
@@ -46,7 +49,7 @@ def main():
     pipe.on_event(pipelineStates.States.SETUP_PIPELINE, sender,receiver,poller,imagesocket)
     pipe.on_event(pipelineStates.States.TRAIN_MODEL, sender,receiver,poller,imagesocket)
     pipe.on_event(pipelineStates.States.RUN_RECONITION, sender,receiver,poller,imagesocket)
-    
+
 
 if __name__ == "__main__":
     main()
