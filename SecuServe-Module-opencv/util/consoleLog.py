@@ -40,9 +40,10 @@ def PipeLine_Data(text):
 
     return
 
-def Pipeline_Data_Block(start,recv_time,isAlive,hasBody,end):
+def Pipeline_Data_Block(start,recv_time,isAlive,hasBody,timesBlinked,end):
     dmsgLayoutblock("DATA_BLOCK", colorama.Fore.LIGHTMAGENTA_EX,str(start))
     dmsgLayoutblock("DATA_BLOCK", colorama.Fore.LIGHTMAGENTA_EX,str(recv_time))
+    dmsgLayoutblock("DATA_BLOCK", colorama.Fore.LIGHTMAGENTA_EX,str(timesBlinked))
     dmsgLayoutblock("DATA_BLOCK", colorama.Fore.LIGHTMAGENTA_EX,str(isAlive))
     dmsgLayoutblock("DATA_BLOCK", colorama.Fore.LIGHTMAGENTA_EX,str(hasBody))
     dmsgLayoutblock("DATA_BLOCK", colorama.Fore.LIGHTMAGENTA_EX,str(end))

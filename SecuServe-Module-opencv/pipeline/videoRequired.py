@@ -647,7 +647,8 @@ class RequiredCode(object):
                     if self.statusmsg['alive'] == False:
                         
                         consoleLog.Pipeline_Data_Block("Data recved from liveness...",
-                        "Time eyes blikned"+ " "+ str(self.statusmsg['time']),
+                        "Time M"+ "essage Sent "+ str(self.statusmsg['time']),
+                        "Blinked about"+ " "+str(self.statusmsg['times_blinked']),
                         "IS Alive "+ " "+ "True",
                         "Has a body "+ " "+ str(self.statusmsg['hasBody']),
                         "End of data dump from liveness"+"\n")
@@ -662,7 +663,7 @@ class RequiredCode(object):
                    
                 
                 #* this allows me to only un check face status when the face liveness is true allows pipline to continue
-                if(not self.liveness):
+                if( self.liveness == False):
 
                     consoleLog.PipeLine_Ok("LiveNess is Active so Its time to process data")
                     
@@ -675,6 +676,9 @@ class RequiredCode(object):
                         status=status,
                         liveness=self.liveness
                     )
+                else:
+                    time.sleep(0.5)
+                    pipe.on_event(event=pipelineStates.States.IDLE, sender=sender,receiver=receiver, poller=poller,imagesocket=imagesocket)
 
     # this should check to see if the module is alive if not it will set the info to true so it does not run 
             if const.liveness_watchdog == 2:
