@@ -32,7 +32,7 @@ class SetupPipeLine(state.State):
         if event == States.SETUP_PIPELINE:
             # moddate = datetime.fromtimestamp(os.path.getctime(const.Modelpath))
             videoRequired.RequiredCode.setupPipeline(
-                videoRequired.RequiredCode(), sender
+                videoRequired.RequiredCode(), sender,receiver,poller
             )
 
             # consoleLog.PipeLine_Data("Model last trained"+" "+ str(moddate['%H']))

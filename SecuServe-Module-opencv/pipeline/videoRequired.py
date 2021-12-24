@@ -31,6 +31,7 @@ import os
 import face_recognition
 import wget
 from zmq import asyncio
+from zmq.sugar import poll
 
 
 from util import const
@@ -48,7 +49,7 @@ import pipeline.userStats as userStats
 
 import pipeline.userStats as userstat
 import util.configcreator as configCreator
-
+from multiprocessing import Process
 
 class Status:
     # enums for the user status
@@ -73,9 +74,15 @@ class RequiredCode(object):
     statusmsg = []
     topic = ""
 
+    poller = None 
+    receiver = None 
+
     # this allows me to set up pipe line easyerly  but for the cv module
-    def setupPipeline(self, sender):
+    def setupPipeline(self, sender,recv,poller):
         const.watchdog = 0
+        
+       
+     
 
         consoleLog.PipeLine_init("Starting up Opencv PipeLine.....")
         pipeline_start_setup = datetime.now()
@@ -134,6 +141,7 @@ class RequiredCode(object):
             "finishes setup pipeline to run",
             datetime.now() - pipeline_start_setup,
         )
+       
         return
 
     # This trains the face model for the  pipeline
@@ -168,8 +176,9 @@ class RequiredCode(object):
         return
 
     # * this is were rhe bulk of the vision pipline is ran and created
-    def reconitionPipeline(self, sender,recv,poller,imagesocket):
-
+    def reconitionPipeline(self, sender,receiver,poller,imagesocket):
+     
+        
         self.sendProgramStatus(
             sender, "SETUP_PIPELINE", "Starting Face rec", datetime.now()
         )
@@ -199,6 +208,8 @@ class RequiredCode(object):
         status = const.status
 
         while True:
+           
+                    
             process_this_frame = process_this_frame + 1
 
             if const.watchdog == 10:
@@ -213,14 +224,16 @@ class RequiredCode(object):
                 sender=sender,
                 pipe=pipe,
                 status=status,
-                poller= poller,
-                receiver=recv,
-                imagesocket=imagesocket
+              
+                imagesocket=imagesocket,
+                recv=receiver,
+                poller = poller
                 
             )
 
+  
     # returns ammount of seenfaces
-
+    
     def getAmmountOfFaces(self, image):
         return len(
             face_recognition.face_locations(
@@ -599,7 +612,7 @@ class RequiredCode(object):
 
     # * this is the main part of face rec pipeline
 
-    def faceIdentify(self, process_this_frame, cap, sender, pipe, status,poller,receiver,imagesocket):
+    def faceIdentify(self, process_this_frame, cap, sender, pipe, status,imagesocket,recv,poller):
 
         if process_this_frame % 10 == 0:
             # cap.read()
@@ -622,15 +635,16 @@ class RequiredCode(object):
                 This Section is Dedicated to dealing with user Seperatation via the User Stats data tag
             """
             evts = dict(poller.poll(timeout=100))
-            if receiver in evts:
-                self.topic = str( receiver.recv_string())
-                self.statusmsg =  receiver.recv_json()
+            if recv in evts:
+                    self.topic = str( recv.recv_string())
+                    self.statusmsg =  recv.recv_json()
+                    time.sleep(0.2)
 
             # runs like an idle stage so program can wait for face to be recived
             if self.getAmmountOfFaces(frame) <= 0:
 
                 time.sleep(0.5)
-                pipe.on_event(event=pipelineStates.States.IDLE, sender=sender,receiver=receiver, poller=poller,imagesocket=imagesocket)
+                pipe.on_event(event=pipelineStates.States.IDLE, sender=sender,receiver=recv, poller=self.poller,imagesocket=imagesocket)
 
             # processes faces when seen
             if self.getAmmountOfFaces(frame) > 0:
@@ -646,14 +660,31 @@ class RequiredCode(object):
                         
                     if self.statusmsg['alive'] == False:
                         
-                        consoleLog.Pipeline_Data_Block("Data recved from liveness...",
-                        "Time M"+ "essage Sent "+ str(self.statusmsg['time']),
-                        "Blinked about"+ " "+str(self.statusmsg['times_blinked']),
-                        "IS Alive "+ " "+ "True",
-                        "Has a body "+ " "+ str(self.statusmsg['hasBody']),
-                        "End of data dump from liveness"+"\n")
+                        if(const.isdevpc):
+                            
+                            consoleLog.Pipeline_Data_Block("Data recved from liveness...",
+                            "Time M"+ "essage Sent "+ str(self.statusmsg['time']),
+                            "Blinked about"+ " "+str(self.statusmsg['times_blinked']),
+                            "IS Alive "+ " "+ "True",
+                            "Has a body "+ " "+ str(self.statusmsg['hasBody']),
+                            "End of data dump from liveness"+"\n")
+
+                            time.sleep(.2)
+
+                            self.liveness = False
                        
-                        self.liveness = False
+                        if(self.statusmsg['hasBody'] == True):
+                            
+                            consoleLog.Pipeline_Data_Block("Data recved from liveness...",
+                            "Time M"+ "essage Sent "+ str(self.statusmsg['time']),
+                            "Blinked about"+ " "+str(self.statusmsg['times_blinked']),
+                            "IS Alive "+ " "+ "True",
+                            "Has a body "+ " "+ str(self.statusmsg['hasBody']),
+                            "End of data dump from liveness"+"\n")
+
+                            time.sleep(.2)
+                            
+                            self.liveness = False
                         
                     else:
                         self.liveness = True
@@ -678,7 +709,7 @@ class RequiredCode(object):
                     )
                 else:
                     time.sleep(0.5)
-                    pipe.on_event(event=pipelineStates.States.IDLE, sender=sender,receiver=receiver, poller=poller,imagesocket=imagesocket)
+                    pipe.on_event(event=pipelineStates.States.IDLE, sender=sender,receiver=self.receiver, poller=self.poller,imagesocket=imagesocket)
 
     # this should check to see if the module is alive if not it will set the info to true so it does not run 
             if const.liveness_watchdog == 2:
