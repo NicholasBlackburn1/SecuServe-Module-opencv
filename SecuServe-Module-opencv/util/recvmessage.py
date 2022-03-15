@@ -42,7 +42,7 @@ while True:
             print(Fore.RED + f"Topic: {topic} => {status}")
             print(Fore.RESET)
 
-        if topic == "LIVENESS":
+        if topic == "LIVENESS_STATS":
             print(Fore.CYAN + f"Topic: {topic} => {status}")
             print(Fore.RESET)
 
@@ -58,7 +58,7 @@ while True:
             print(Fore.YELLOW + f"Topic: {topic} => {status}")
             print(Fore.RESET)
 
-        if topic == "LIVENESS_STATS":
+        if topic == "USERS":
             print(Fore.GREEN + f"Topic: {topic} => {status}")
             print(Fore.RESET)
 
@@ -66,3 +66,6 @@ while True:
             print(Fore.RED + f"Topic: {topic} => {status}")
             print(Fore.RESET)
 
+        if topic == "LIVENESS":
+            print(Fore.CYAN + f"Topic: {topic} => {status}")
+            print(Fore.RESET)
