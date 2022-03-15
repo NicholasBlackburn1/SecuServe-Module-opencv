@@ -14,11 +14,13 @@ class ThreadingClass:
 
         if const.isdevpc:
             self.cap = cv2.VideoCapture(0)
+
         if const.isdevpc == False:
             self.cap = cv2.VideoCapture(name, cv2.CAP_GSTREAMER)
 
         # define an empty queue and thread
         self.q = queue.Queue()
+        
         t = threading.Thread(target=self._reader)
         t.daemon = True
         t.start()

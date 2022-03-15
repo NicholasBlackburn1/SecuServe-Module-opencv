@@ -19,8 +19,8 @@ context = zmq.Context(io_threads=4)
 asyncContext = zmq.Context(io_threads=4)
 
 # inits Sender and reciver Sockets for the Module
-sender = context.socket(zmq.PUB)
-receiver = asyncContext.socket(zmq.SUB)
+sender = context.socket(zmq.PUSH)
+receiver = asyncContext.socket(zmq.PULL)
 imagesocket = None
 
 poller = zmq.Poller()
@@ -32,7 +32,6 @@ def main():
 
     consoleLog.Warning("Initing zmq")
 
-    receiver.setsockopt(zmq.SUBSCRIBE,b"")
 
     sender.bind(const.zmq_send)
     receiver.connect(const.zmq_recv)

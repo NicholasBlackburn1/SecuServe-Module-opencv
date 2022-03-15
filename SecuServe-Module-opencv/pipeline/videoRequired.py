@@ -80,10 +80,7 @@ class RequiredCode(object):
     # this allows me to set up pipe line easyerly  but for the cv module
     def setupPipeline(self, sender,recv,poller):
         const.watchdog = 0
-        
-       
-     
-
+    
         consoleLog.PipeLine_init("Starting up Opencv PipeLine.....")
         pipeline_start_setup = datetime.now()
         self.sendProgramStatus(
@@ -157,6 +154,7 @@ class RequiredCode(object):
         )
 
         consoleLog.Warning("Training Model Going to take a while UwU..... ")
+
         knnClasifiyer.train(
             train_dir=const.imagePathusers,
             model_save_path=const.Modelpath,
@@ -185,9 +183,10 @@ class RequiredCode(object):
         # cleans mess as we keep prosessing
         gc.collect()
 
+        #TODO: MAKE MUTLI CAMERA SETUP WORK WITH IT
         # Camera Stream gst setup
         gst_str = str(
-            const.opencvconfig["Stream_intro"]
+            const.opencv["Stream_intro"]
             + const.opencvconfig["Stream_ip"]
             + ":"
             + const.opencvconfig["Stream_port"]
@@ -195,7 +194,7 @@ class RequiredCode(object):
 
         consoleLog.Warning("Looking for Faces...")
 
-        consoleLog.Error("User list size is  " + " " + str(len(const.userList)))
+        consoleLog.PipeLine_Data("User list size is  " + " " + str(len(const.userList)))
 
         process_this_frame = 5
 
@@ -218,6 +217,7 @@ class RequiredCode(object):
                     sender, "ERROR", "WATCHDOG OVERRRAN", datetime.now()
                 )
                 break
+
             self.faceIdentify(
                 process_this_frame=process_this_frame,
                 cap=cap,
@@ -619,6 +619,7 @@ class RequiredCode(object):
             frame = cap.read()
 
             img = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
+
             predictions = knnClasifiyer.predict(
                 img,
                 knn_clf=knnClasifiyer.loadTrainedModel(
@@ -626,6 +627,7 @@ class RequiredCode(object):
                 ),
                 distance_threshold=const.faceTolorace,
             )
+            
             #* this allows me to convert frames caputred to the network allowing me to send them to other modules 
             #TODO: get image socket to acutally send images over the network 
             ret_code, jpg_buffer = cv2.imencode(
@@ -656,6 +658,7 @@ class RequiredCode(object):
                 #*Sends images over zmq
                 imagesocket.send_jpg('IMAGE', jpg_buffer)
                 
+                #* only runs when recvices messages from the live rec
                 if self.topic == "LIVENESS":
                         
                     if self.statusmsg['alive'] == False:
