@@ -25,8 +25,8 @@ while True:
 
     if recv in evts:
 
-        topic = controller.recv_string()
-        status = controller.recv_json()
+        topic = recv.recv_string()
+        status = recv.recv_json()
         
         print(topic + " "+ "from port 5002")
 
@@ -34,8 +34,8 @@ while True:
             print(Fore.YELLOW + f"Topic: {topic} => {status}")
             print(Fore.RESET)
 
-        if topic == "USERS":
-            print(Fore.GREEN + f"Topic: {topic} => {status}")
+        if topic == "TEXTMESSAGES":
+            print(Fore.LIGHTMAGENTA_EX + f"Topic: {topic} => {status}")
             print(Fore.RESET)
 
         if topic == "ERROR":
