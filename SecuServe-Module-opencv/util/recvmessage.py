@@ -1,3 +1,12 @@
+"""
+this is the message recver this thing allows me to see all the messages on all the ports
+
+TODO: get everything orgizied better
+
+"""
+
+
+
 import zmq
 from colorama import Fore, Back, Style
 
