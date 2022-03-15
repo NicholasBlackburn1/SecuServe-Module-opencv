@@ -47,6 +47,11 @@ while True:
             print(Fore.RESET)
 
 
+        if topic == "SENSOR":
+            print(Fore.GREEN + f"Topic: {topic} => {status}")
+            print(Fore.RESET)
+
+
     if controller in evts:
 
         topic = controller.recv_string()
