@@ -186,7 +186,7 @@ class RequiredCode(object):
         #TODO: MAKE MUTLI CAMERA SETUP WORK WITH IT
         # Camera Stream gst setup
         gst_str = str(
-            const.opencv["Stream_intro"]
+            const.opencvconfig["Stream_intro"]
             + const.opencvconfig["Stream_ip"]
             + ":"
             + const.opencvconfig["Stream_port"]
