@@ -20,7 +20,9 @@ asyncContext = zmq.Context(io_threads=4)
 
 # inits Sender and reciver Sockets for the Module
 sender = context.socket(zmq.PUSH)
-receiver = asyncContext.socket(zmq.PULL)
+receiver = context.socket(zmq.PULL)
+receiver.setsockopt(zmq.PULLSCRIBE,b"")
+
 imagesocket = None
 
 poller = zmq.Poller()

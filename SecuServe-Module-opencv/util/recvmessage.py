@@ -15,7 +15,7 @@ context = zmq.Context()
 controller = context.socket(zmq.PULL)
 
 recv = context.socket(zmq.PULL)
-controller = context.socket(zmq.PULL)
+
 
 controller.connect("tcp://" + "127.0.0.1:5001")
 recv.connect("tcp://" + "127.0.0.1:5002")
