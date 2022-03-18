@@ -19,9 +19,9 @@ context = zmq.Context(io_threads=4)
 asyncContext = zmq.Context(io_threads=4)
 
 # inits Sender and reciver Sockets for the Module
-sender = context.socket(zmq.PUSH)
-receiver = context.socket(zmq.PULL)
-receiver.setsockopt(zmq.PULLSCRIBE,b"")
+sender = context.socket(zmq.PUB)
+receiver = context.socket(zmq.SUB)
+receiver.setsockopt(zmq.SUBSCRIBE,b"")
 
 imagesocket = None
 

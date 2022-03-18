@@ -12,9 +12,9 @@ from colorama import Fore, Back, Style
 
 context = zmq.Context()
 
-controller = context.socket(zmq.PULL)
+controller = context.socket(zmq.SUB)
 
-recv = context.socket(zmq.PULL)
+recv = context.socket(zmq.SUB)
 
 
 controller.connect("tcp://" + "127.0.0.1:5001")
