@@ -20,6 +20,9 @@ recv = context.socket(zmq.SUB)
 controller.connect("tcp://" + "127.0.0.1:5001")
 recv.connect("tcp://" + "127.0.0.1:5002")
 
+recv.setsockopt(zmq.SUBSCRIBE,b"")
+controller.setsockopt(zmq.SUBSCRIBE,b"")
+
 poller = zmq.Poller()
 poller.register(controller, zmq.POLLIN)
 

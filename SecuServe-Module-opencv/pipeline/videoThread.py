@@ -13,7 +13,7 @@ class ThreadingClass:
     def __init__(self, name):
 
         if const.isdevpc:
-            self.cap = cv2.VideoCapture(0)
+            self.cap = cv2.VideoCapture(2)
 
         if const.isdevpc == False:
             self.cap = cv2.VideoCapture(name, cv2.CAP_GSTREAMER)
