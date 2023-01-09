@@ -36,10 +36,14 @@ def getFaces():
     consoleLog.PipeLine_Data("data from daabase"+ str(result_set.json()))
     return result_set.json()
 
-
+# gwts user uuid 
 def getUserid(face_data):
-    consoleLog.info('user id:')
-    return 
+    consoleLog.info('user id:'+ str(face_data[1]))
+    return str(face_data[1])
+
+
+def getStatus(face_data):
+    pass
 
 
 #! make sure to rewrite sll the data flow to ue new db method instead of dirty db (reding from db directly)"
