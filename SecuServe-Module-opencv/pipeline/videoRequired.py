@@ -279,10 +279,10 @@ class RequiredCode(object):
                 mydb.getName(mydb.getUsers()),
                 mydb.getStatus(mydb.getUsers()),
                 mydb.getImageName(mydb.getFaces()),
-                mydb.getImageUrI(mydb.getFaces(), i),
-                mydb.getPhoneNum(mydb.getFaces(), i),
+                mydb.getImageUrl(mydb.getFaces()),
+                mydb.getPhoneNum(mydb.getUsers()),
             )
-            local_data = {mydb.getUserUUID(mydb.getFaces(), i): userinfo.__repr__()}
+            local_data = {mydb.getUserUUID(mydb.getUsers()): userinfo.__repr__()}
 
             const.userList.append(local_data)
 
