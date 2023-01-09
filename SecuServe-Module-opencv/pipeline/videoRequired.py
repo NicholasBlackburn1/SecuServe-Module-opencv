@@ -273,6 +273,8 @@ class RequiredCode(object):
             # example Json string  [{"uuid":"Tesla", "name":2, "status":"New York",image:none, url:}]
 
             # this is Where the Data gets Wrapped into am DataList with uuid First key
+
+            #TODO: change to using api server
             userinfo = UserData(
                 mydb.getName(mydb.getFaces(), i),
                 mydb.getStatus(mydb.getFaces(), i),

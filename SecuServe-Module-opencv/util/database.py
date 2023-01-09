@@ -1,38 +1,48 @@
 from configparser import ConfigParser
+from urllib import request
 
 from util import const
 from pathlib import Path
 from util import consoleLog
 import sqlalchemy as db
 from sqlalchemy import orm
+import requests
 
+
+###########
+
+#TODO: fix database stuff to communicate with the api server
+
+"""
+#! data to grab
+   mydb.getName(mydb.getFaces(), i),
+                mydb.getStatus(mydb.getFaces(), i),
+                mydb.getImageName(mydb.getFaces(), i),
+                mydb.getImageUrI(mydb.getFaces(), i),
+                mydb.getPhoneNum(mydb.getFaces(), i),
+"""
+
+
+###########
 
 # Gets the Face Data from the Face data
 
 # TODO: NEED TO ONLY USE LIFE TIME DATABASE FOR FACES
 local = "/Documents/SECUSERVE/SecuServeFiles/"
 
-
+#! this section is for handling all the db interactions with the api server
 def getFaces():
-    # Read config.ini file
-    config_object = ConfigParser()
-    config_object.read(const.PATH)
+    result_set =requests.get(url="http://127.0.0.1:2020/secuserve/api/v1.0/database/faces/getallfaces")
+    consoleLog.PipeLine_Data("data from daabase"+ str(result_set.json()))
+    return result_set.json()
 
-    # Get the password
-    database = config_object["DATABASE"]
 
-    engine = db.create_engine(
-        "sqlite:///" + str(Path.home()) + str(local) + "db.sqlite3"
-    )
-    connection = engine.connect()
-    metadata = db.MetaData()
-    faces = db.Table(
-        database["table"], metadata, autoload=True, autoload_with=engine
-    )
-    query = db.select([faces])
-    result_proxy = connection.execute(query)
-    result_set = result_proxy.fetchall()
-    return result_set
+def getUserid(face_data):
+    consoleLog.info('user id:')
+    return 
+
+
+#! make sure to rewrite sll the data flow to ue new db method instead of dirty db (reding from db directly)"
 
 
 """
@@ -105,8 +115,8 @@ def getPhoneNum(result_set, i):
 
 
 def getLifefaces(result_set):
-    id, seenFaces, seenPlates, seenReconized, seenUnReconized = result_set
-    return seenFaces
+    id, seenFaces, seenPlates, seenReconized, s
+from sqlalchemy import orm
 
 
 def getLifePlates(result_set, i):
