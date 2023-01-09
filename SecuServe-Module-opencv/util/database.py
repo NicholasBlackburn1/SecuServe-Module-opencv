@@ -34,13 +34,16 @@ def getFaces():
 
 # gets name for the
 def getImageName(faces_data):
-    consoleLog.Warning('image name is'+ str(faces_data[4]) + " for user"+ str(faces_data[2]))
-    return faces_data[4]
+
+    face = faces_data[i]
+    consoleLog.Warning('image name is'+ str(face[4]) + " for user"+ str(face[2]))
+    return face[4]
 
 #
-def getImageUrl(face_data):
-    consoleLog.Warning('image url is'+ str(face_data[3]) + " for user"+ str(face_data[2]))
-    return face_data[3]
+def getImageUrl(face_data,i ):
+    face = face_data[i]
+    consoleLog.Warning('image url is'+ str(face[3]) + " for user"+ str(face[2]))
+    return face[3]
 
 ####
 
@@ -54,26 +57,30 @@ def getUsers():
     return result_set.json()
 
 #! gets user iid
-def getUserUUID(usr_data):
-    consoleLog.Warning('User uuid is'+ str(usr_data[0]) + " for user"+ str(usr_data[1]))
-    return usr_data[0]
+def getUserUUID(usr_data,i):
+    usr = usr_data[i]
+    consoleLog.Warning('User uuid is'+ str(usr[0]) + " for user"+ str(usr[1]))
+    return usr[0]
 
 
 #! gets the statays of the user
-def getStatus(usr_data):
-    consoleLog.Warning('User status is'+ str(usr_data[2]) + " for user"+ str(usr_data[1]))
-    return usr_data[2]
+def getStatus(usr_data,i):
+    usr = usr_data[i]
+    consoleLog.Warning('User status is'+ str(usr[2]) + " for user"+ str(usr[1]))
+    return usr[2]
 
 # gets the user name of the user
 
-def getName(usr_data):
-    consoleLog.Warning('User name is'+ str(usr_data[1]) + " for user id"+ str(usr_data[0]))
-    return usr_data[1]
+def getName(usr_data,i):
+    usr = usr_data[i]
+    consoleLog.Warning('User name is'+ str(usr[1]) + " for user id"+ str(usr[0]))
+    return usr[1]
 
 # gets user phone
-def getPhoneNum(usr_data):
-    consoleLog.Warning('User phone nnum is'+ str(usr_data[3]) + " for user id"+ str(usr_data[1]))
-    return usr_data[3]
+def getPhoneNum(usr_data,i):
+    usr = usr_data[i]
+    consoleLog.Warning('User phone nnum is'+ str(usr[3]) + " for user id"+ str(usr[1]))
+    return usr[3]
 
 
 #! make sure to rewrite sll the data flow to ue new db method instead of dirty db (reding from db directly)"

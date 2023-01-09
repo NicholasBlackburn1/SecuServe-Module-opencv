@@ -276,11 +276,11 @@ class RequiredCode(object):
 
             #TODO: change to using api server
             userinfo = UserData(
-                mydb.getName(mydb.getUsers()),
-                mydb.getStatus(mydb.getUsers()),
-                mydb.getImageName(mydb.getFaces()),
-                mydb.getImageUrl(mydb.getFaces()),
-                mydb.getPhoneNum(mydb.getUsers()),
+                mydb.getName(mydb.getUsers(), i),
+                mydb.getStatus(mydb.getUsers(),i),
+                mydb.getImageName(mydb.getFaces(),i),
+                mydb.getImageUrl(mydb.getFaces(),i),
+                mydb.getPhoneNum(mydb.getUsers(),i ),
             )
             local_data = {mydb.getUserUUID(mydb.getUsers()): userinfo.__repr__()}
 
