@@ -276,9 +276,9 @@ class RequiredCode(object):
 
             #TODO: change to using api server
             userinfo = UserData(
-                mydb.getName(mydb.getFaces(), i),
-                mydb.getStatus(mydb.getFaces(), i),
-                mydb.getImageName(mydb.getFaces(), i),
+                mydb.getName(mydb.getUsers()),
+                mydb.getStatus(mydb.getUsers()),
+                mydb.getImageName(mydb.getFaces()),
                 mydb.getImageUrI(mydb.getFaces(), i),
                 mydb.getPhoneNum(mydb.getFaces(), i),
             )

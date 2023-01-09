@@ -32,16 +32,29 @@ def getFaces():
     consoleLog.PipeLine_Data("data from daabase"+ str(result_set.json()))
     return result_set.json()
 
+
+
+####
+
+#? gets the user inbfo form the user sb
+
+####
 #! gets users from user db
-def getUsers(face_data):
+def getUsers():
     result_set =requests.get(url="http://127.0.0.1:2020/secuserve/api/v1.0/database/users/getallusers")
     consoleLog.PipeLine_Data("users from daabase"+ str(result_set.json()))
     return result_set.json()
 
-
+#! gets the statays of the user
 def getStatus(usr_data):
     consoleLog.Warning('User status is'+ str(usr_data[2]) + " for user"+ str(usr_data[1]))
     return usr_data[2]
+
+# gets the user name of the user
+
+def getName(usr_data):
+    consoleLog.Warning('User name is'+ str(usr_data[1]) + " for user id"+ str(usr_data[0]))
+    return usr_data[1]
 
 
 #! make sure to rewrite sll the data flow to ue new db method instead of dirty db (reding from db directly)"
