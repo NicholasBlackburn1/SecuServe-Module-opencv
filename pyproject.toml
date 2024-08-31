@@ -5,7 +5,7 @@ description = "The facial reconition module of the SecuServe Secuirty System"
 authors = ["NicholasBlackburn1 <nickblackburn02@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "3.7"
+python = "3.7.9"
 
 # python package 
 colorama = "^0.4.4"
